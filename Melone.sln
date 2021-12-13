@@ -1,0 +1,31 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Melone", "Melone\Melone.vcxproj", "{8243AD0F-8F2F-48F0-946A-34B590BE8061}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{F1576D0F-878D-46F2-9C9A-872B6ED8BEC3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8243AD0F-8F2F-48F0-946A-34B590BE8061}.Debug|x64.ActiveCfg = Debug|x64
+		{8243AD0F-8F2F-48F0-946A-34B590BE8061}.Debug|x64.Build.0 = Debug|x64
+		{8243AD0F-8F2F-48F0-946A-34B590BE8061}.Release|x64.ActiveCfg = Release|x64
+		{8243AD0F-8F2F-48F0-946A-34B590BE8061}.Release|x64.Build.0 = Release|x64
+		{F1576D0F-878D-46F2-9C9A-872B6ED8BEC3}.Debug|x64.ActiveCfg = Debug|x64
+		{F1576D0F-878D-46F2-9C9A-872B6ED8BEC3}.Debug|x64.Build.0 = Debug|x64
+		{F1576D0F-878D-46F2-9C9A-872B6ED8BEC3}.Release|x64.ActiveCfg = Release|x64
+		{F1576D0F-878D-46F2-9C9A-872B6ED8BEC3}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E693494-9F48-46CB-9666-528AB26DC5E6}
+	EndGlobalSection
+EndGlobal
