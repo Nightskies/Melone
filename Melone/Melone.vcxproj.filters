@@ -15,6 +15,9 @@
     <ClCompile Include="Src\Melone\Core\App.cpp">
       <Filter>Src\Melone\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Melone\Core\Log.cpp">
+      <Filter>Src\Melone\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Melone\Core\App.h">
@@ -28,6 +31,9 @@
     </ClInclude>
     <ClInclude Include="Src\Melone.h">
       <Filter>Src\Melone</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Melone\Core\Log.h">
+      <Filter>Src\Melone\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
