@@ -16,6 +16,14 @@ workspace "Melone"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "Melone/Vendor/GLFW/include"
+
+group "Dependencies"
+	include "Melone/Vendor/GLFW"
+
+group ""
+
 project "Melone"
 	location "Melone"
 	kind "StaticLib"
@@ -35,7 +43,14 @@ project "Melone"
 	includedirs
 	{
 		"%{prj.name}/Src",
-		"%{prj.name}/Vendor/spdlog/include"
+		"%{prj.name}/Vendor/spdlog/include",
+		"%{IncludeDir.GLFW}"
+	}
+
+	links 
+	{ 
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
