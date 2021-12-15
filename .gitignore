@@ -1,7 +1,10 @@
-# Dirs
-.vs/
-bin/
-bin-int/
+# Binaries
+**/bin/
+bin_int/
 
-# Files
-*.user
+# Visual Studio files and folder
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
