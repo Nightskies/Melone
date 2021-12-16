@@ -7,11 +7,9 @@
 	int main(int argc, char** argv)
 	{
 		Melone::Log::init();
-		MELONE_CORE_INFO("GLFW init success!");
 
 		auto app = Melone::createApp();
 		app->run();
-		delete app;
 	}
 
 #endif

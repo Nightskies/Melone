@@ -9,5 +9,5 @@ public:
 
 Melone::App* Melone::createApp(void)
 {
-	return new Sandbox();
+	return new Sandbox;
 }

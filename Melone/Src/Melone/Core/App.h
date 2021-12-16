@@ -2,12 +2,16 @@
 
 #include "Core.h"
 
+#include "Window.h"
+
 namespace Melone
 {
 	class App
 	{
+	private:
+		std::unique_ptr<Window> mWindow;
 	public:
-		App(void) = default;
+		App(void);
 		virtual ~App(void) = default;
 	
 		void run(void);

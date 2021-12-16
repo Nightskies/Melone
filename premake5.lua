@@ -91,6 +91,7 @@ project "Sandbox"
 	{
 		"Melone/Vendor/spdlog/include",
 		"Melone/Src",
+		"Melone/Vendor"
 	}
 
 	links
