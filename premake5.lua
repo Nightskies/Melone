@@ -18,6 +18,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Melone/Vendor/GLFW/include"
+IncludeDir["glm"] = "Melone/Vendor/glm"
 
 group "Dependencies"
 	include "Melone/Vendor/GLFW"
@@ -44,7 +45,8 @@ project "Melone"
 	{
 		"%{prj.name}/Src",
 		"%{prj.name}/Vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.glm}"
 	}
 
 	links 
@@ -91,7 +93,8 @@ project "Sandbox"
 	{
 		"Melone/Vendor/spdlog/include",
 		"Melone/Src",
-		"Melone/Vendor"
+		"Melone/Vendor",
+		"%{IncludeDir.glm}"
 	}
 
 	links
