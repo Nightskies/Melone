@@ -1,9 +1,9 @@
 #include "Window.h"
 
 #include "Log.h"
-#include "Platform/OpenGL/OpenGLContext.h"
 
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace Melone
 {

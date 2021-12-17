@@ -19,9 +19,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "Melone/Vendor/GLFW/include"
 IncludeDir["glm"] = "Melone/Vendor/glm"
+IncludeDir["Glad"] = "Melone/Vendor/Glad/include"
 
 group "Dependencies"
 	include "Melone/Vendor/GLFW"
+	include "Melone/Vendor/Glad"
 
 group ""
 
@@ -46,17 +48,24 @@ project "Melone"
 		"%{prj.name}/Src",
 		"%{prj.name}/Vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links 
 	{ 
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
 	filter "system:windows"
 		systemversion "latest"
+
+		defines
+		{
+			"GLFW_INCLUDE_NONE"
+		}
 
 	filter "configurations:Debug"
 		defines "MELONE_DEBUG"
