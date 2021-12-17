@@ -20,10 +20,12 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Melone/Vendor/GLFW/include"
 IncludeDir["glm"] = "Melone/Vendor/glm"
 IncludeDir["Glad"] = "Melone/Vendor/Glad/include"
+IncludeDir["ImGui"] = "Melone/Vendor/imgui"
 
 group "Dependencies"
 	include "Melone/Vendor/GLFW"
 	include "Melone/Vendor/Glad"
+	include "Melone/Vendor/imgui"
 
 group ""
 
@@ -41,6 +43,8 @@ project "Melone"
 	{
 		"%{prj.name}/Src/**.h",
 		"%{prj.name}/Src/**.cpp",
+		"%{prj.name}/Vendor/glm/glm/**.hpp",
+		"%{prj.name}/Vendor/glm/glm/**.inl"
 	}
 
 	includedirs
@@ -49,13 +53,15 @@ project "Melone"
 		"%{prj.name}/Vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links 
 	{ 
 		"GLFW",
 		"Glad",
+		"ImGui",
 		"opengl32.lib"
 	}
 

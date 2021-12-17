@@ -28,6 +28,10 @@ namespace Melone
 		void shutdown(void);
 		void update(void);
 
+		// Temporary
+		void initImGui(void);
+		void updateImGui(void);
+
 		void setViewport(int32_t width, int32_t height);
 		void setClearColor(float r = 1.0f, float g = 0.0f, float b = 1.0f, float a = 1.0f);
 	};

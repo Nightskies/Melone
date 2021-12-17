@@ -7,3 +7,6 @@
 [submodule "Melone/Vendor/glm"]
 	path = Melone/Vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "Melone/Vendor/imgui"]
+	path = Melone/Vendor/imgui
+	url = https://github.com/TheCherno/imgui
