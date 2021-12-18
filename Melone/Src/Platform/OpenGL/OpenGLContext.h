@@ -11,7 +11,7 @@ namespace Melone
 		GLFWwindow* mWindow;
 	public:
 		OpenGLContext(GLFWwindow* window);
-		~OpenGLContext() = default;
+		~OpenGLContext(void) = default;
 
 		virtual void init(void) override;
 		virtual void swapBuffers(void) override;
