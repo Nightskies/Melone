@@ -29,16 +29,13 @@ namespace Melone
 		~Window() = default;
 
 		const std::pair<int32_t, int32_t>& getWinDimentions() const { return mWinDimensions; }
+		GLFWwindow* getNativeWindow(void) { return mWindow; }
 
 		void setWinDimentions(std::pair<int32_t, int32_t> winDimentions) { mWinDimensions = std::move(winDimentions); }
 		void setEventCallback(const EventCallback& callback) { mEventCallback = callback; }
 
 		void shutdown(void);
 		void update(void);
-
-		// Temporary
-		void initImGui(void);
-		void updateImGui(void);
 
 		void setViewport(const std::pair<int32_t, int32_t>& winDimentions);
 		void setClearColor(float r = 1.0f, float g = 0.0f, float b = 1.0f, float a = 1.0f);

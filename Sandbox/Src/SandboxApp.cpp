@@ -1,9 +1,13 @@
-#include <Melone.h>
+#include "../ExampleLayer.h"
 
 class Sandbox : public Melone::App
 {
 public:
-	Sandbox(void) = default;
+	Sandbox(void)
+	{
+		pushLayer(new ExampleLayer());
+	}
+
 	~Sandbox(void) = default;
 };
 

@@ -1,15 +1,24 @@
 #include "App.h"
 
 #include "Log.h"
+#include "Melone/ImGui/ImGuiLayer.h"
 
 namespace Melone
 {
 #define BIND_EVENT_FN(x) std::bind(&App::x, this, std::placeholders::_1)
 
+	App* App::sInstance;
+
 	App::App(void)
 	{
+		MELONE_CORE_ASSERT(!sInstance, "App already exists!");
+		sInstance = this;
+
 		mWindow = std::make_unique<Window>(800, 600);
 		mWindow->setEventCallback(BIND_EVENT_FN(onEvent));
+
+		mLayer = new ImGuiLayer();
+		pushOverlay(mLayer);
 	}
 
 	void App::run(void)
@@ -17,7 +26,10 @@ namespace Melone
 		while (mRunning)
 		{
 			if (!mMinimized)
-				mWindow->updateImGui();
+			{
+				for (auto layer : mLayerStack)
+					layer->onUpdate();
+			}
 			mWindow->update();
 		}
 	}
@@ -28,7 +40,8 @@ namespace Melone
 		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
 		dispatcher.dispatch<WindowResizeEvent>(BIND_EVENT_FN(onWindowResize));
 
-		MELONE_CORE_INFO("{0}", e.toString());
+		for (auto it = mLayerStack.end(); it != mLayerStack.begin();)
+			(*--it)->onEvent(e);
 	}
 
 	bool App::onWindowClose(WindowCloseEvent& e)
@@ -49,5 +62,17 @@ namespace Melone
 		mWindow->setViewport(e.getWinDimensions());
 
 		return false;
+	}
+
+	void App::pushLayer(Layer* layer)
+	{
+		mLayerStack.pushLayer(layer);
+		layer->onAttach();
+	}
+
+	void App::pushOverlay(Layer* layer)
+	{
+		mLayerStack.pushOverlay(layer);
+		layer->onAttach();
 	}
 }
