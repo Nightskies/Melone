@@ -2,10 +2,7 @@
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
-#include "Event.h"
-
-#include <string>
-#include <utility>
+#include "Melone/Events/Event.h"
 
 struct GLFWwindow;
 

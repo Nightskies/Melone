@@ -1,5 +1,5 @@
 #pragma once
-#include "Melone/Core/Event.h"
+#include "Event.h"
 
 namespace Melone
 {

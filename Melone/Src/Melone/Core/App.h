@@ -6,8 +6,6 @@
 #include "Melone/Events/WindowEvent.h"
 #include "Melone/ImGui/ImGuiLayer.h"
 
-#include <functional>
-
 namespace Melone
 {
 	class App
