@@ -2,8 +2,9 @@
 
 #include "Core.h"
 #include "Window.h"
-#include "Melone/Events/WindowEvent.h"
 #include "LayerStack.h"
+#include "Melone/Events/WindowEvent.h"
+#include "Melone/ImGui/ImGuiLayer.h"
 
 #include <functional>
 
@@ -19,6 +20,7 @@ namespace Melone
 
 		Layer* mLayer;
 		LayerStack mLayerStack;
+		ImGuiLayer* mImGuiLayer;
 		
 		static App* sInstance;
 	public:

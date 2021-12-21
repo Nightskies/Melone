@@ -19,6 +19,8 @@ namespace Melone
 
 		virtual void onAttach(void) override;
 		virtual void onDetach(void) override;
-		virtual void onUpdate(void) override;
+		
+		void begin(void);
+		void end(void);
 	};
 }

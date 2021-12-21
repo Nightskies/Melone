@@ -53,12 +53,15 @@ namespace Melone
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::onUpdate(void)
+	void ImGuiLayer::begin(void)
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+	}
 
+	void ImGuiLayer::end(void)
+	{
 		App& app = App::getInstance();
 
 		bool show_demo_window = true;

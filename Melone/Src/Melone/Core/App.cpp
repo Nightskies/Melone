@@ -17,8 +17,8 @@ namespace Melone
 		mWindow = std::make_unique<Window>(800, 600);
 		mWindow->setEventCallback(BIND_EVENT_FN(onEvent));
 
-		mLayer = new ImGuiLayer();
-		pushOverlay(mLayer);
+		mImGuiLayer = new ImGuiLayer();
+		pushOverlay(mImGuiLayer);
 	}
 
 	void App::run(void)
@@ -29,6 +29,11 @@ namespace Melone
 			{
 				for (auto layer : mLayerStack)
 					layer->onUpdate();
+
+				mImGuiLayer->begin();
+				for (auto layer : mLayerStack)
+					layer->onImGuiRender();
+				mImGuiLayer->end();
 			}
 			mWindow->update();
 		}
