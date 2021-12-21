@@ -14,6 +14,8 @@ namespace Melone
 		{}
 
 		~KeyEvent(void) = default;
+	public:
+		int getKeyCode(void) const { return mKeyCode; }
 	};
 
 	class KeyPressedEvent : public KeyEvent
@@ -42,8 +44,6 @@ namespace Melone
 
 		EVENT_CLASS_TYPE(KeyPressed);
 	};
-	// Init static repeatCount
-	int KeyPressedEvent::repeatCount;
 
 	class KeyReleasedEvent : public KeyEvent
 	{

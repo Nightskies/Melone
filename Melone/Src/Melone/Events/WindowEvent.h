@@ -8,16 +8,16 @@ namespace Melone
 	class WindowResizeEvent : public Event
 	{
 	private:
-		std::pair<int32_t, int32_t> mWinDimensions;
+		std::pair<int, int> mWinDimensions;
 	public:
-		WindowResizeEvent(int32_t newWidth, int32_t newHeight)
+		WindowResizeEvent(int newWidth, int newHeight)
 			:
 			mWinDimensions(newWidth, newHeight)
 		{}
 		
 		~WindowResizeEvent(void) = default;
 	public:
-		const std::pair<int32_t, int32_t> getWinDimensions(void) const { return mWinDimensions; }
+		const std::pair<int, int> getWinDimensions(void) const { return mWinDimensions; }
 
 		std::string toString(void) const
 		{

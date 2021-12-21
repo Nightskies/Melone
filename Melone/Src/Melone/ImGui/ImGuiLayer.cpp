@@ -11,6 +11,9 @@
 
 namespace Melone
 {
+	// Init static repeatCount
+	int KeyPressedEvent::repeatCount;
+
 	void ImGuiLayer::onAttach(void)
 	{
 		IMGUI_CHECKVERSION();

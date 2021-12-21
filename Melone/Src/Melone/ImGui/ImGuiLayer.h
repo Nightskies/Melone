@@ -2,6 +2,9 @@
 
 #include "Melone/Core/Layer.h"
 
+#include "Melone/Events/KeyEvent.h"
+#include "Melone/Events/MouseEvent.h"
+
 namespace Melone
 {
 	class ImGuiLayer: public Layer

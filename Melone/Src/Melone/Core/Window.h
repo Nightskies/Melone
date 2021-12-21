@@ -21,7 +21,7 @@ namespace Melone
 		EventCallback mEventCallback;
 
 		// Width and Height
-		std::pair<int32_t, int32_t> mWinDimensions;
+		std::pair<int, int> mWinDimensions;
 		std::string mTitle;
 	public:
 		Window(int32_t width = 1280, int32_t height = 720, std::string title = "Melone Engine");

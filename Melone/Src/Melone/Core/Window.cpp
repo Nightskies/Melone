@@ -16,7 +16,7 @@ namespace Melone
 		MELONE_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window::Window(int32_t width, int32_t height, std::string title)
+	Window::Window(int width, int height, std::string title)
 		:
 		mTitle(std::move(title)),
 		mWinDimensions(width, height)
@@ -142,7 +142,7 @@ namespace Melone
 		glfwPollEvents();
 	}
 
-	void Window::setViewport(const std::pair<int32_t, int32_t>& winDimentions)
+	void Window::setViewport(const std::pair<int, int>& winDimentions)
 	{
 		glViewport(0, 0, winDimentions.first, winDimentions.second);
 	}
