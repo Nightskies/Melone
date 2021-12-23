@@ -20,6 +20,8 @@ namespace Melone
 
 		mImGuiLayer = new ImGuiLayer();
 		pushOverlay(mImGuiLayer);
+
+		mShader = Shader::create("Assets/Shaders/FirstShader.glsl");
 	}
 
 	void App::run(void)

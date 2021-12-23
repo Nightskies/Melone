@@ -5,6 +5,7 @@
 #include "LayerStack.h"
 #include "Melone/Events/WindowEvent.h"
 #include "Melone/ImGui/ImGuiLayer.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Melone
 {
@@ -19,6 +20,8 @@ namespace Melone
 		Layer* mLayer;
 		LayerStack mLayerStack;
 		ImGuiLayer* mImGuiLayer;
+
+		std::shared_ptr<Shader> mShader;
 		
 		static App* sInstance;
 	public:
