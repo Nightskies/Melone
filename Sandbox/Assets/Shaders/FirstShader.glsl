@@ -2,9 +2,13 @@
 #version 330 core
 
 layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec2 aTexture;
+
+out vec2 vTexCoord;
 
 void main()
 {
+	vTexCoord = aTexture;
 	gl_Position = vec4(aPosition, 1.0f);
 };
 
@@ -13,7 +17,11 @@ void main()
 
 layout(location = 0) out vec4 color;
 
+in vec2 vTexCoord;
+
+uniform sampler2D uTexture;
+
 void main()
 {
-	color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	color = texture(uTexture, vTexCoord);
 };

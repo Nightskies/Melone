@@ -27,10 +27,10 @@ namespace Melone
 
 		/* Square */
 		float vertices[] = {
-			-0.5f, 0.5f, 0.0f,
-			0.5f, 0.5f, 0.0f,
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f
+			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+			0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			0.5f, -0.5f, 0.0f, 1.0f, 0.0f
 		};
 
 		unsigned int indices[] = {
@@ -38,10 +38,12 @@ namespace Melone
 			0, 2, 3
 		};
 
+		mTexture = Texture2D::create("Assets/Textures/FirstTexture.png");
 
 		mVBO.reset(VBO::create(vertices, sizeof(vertices)));
 		mVBO->setLayout({
-			{ ShaderDataType::Float3, "aPosition" }
+			{ ShaderDataType::Float3, "aPosition" },
+			{ ShaderDataType::Float2, "aTexCoord" }
 			});
 
 		mIBO.reset(IBO::create(indices, sizeof(indices) / sizeof(unsigned int)));
@@ -51,6 +53,8 @@ namespace Melone
 		mVAO->setIBO(mIBO);
 
 		mShader = Shader::create("Assets/Shaders/FirstShader.glsl");
+		mShader->setUniformInt("uTexture", 0);
+		mTexture->bind();
 	}
 
 	void App::run(void)

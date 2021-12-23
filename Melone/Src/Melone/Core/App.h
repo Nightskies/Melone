@@ -8,6 +8,7 @@
 
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "Platform/OpenGL/OpenGLArrayObj.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
 
 namespace Melone
 {
@@ -24,6 +25,7 @@ namespace Melone
 		ImGuiLayer* mImGuiLayer;
 
 		std::shared_ptr<Shader> mShader;
+		std::shared_ptr<Texture2D> mTexture;
 		std::shared_ptr<VAO> mVAO;
 		std::shared_ptr<VBO> mVBO;
 		std::shared_ptr<IBO> mIBO;
