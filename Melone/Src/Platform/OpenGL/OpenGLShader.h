@@ -6,17 +6,11 @@ typedef unsigned int GLenum;
 
 namespace Melone
 {
-	struct ShaderProgramSource
-	{
-		std::string VertexSource;
-		std::string FragmentSource;
-	};
-
 	class OpenGLShader : public Shader
 	{
 	private:
 		std::string mFilePath;
-		uint32_t mRendererID;
+		unsigned int mRendererID;
 		std::string mName;
 		mutable std::unordered_map<std::string, int> mUniformLocationCache;
 	public:

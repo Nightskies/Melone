@@ -31,6 +31,6 @@ namespace Melone
 		virtual void bind(void) const override;
 		virtual void unbind(void) const override;
 
-		virtual unsigned int getCount(void) const { return mCount; }
+		virtual unsigned int getCount(void) const override { return mCount; }
 	};
 }

@@ -138,7 +138,6 @@ namespace Melone
 
 	void Window::update(void)
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
 		mContext->swapBuffers();
 		glfwPollEvents();
 	}

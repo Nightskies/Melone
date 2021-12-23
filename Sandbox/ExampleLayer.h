@@ -30,6 +30,6 @@ public:
 		if (Melone::Input::isKeyPressed(MELONE_KEY_TAB))
 			MELONE_TRACE("Tab key is pressed (poll)!");
 
-		MELONE_TRACE("{0} layer update!", mName);
+		//MELONE_TRACE("{0} layer update!", mName);
 	}
 };

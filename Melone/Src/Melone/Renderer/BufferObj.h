@@ -108,6 +108,8 @@ namespace Melone
 		virtual void bind(void) const = 0;
 		virtual void unbind(void) const = 0;
 
+		virtual unsigned int getCount(void) const = 0;
+
 		static IBO* create(unsigned int* indices, unsigned int count);
 	};
 }
