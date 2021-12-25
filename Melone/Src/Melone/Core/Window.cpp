@@ -34,10 +34,8 @@ namespace Melone
 		mContext = new OpenGLContext(mWindow);
 		mContext->init();
 
-		setViewport(mWinDimensions);
-		setClearColor();
-
 		glfwSetWindowUserPointer(mWindow, this);
+		setVSync(true);
 
 		// Set GLFW Callbacks
 
@@ -142,13 +140,13 @@ namespace Melone
 		glfwPollEvents();
 	}
 
-	void Window::setViewport(const std::pair<int, int>& winDimentions)
+	void Window::setVSync(bool enabled)
 	{
-		glViewport(0, 0, winDimentions.first, winDimentions.second);
-	}
+		if (enabled)
+			glfwSwapInterval(1);
+		else
+			glfwSwapInterval(0);
 
-	void Window::setClearColor(float r, float g, float b, float a)
-	{
-		glClearColor(r, g, b, a);
+		mVSync = enabled;
 	}
 }

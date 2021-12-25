@@ -33,7 +33,7 @@ namespace Melone
 		static App* sInstance;
 	public:
 		App(void);
-		virtual ~App(void) = default;
+		virtual ~App(void);
 		App(const App&) = delete;
 		App& operator=(App&) = delete;
 

@@ -20,6 +20,7 @@ namespace Melone
 		// Width and Height
 		std::pair<int, int> mWinDimensions;
 		std::string mTitle;
+		bool mVSync;
 	public:
 		Window(int32_t width = 1280, int32_t height = 720, std::string title = "Melone Engine");
 
@@ -30,11 +31,9 @@ namespace Melone
 
 		void setWinDimentions(std::pair<int32_t, int32_t> winDimentions) { mWinDimensions = std::move(winDimentions); }
 		void setEventCallback(const EventCallback& callback) { mEventCallback = callback; }
+		void setVSync(bool enabled);
 
 		void shutdown(void);
 		void update(void);
-
-		void setViewport(const std::pair<int32_t, int32_t>& winDimentions);
-		void setClearColor(float r = 1.0f, float g = 0.0f, float b = 1.0f, float a = 1.0f);
 	};
 }

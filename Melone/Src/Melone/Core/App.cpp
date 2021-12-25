@@ -2,9 +2,9 @@
 #include "App.h"
 
 #include "Log.h"
-#include "Melone/ImGui/ImGuiLayer.h"
 
-#include "Platform/OpenGL/OpenGLBufferObj.h"
+#include "Melone/ImGui/ImGuiLayer.h"
+#include "Melone/Renderer/Renderer.h"
 
 #include <glad/glad.h>
 
@@ -19,8 +19,10 @@ namespace Melone
 		MELONE_CORE_ASSERT(!sInstance, "App already exists!");
 		sInstance = this;
 
-		mWindow = std::make_unique<Window>(800, 600);
+		mWindow = std::make_unique<Window>(1280, 720);
 		mWindow->setEventCallback(BIND_EVENT_FN(onEvent));
+
+		Renderer::init();
 
 		mImGuiLayer = new ImGuiLayer();
 		pushOverlay(mImGuiLayer);
@@ -54,7 +56,6 @@ namespace Melone
 
 		mShader = Shader::create("Assets/Shaders/FirstShader.glsl");
 		mShader->setUniformInt("uTexture", 0);
-		mTexture->bind();
 	}
 
 	void App::run(void)
@@ -63,11 +64,15 @@ namespace Melone
 		{
 			if (!mMinimized)
 			{
-				glClear(GL_COLOR_BUFFER_BIT);
+				RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+				RenderCommand::clear();
 
-				mShader->bind();
-				mVAO->bind();
-				glDrawElements(GL_TRIANGLES, mIBO->getCount(), GL_UNSIGNED_INT, nullptr);
+				Renderer::beginScene();
+
+				mTexture->bind();
+				Renderer::submit(mShader, mVAO);
+
+				Renderer::endScene();
 
 				for (auto layer : mLayerStack)
 					layer->onUpdate();
@@ -106,7 +111,7 @@ namespace Melone
 		}
 
 		mMinimized = false;
-		mWindow->setViewport(e.getWinDimensions());
+		Renderer::onWindowResize(e.getWinDimensions());
 
 		return false;
 	}
@@ -121,5 +126,10 @@ namespace Melone
 	{
 		mLayerStack.pushOverlay(layer);
 		layer->onAttach();
+	}
+
+	App::~App(void)
+	{
+		Renderer::shutdown();
 	}
 }

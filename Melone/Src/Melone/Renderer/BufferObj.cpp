@@ -1,6 +1,8 @@
 #include "mlpch.h"
 #include "BufferObj.h"
 
+#include "Renderer.h"
+
 #include "Platform/OpenGL/OpenGLBufferObj.h"
 
 namespace Melone
@@ -45,7 +47,7 @@ namespace Melone
 		}
 	}
 
-	VBOLayout::VBOLayout(const std::initializer_list<VBOElement> el)
+	VBOLayout::VBOLayout(std::initializer_list<VBOElement> el)
 		:
 		mElements(std::move(el))
 	{
@@ -67,11 +69,35 @@ namespace Melone
 
 	VBO* VBO::create(float* vertices, unsigned int size)
 	{
-		return new OpenGLVBO(vertices, size);
+		switch (Renderer::getAPI())
+		{
+			case RendererAPI::API::Undefined:
+				MELONE_CORE_ASSERT(false, "RendererAPI is undefined");
+				return nullptr;
+
+			case RendererAPI::API::OpenGL:
+				return new OpenGLVBO(vertices, size);
+
+			default:
+				MELONE_CORE_ASSERT(false, "Unknown renderer api");
+				return nullptr;
+		}
 	}
 
 	IBO* IBO::create(unsigned int* indices, unsigned int count)
 	{
-		return new OpenGLIBO(indices, count);
+		switch (Renderer::getAPI())
+		{
+			case RendererAPI::API::Undefined:
+				MELONE_CORE_ASSERT(false, "RendererAPI is undefined");
+				return nullptr;
+
+			case RendererAPI::API::OpenGL:
+				return new OpenGLIBO(indices, count);
+
+			default:
+				MELONE_CORE_ASSERT(false, "Unknown renderer api");
+				return nullptr;
+		}
 	}
 }

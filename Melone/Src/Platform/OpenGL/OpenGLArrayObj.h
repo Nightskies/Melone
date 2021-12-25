@@ -19,6 +19,8 @@ namespace Melone
 
 		virtual void addVBO(const std::shared_ptr<VBO>& VBO) override;
 		virtual void setIBO(const std::shared_ptr<IBO>& IBO) override;
+
+		virtual const std::shared_ptr<IBO>& getIBO(void) const override { return mIBO; }
 	};
 }
 

@@ -69,7 +69,7 @@ namespace Melone
 		VBOLayout(void) = default;
 		~VBOLayout(void) = default;
 
-		VBOLayout(const std::initializer_list<VBOElement> el);
+		VBOLayout(std::initializer_list<VBOElement> el);
 
 		const std::vector<VBOElement>& getElements(void) const { return mElements; }
 		unsigned int getStride(void) const { return mStride; }
