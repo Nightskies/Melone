@@ -10,4 +10,16 @@
 
 #include "Melone/ImGui/ImGuiLayer.h"
 
+#include "Melone/Core/Timestep.h"
+
+#include "Melone/Renderer/Renderer.h"
+#include "Melone/Renderer/RenderCommand.h"
+
+#include "Melone/Renderer/BufferObj.h"
+#include "Melone/Renderer/ArrayObj.h"
+#include "Melone/Renderer/Shader.h"
+#include "Melone/Renderer/Texture.h"
+
+#include "Melone/Renderer/OrthographicCamera.h"
+
 #include "Melone/Core/EntryPoint.h"

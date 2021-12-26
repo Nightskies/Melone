@@ -1,5 +1,6 @@
 #pragma once
 #include "Melone/Events/Event.h"
+#include "Melone/Core/Timestep.h"
 
 namespace Melone
 {
@@ -15,7 +16,7 @@ namespace Melone
 
 		virtual ~Layer(void) = default;
 
-		virtual void onUpdate(void) {};
+		virtual void onUpdate(Timestep ts) {};
 		virtual void onEvent(Event& e) {};
 		virtual void onAttach(void) {};
 		virtual void onImGuiRender() {}

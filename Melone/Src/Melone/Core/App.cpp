@@ -6,7 +6,7 @@
 #include "Melone/ImGui/ImGuiLayer.h"
 #include "Melone/Renderer/Renderer.h"
 
-#include <glad/glad.h>
+#include <glfw/glfw3.h>
 
 namespace Melone
 {
@@ -64,6 +64,10 @@ namespace Melone
 	{
 		while (mRunning)
 		{
+			float time = (float)glfwGetTime();
+			Timestep timestep = time - mLastFrameTime;
+			mLastFrameTime = time;
+
 			if (!mMinimized)
 			{
 				RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -80,7 +84,7 @@ namespace Melone
 				Renderer::endScene();
 
 				for (auto layer : mLayerStack)
-					layer->onUpdate();
+					layer->onUpdate(timestep);
 
 				mImGuiLayer->begin();
 				for (auto layer : mLayerStack)

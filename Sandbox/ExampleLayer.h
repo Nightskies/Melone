@@ -25,7 +25,7 @@ public:
 		}
 	}
 
-	void onUpdate(void) override
+	void onUpdate(Melone::Timestep ts) override
 	{
 		if (Melone::Input::isKeyPressed(MELONE_KEY_TAB))
 			MELONE_TRACE("Tab key is pressed (poll)!");

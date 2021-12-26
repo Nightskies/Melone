@@ -33,6 +33,8 @@ namespace Melone
 		std::shared_ptr<IBO> mIBO;
 
 		OrthographicCamera mCamera;
+
+		float mLastFrameTime = 0.0f;
 		
 		static App* sInstance;
 	public:
