@@ -1,5 +1,7 @@
 #include "ExampleLayer.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 ExampleLayer::ExampleLayer(void)
 	:
 	Layer("Example"),
@@ -32,8 +34,10 @@ ExampleLayer::ExampleLayer(void)
 	mVAO->addVBO(mVBO);
 	mVAO->setIBO(mIBO);
 
-	mShader = Melone::Shader::create("Assets/Shaders/FirstShader.glsl");
-	mShader->setUniformInt("uTexture", 0);
+	mSquareTextureShader = Melone::Shader::create("Assets/Shaders/FirstShader.glsl");
+	mSquareTextureShader->setUniformInt("uTexture", 0);
+
+	mSquareShader = Melone::Shader::create("Assets/Shaders/FlatColor.glsl");
 }
 
 void ExampleLayer::onEvent(Melone::Event& e)
@@ -76,8 +80,23 @@ void ExampleLayer::onUpdate(Melone::Timestep ts)
 
 	Melone::Renderer::beginScene(mCamera);
 
+	mSquareShader->bind();
+	mSquareShader->setUniformFloat3("uColor", mSquareColor);
+
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+	// tiles
+	for (int y = 0; y < 20; y++)
+	{
+		for (int x = 0; x < 20; x++)
+		{
+			glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+			Melone::Renderer::submit(mSquareShader, mVAO, transform);
+		}
+	}
+
 	mTexture->bind();
-	Melone::Renderer::submit(mShader, mVAO);
+	Melone::Renderer::submit(mSquareTextureShader, mVAO);
 
 	Melone::Renderer::endScene();
 }

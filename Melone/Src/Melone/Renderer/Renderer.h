@@ -27,7 +27,7 @@ namespace Melone
 		static void beginScene(OrthographicCamera& camera);
 		static void endScene(void);
 
-		static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VAO>& VAO);
+		static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VAO>& VAO, const glm::mat4& transform = glm::mat4(1.0f));
 
 		static const RendererAPI::API getAPI() { return RendererAPI::getAPI(); }
 	};

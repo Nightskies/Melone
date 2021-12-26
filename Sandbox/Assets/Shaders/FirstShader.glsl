@@ -7,11 +7,12 @@ layout(location = 1) in vec2 aTexture;
 out vec2 vTexCoord;
 
 uniform mat4 uViewProjection;
+uniform mat4 uTransform;
 
 void main()
 {
 	vTexCoord = aTexture;
-	gl_Position = uViewProjection * vec4(aPosition, 1.0f);	
+	gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0f);	
 };
 
 #type fragment

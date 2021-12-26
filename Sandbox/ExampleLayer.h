@@ -5,7 +5,8 @@
 class ExampleLayer: public Melone::Layer
 {
 private:
-	std::shared_ptr<Melone::Shader> mShader;
+	std::shared_ptr<Melone::Shader> mSquareShader;
+	std::shared_ptr<Melone::Shader> mSquareTextureShader;
 	std::shared_ptr<Melone::Texture2D> mTexture;
 	std::shared_ptr<Melone::VAO> mVAO;
 	std::shared_ptr<Melone::VBO> mVBO;
@@ -18,6 +19,8 @@ private:
 	float mCameraRotation = 0.0f;
 	float mCameraTranslationSpeed = 5.0f;
 	float mCameraRotationSpeed = 180.0f;
+
+	glm::vec3 mSquareColor = { 1.0f, 0.5f, 0.3f };
 public:
 	ExampleLayer(void);
 

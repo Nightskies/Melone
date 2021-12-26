@@ -27,10 +27,11 @@ namespace Melone
 
 	}
 
-	void Renderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VAO>& VAO)
+	void Renderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VAO>& VAO, const glm::mat4& transform)
 	{
 		shader->bind();
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("uViewProjection", mSceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("uTransform", transform);
 		VAO->bind();
 
 		RenderCommand::drawIndexed(VAO);
