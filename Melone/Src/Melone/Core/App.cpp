@@ -15,6 +15,8 @@ namespace Melone
 	App* App::sInstance;
 
 	App::App(void)
+		:
+		mCamera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		MELONE_CORE_ASSERT(!sInstance, "App already exists!");
 		sInstance = this;
@@ -67,7 +69,10 @@ namespace Melone
 				RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 				RenderCommand::clear();
 
-				Renderer::beginScene();
+				mCamera.setPosition({ 0.5f, 0.1f, 0.0f });
+				mCamera.setRotation(45.0f);
+
+				Renderer::beginScene(mCamera);
 
 				mTexture->bind();
 				Renderer::submit(mShader, mVAO);

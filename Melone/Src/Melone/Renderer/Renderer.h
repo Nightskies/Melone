@@ -1,12 +1,20 @@
 #pragma once
 
 #include "RenderCommand.h"
+#include "OrthographicCamera.h"
 #include "Shader.h"
 
 namespace Melone
 {
 	class Renderer
 	{
+	private:
+		struct SceneData
+		{
+			glm::mat4 ViewProjectionMatrix;
+		};
+
+		static SceneData* mSceneData;
 	public:
 		Renderer(void) = default;
 		~Renderer(void) = default;
@@ -16,7 +24,7 @@ namespace Melone
 
 		static void onWindowResize(const std::pair<unsigned int, unsigned int>& dimensions);
 
-		static void beginScene(void);
+		static void beginScene(OrthographicCamera& camera);
 		static void endScene(void);
 
 		static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VAO>& VAO);

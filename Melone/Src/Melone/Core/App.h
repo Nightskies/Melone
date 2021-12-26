@@ -3,8 +3,10 @@
 #include "Core.h"
 #include "Window.h"
 #include "LayerStack.h"
+
 #include "Melone/Events/WindowEvent.h"
 #include "Melone/ImGui/ImGuiLayer.h"
+#include "Melone/Renderer/OrthographicCamera.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "Platform/OpenGL/OpenGLArrayObj.h"
@@ -29,6 +31,8 @@ namespace Melone
 		std::shared_ptr<VAO> mVAO;
 		std::shared_ptr<VBO> mVBO;
 		std::shared_ptr<IBO> mIBO;
+
+		OrthographicCamera mCamera;
 		
 		static App* sInstance;
 	public:
