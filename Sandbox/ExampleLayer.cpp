@@ -1,6 +1,9 @@
 #include "ExampleLayer.h"
 
+#include "imgui/imgui.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 ExampleLayer::ExampleLayer(void)
 	:
@@ -79,4 +82,11 @@ void ExampleLayer::onUpdate(Melone::Timestep ts)
 	Melone::Renderer::submit(textureShader, mVAO);
 
 	Melone::Renderer::endScene();
+}
+
+void ExampleLayer::onImGuiRender(void)
+{
+	ImGui::Begin("Settings");
+	ImGui::ColorEdit3("Square Color", glm::value_ptr(mSquareColor));
+	ImGui::End();
 }

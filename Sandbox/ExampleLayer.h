@@ -17,8 +17,9 @@ private:
 	glm::vec3 mSquareColor = { 1.0f, 0.5f, 0.3f };
 public:
 	ExampleLayer(void);
+	~ExampleLayer(void) = default;
 
-	void onEvent(Melone::Event& e) override;
-
-	void onUpdate(Melone::Timestep ts) override;
+	virtual void onEvent(Melone::Event& e) override;
+	virtual void onUpdate(Melone::Timestep ts) override;
+	virtual void onImGuiRender(void) override;
 };

@@ -19,7 +19,7 @@ namespace Melone
 		virtual void onUpdate(Timestep ts) {};
 		virtual void onEvent(Event& e) {};
 		virtual void onAttach(void) {};
-		virtual void onImGuiRender() {}
+		virtual void onImGuiRender(void) {}
 		virtual void onDetach(void) {};
 
 		const std::string getName(void) const { return mName; }
