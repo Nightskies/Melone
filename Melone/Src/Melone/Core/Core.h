@@ -50,3 +50,5 @@
 	#define MELONE_ASSERT(x, ...)
 	#define MELONE_CORE_ASSERT(x, ...)
 #endif
+
+#define MELONE_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)

@@ -5,7 +5,7 @@
 ExampleLayer::ExampleLayer(void)
 	:
 	Layer("Example"),
-	mCamera(-1.6f, 1.6f, -0.9f, 0.9f)
+	mCameraController(1280.0f / 720.0f, true)
 {
 	/* Square */
 	float vertices[] = {
@@ -46,41 +46,17 @@ void ExampleLayer::onEvent(Melone::Event& e)
 {
 	MELONE_INFO("{0}", e.toString());
 
-	if (e.getEventType() == Melone::EventType::KeyPressed)
-	{
-		Melone::KeyPressedEvent& ev = static_cast<Melone::KeyPressedEvent&>(e);
-
-		if (ev.getKeyCode() == MELONE_KEY_TAB)
-			MELONE_TRACE("Tab key is pressed (event)!");
-
-		MELONE_TRACE("{0}", (char)ev.getKeyCode());
-	}
+	mCameraController.onEvent(e);
 }
 
 void ExampleLayer::onUpdate(Melone::Timestep ts)
 {
-	if (Melone::Input::isKeyPressed(MELONE_KEY_A))
-		mCameraPosition.x -= mCameraTranslationSpeed * ts;
-	else if (Melone::Input::isKeyPressed(MELONE_KEY_D))
-		mCameraPosition.x += mCameraTranslationSpeed * ts;
-
-	if (Melone::Input::isKeyPressed(MELONE_KEY_W))
-		mCameraPosition.y += mCameraTranslationSpeed * ts;
-	else if (Melone::Input::isKeyPressed(MELONE_KEY_S))
-		mCameraPosition.y -= mCameraTranslationSpeed * ts;
-
-	if (Melone::Input::isKeyPressed(MELONE_KEY_Q))
-		mCameraRotation += mCameraRotationSpeed * ts;
-	else if (Melone::Input::isKeyPressed(MELONE_KEY_E))
-		mCameraRotation -= mCameraRotationSpeed * ts;
-
-	mCamera.setRotation(mCameraRotation);
-	mCamera.setPosition(mCameraPosition);
+	mCameraController.onUpdate(ts);
 
 	Melone::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Melone::RenderCommand::clear();
 
-	Melone::Renderer::beginScene(mCamera);
+	Melone::Renderer::beginScene(mCameraController.getCamera());
 
 	mSquareShader->bind();
 	mSquareShader->setUniformFloat3("uColor", mSquareColor);

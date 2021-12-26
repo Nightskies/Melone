@@ -12,13 +12,7 @@ private:
 	std::shared_ptr<Melone::VBO> mVBO;
 	std::shared_ptr<Melone::IBO> mIBO;
 
-	Melone::OrthographicCamera mCamera;
-
-	glm::vec3 mCameraPosition = { 0.0f, 0.0f, 0.0f };
-
-	float mCameraRotation = 0.0f;
-	float mCameraTranslationSpeed = 5.0f;
-	float mCameraRotationSpeed = 180.0f;
+	Melone::OrthographicCameraController mCameraController;
 
 	glm::vec3 mSquareColor = { 1.0f, 0.5f, 0.3f };
 public:

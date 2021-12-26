@@ -41,6 +41,9 @@ namespace Melone
 
 		~MouseScrolledEvent(void) = default;
 
+		float getXOffset(void) const { return mXOffset; }
+		float getYOffset(void) const { return mYOffset; }
+
 		std::string toString(void) const
 		{
 			std::stringstream ss;

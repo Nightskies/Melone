@@ -16,7 +16,7 @@ namespace Melone
 		{}
 		
 		~WindowResizeEvent(void) = default;
-	public:
+
 		const std::pair<int, int> getWinDimensions(void) const { return mWinDimensions; }
 
 		std::string toString(void) const
