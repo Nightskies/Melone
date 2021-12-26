@@ -4,32 +4,24 @@
 
 class ExampleLayer: public Melone::Layer
 {
+private:
+	std::shared_ptr<Melone::Shader> mShader;
+	std::shared_ptr<Melone::Texture2D> mTexture;
+	std::shared_ptr<Melone::VAO> mVAO;
+	std::shared_ptr<Melone::VBO> mVBO;
+	std::shared_ptr<Melone::IBO> mIBO;
+
+	Melone::OrthographicCamera mCamera;
+
+	glm::vec3 mCameraPosition = { 0.0f, 0.0f, 0.0f };
+
+	float mCameraRotation = 0.0f;
+	float mCameraTranslationSpeed = 5.0f;
+	float mCameraRotationSpeed = 180.0f;
 public:
-	ExampleLayer(void)
-		:
-		Layer("Example")
-	{}
+	ExampleLayer(void);
 
-	void onEvent(Melone::Event& e) override
-	{
-		MELONE_INFO("{0}", e.toString());
+	void onEvent(Melone::Event& e) override;
 
-		if (e.getEventType() == Melone::EventType::KeyPressed)
-		{
-			Melone::KeyPressedEvent& ev = static_cast<Melone::KeyPressedEvent&>(e);
-
-			if (ev.getKeyCode() == MELONE_KEY_TAB)
-				MELONE_TRACE("Tab key is pressed (event)!");
-
-			MELONE_TRACE("{0}", (char)ev.getKeyCode());
-		}
-	}
-
-	void onUpdate(Melone::Timestep ts) override
-	{
-		if (Melone::Input::isKeyPressed(MELONE_KEY_TAB))
-			MELONE_TRACE("Tab key is pressed (poll)!");
-
-		//MELONE_TRACE("{0} layer update!", mName);
-	}
+	void onUpdate(Melone::Timestep ts) override;
 };

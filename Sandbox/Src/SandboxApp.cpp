@@ -1,5 +1,7 @@
 #include "../ExampleLayer.h"
 
+#include <Melone/Core/EntryPoint.h>
+
 class Sandbox : public Melone::App
 {
 public:

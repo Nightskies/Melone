@@ -21,5 +21,3 @@
 #include "Melone/Renderer/Texture.h"
 
 #include "Melone/Renderer/OrthographicCamera.h"
-
-#include "Melone/Core/EntryPoint.h"

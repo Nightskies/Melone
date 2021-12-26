@@ -15,8 +15,6 @@ namespace Melone
 	App* App::sInstance;
 
 	App::App(void)
-		:
-		mCamera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		MELONE_CORE_ASSERT(!sInstance, "App already exists!");
 		sInstance = this;
@@ -28,36 +26,6 @@ namespace Melone
 
 		mImGuiLayer = new ImGuiLayer();
 		pushOverlay(mImGuiLayer);
-
-		/* Square */
-		float vertices[] = {
-			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-			0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			0.5f, -0.5f, 0.0f, 1.0f, 0.0f
-		};
-
-		unsigned int indices[] = {
-			0, 1, 3,
-			0, 2, 3
-		};
-
-		mTexture = Texture2D::create("Assets/Textures/FirstTexture.png");
-
-		mVBO.reset(VBO::create(vertices, sizeof(vertices)));
-		mVBO->setLayout({
-			{ ShaderDataType::Float3, "aPosition" },
-			{ ShaderDataType::Float2, "aTexCoord" }
-			});
-
-		mIBO.reset(IBO::create(indices, sizeof(indices) / sizeof(unsigned int)));
-
-		mVAO = VAO::create();
-		mVAO->addVBO(mVBO);
-		mVAO->setIBO(mIBO);
-
-		mShader = Shader::create("Assets/Shaders/FirstShader.glsl");
-		mShader->setUniformInt("uTexture", 0);
 	}
 
 	void App::run(void)
@@ -70,19 +38,6 @@ namespace Melone
 
 			if (!mMinimized)
 			{
-				RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-				RenderCommand::clear();
-
-				mCamera.setPosition({ 0.5f, 0.1f, 0.0f });
-				mCamera.setRotation(45.0f);
-
-				Renderer::beginScene(mCamera);
-
-				mTexture->bind();
-				Renderer::submit(mShader, mVAO);
-
-				Renderer::endScene();
-
 				for (auto layer : mLayerStack)
 					layer->onUpdate(timestep);
 
