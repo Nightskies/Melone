@@ -18,20 +18,20 @@ namespace Melone
 		return 0;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& file_path)
+	OpenGLShader::OpenGLShader(const std::string& filePath)
 		: 
-		mFilePath(file_path), 
+		mFilePath(filePath), 
 		mRendererID(0)
 	{
-		std::string src = readShaderFile(file_path);
+		std::string src = readShaderFile(filePath);
 		auto shaderSrc = getSourceShaders(src);
 		compileAndLinkShader(shaderSrc);
 
-		auto lastSlash = file_path.find_last_of("/\\");
+		auto lastSlash = filePath.find_last_of("/\\");
 		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-		auto lastDot = file_path.rfind('.');
-		auto count = lastDot == std::string::npos ? file_path.size() - lastSlash : lastDot - lastSlash;
-		mName = file_path.substr(lastSlash, count);
+		auto lastDot = filePath.rfind('.');
+		auto count = lastDot == std::string::npos ? filePath.size() - lastSlash : lastDot - lastSlash;
+		mName = filePath.substr(lastSlash, count);
 	}
 
 	void OpenGLShader::bind(void) const

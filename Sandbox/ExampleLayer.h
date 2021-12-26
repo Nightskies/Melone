@@ -5,8 +5,8 @@
 class ExampleLayer: public Melone::Layer
 {
 private:
+	Melone::ShaderLibrary mShaderLibrary;
 	std::shared_ptr<Melone::Shader> mSquareShader;
-	std::shared_ptr<Melone::Shader> mSquareTextureShader;
 	std::shared_ptr<Melone::Texture2D> mTexture;
 	std::shared_ptr<Melone::VAO> mVAO;
 	std::shared_ptr<Melone::VBO> mVBO;

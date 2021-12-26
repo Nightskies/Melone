@@ -14,7 +14,7 @@ namespace Melone
 		std::string mName;
 		mutable std::unordered_map<std::string, int> mUniformLocationCache;
 	public:
-		OpenGLShader(const std::string& file_path);
+		OpenGLShader(const std::string& filePath);
 		~OpenGLShader(void);
 
 		virtual void bind(void) const override;

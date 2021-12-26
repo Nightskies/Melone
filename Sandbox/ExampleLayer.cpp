@@ -34,10 +34,12 @@ ExampleLayer::ExampleLayer(void)
 	mVAO->addVBO(mVBO);
 	mVAO->setIBO(mIBO);
 
-	mSquareTextureShader = Melone::Shader::create("Assets/Shaders/FirstShader.glsl");
-	mSquareTextureShader->setUniformInt("uTexture", 0);
+	auto textureShader = mShaderLibrary.load("Assets/Shaders/TextureShader.glsl");
 
 	mSquareShader = Melone::Shader::create("Assets/Shaders/FlatColor.glsl");
+
+	std::dynamic_pointer_cast<Melone::OpenGLShader>(textureShader)->bind();
+	std::dynamic_pointer_cast<Melone::OpenGLShader>(textureShader)->setUniformInt("uTexture", 0);
 }
 
 void ExampleLayer::onEvent(Melone::Event& e)
@@ -95,8 +97,10 @@ void ExampleLayer::onUpdate(Melone::Timestep ts)
 		}
 	}
 
+	auto textureShader = mShaderLibrary.get("TextureShader");
 	mTexture->bind();
-	Melone::Renderer::submit(mSquareTextureShader, mVAO);
+
+	Melone::Renderer::submit(textureShader, mVAO);
 
 	Melone::Renderer::endScene();
 }
