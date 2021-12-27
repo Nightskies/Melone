@@ -95,7 +95,7 @@ namespace Melone
 		virtual const VBOLayout& getLayout() const = 0;
 		virtual void setLayout(const VBOLayout& layout) = 0;
 
-		static VBO* create(float* vertices, unsigned int size);
+		static std::shared_ptr<VBO> create(float* vertices, unsigned int size);
 	};
 
 	// Index Buffer Object
@@ -110,6 +110,6 @@ namespace Melone
 
 		virtual unsigned int getCount(void) const = 0;
 
-		static IBO* create(unsigned int* indices, unsigned int count);
+		static std::shared_ptr<IBO> create(unsigned int* indices, unsigned int count);
 	};
 }

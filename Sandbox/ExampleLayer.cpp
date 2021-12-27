@@ -23,15 +23,15 @@ ExampleLayer::ExampleLayer(void)
 		0, 2, 3
 	};
 
-	mTexture = Melone::Texture2D::create("Assets/Textures/FirstTexture.png");
+	mTexture = Melone::Texture2D::create("Assets/Textures/Checkerboard.png");
 
-	mVBO.reset(Melone::VBO::create(vertices, sizeof(vertices)));
+	mVBO = Melone::VBO::create(vertices, sizeof(vertices));
 	mVBO->setLayout({
 		{ Melone::ShaderDataType::Float3, "aPosition" },
 		{ Melone::ShaderDataType::Float2, "aTexCoord" }
 		});
 
-	mIBO.reset(Melone::IBO::create(indices, sizeof(indices) / sizeof(unsigned int)));
+	mIBO = Melone::IBO::create(indices, sizeof(indices) / sizeof(unsigned int));
 
 	mVAO = Melone::VAO::create();
 	mVAO->addVBO(mVBO);

@@ -67,7 +67,7 @@ namespace Melone
 		}
 	}
 
-	VBO* VBO::create(float* vertices, unsigned int size)
+	std::shared_ptr<VBO> VBO::create(float* vertices, unsigned int size)
 	{
 		switch (Renderer::getAPI())
 		{
@@ -76,7 +76,7 @@ namespace Melone
 				return nullptr;
 
 			case RendererAPI::API::OpenGL:
-				return new OpenGLVBO(vertices, size);
+				return std::make_shared<OpenGLVBO>(vertices, size);
 
 			default:
 				MELONE_CORE_ASSERT(false, "Unknown renderer api");
@@ -84,7 +84,7 @@ namespace Melone
 		}
 	}
 
-	IBO* IBO::create(unsigned int* indices, unsigned int count)
+	std::shared_ptr<IBO> IBO::create(unsigned int* indices, unsigned int count)
 	{
 		switch (Renderer::getAPI())
 		{
@@ -93,7 +93,7 @@ namespace Melone
 				return nullptr;
 
 			case RendererAPI::API::OpenGL:
-				return new OpenGLIBO(indices, count);
+				return std::make_shared<OpenGLIBO>(indices, count);
 
 			default:
 				MELONE_CORE_ASSERT(false, "Unknown renderer api");

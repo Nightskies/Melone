@@ -1,5 +1,6 @@
 #include "mlpch.h"
 #include "Renderer.h"
+#include "Renderer2D.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -10,6 +11,7 @@ namespace Melone
 	void Renderer::init(void)
 	{
 		RenderCommand::init();
+		Renderer2D::init();
 	}
 
 	void Renderer::onWindowResize(const std::pair<unsigned int, unsigned int>& dimensions)

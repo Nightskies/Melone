@@ -16,14 +16,14 @@ namespace Melone
 	void OrthographicCameraController::onUpdate(Timestep ts)
 	{
 		if (Input::isKeyPressed(MELONE_KEY_A))
-			m_CameraPosition.x -= mCameraTranslationSpeed * ts;
+			mCameraPosition.x -= mCameraTranslationSpeed * ts;
 		else if (Input::isKeyPressed(MELONE_KEY_D))
-			m_CameraPosition.x += mCameraTranslationSpeed * ts;
+			mCameraPosition.x += mCameraTranslationSpeed * ts;
 
 		if (Input::isKeyPressed(MELONE_KEY_W))
-			m_CameraPosition.y += mCameraTranslationSpeed * ts;
+			mCameraPosition.y += mCameraTranslationSpeed * ts;
 		else if (Input::isKeyPressed(MELONE_KEY_S))
-			m_CameraPosition.y -= mCameraTranslationSpeed * ts;
+			mCameraPosition.y -= mCameraTranslationSpeed * ts;
 
 		if (mRotation)
 		{
@@ -35,7 +35,7 @@ namespace Melone
 			mCamera.setRotation(mCameraRotation);
 		}
 
-		mCamera.setPosition(m_CameraPosition);
+		mCamera.setPosition(mCameraPosition);
 
 		mCameraTranslationSpeed = mZoomLevel;
 	}

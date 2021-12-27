@@ -13,6 +13,7 @@
 #include "Melone/Core/Timestep.h"
 
 #include "Melone/Renderer/Renderer.h"
+#include "Melone/Renderer/Renderer2D.h"
 #include "Melone/Renderer/RenderCommand.h"
 
 #include "Melone/Renderer/BufferObj.h"

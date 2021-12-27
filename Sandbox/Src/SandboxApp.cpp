@@ -1,5 +1,7 @@
 #include "../ExampleLayer.h"
 
+#include "Sandbox2D.h"
+
 #include <Melone/Core/EntryPoint.h>
 
 class Sandbox : public Melone::App
@@ -7,7 +9,7 @@ class Sandbox : public Melone::App
 public:
 	Sandbox(void)
 	{
-		pushLayer(new ExampleLayer());
+		pushLayer(new Sandbox2D());
 	}
 
 	~Sandbox(void) = default;
