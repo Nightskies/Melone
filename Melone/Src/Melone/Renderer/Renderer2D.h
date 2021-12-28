@@ -28,6 +28,21 @@ namespace Melone
 		static void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color);
 		static void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+
+		// Stats info
+		struct Stats
+		{
+			unsigned int DrawCalls = 0;
+			unsigned int QuadCount = 0;
+
+			unsigned int getTotalVertexCount(void) { return QuadCount * 4; }
+			unsigned int getTotalIndexCount(void) { return QuadCount * 6; }
+		};
+
+		static void resetStats(void);
+		static Stats getStats(void);
+	private:
+		static void flushAndReset(void);
 	};
 }
 

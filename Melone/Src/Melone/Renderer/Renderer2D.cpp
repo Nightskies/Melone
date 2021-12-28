@@ -21,9 +21,9 @@ namespace Melone
 
 	struct Renderer2DStash
 	{
-		const unsigned int MaxQuads = 10000;
-		const unsigned int MaxVertices = MaxQuads * 4;
-		const unsigned int MaxIndices = MaxQuads * 6;
+		static const unsigned int MaxQuads = 10000;
+		static const unsigned int MaxVertices = MaxQuads * 4;
+		static const unsigned int MaxIndices = MaxQuads * 6;
 		static const unsigned int MaxTextureSlots = 32;
 
 		std::shared_ptr<VAO> QuadVAO;
@@ -39,6 +39,8 @@ namespace Melone
 		unsigned int TextureSlotIndex = 1;
 
 		glm::vec4 QuadVertexPositions[4];
+
+		Renderer2D::Stats Info;
 	};
 
 	static Renderer2DStash sData;
@@ -124,6 +126,17 @@ namespace Melone
 			sData.TextureSlots[i]->bind(i);
 
 		RenderCommand::drawIndexed(sData.QuadVAO, sData.QuadIndexCount);
+		sData.Info.DrawCalls++;
+	}
+
+	void Renderer2D::flushAndReset(void)
+	{
+		endScene();
+
+		sData.QuadIndexCount = 0;
+		sData.QuadVBOPtr = sData.QuadVBOBase;
+
+		sData.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -141,6 +154,9 @@ namespace Melone
 		const float textureIndex = 0.0f; // White Texture
 		const float tilingFactor = 1.0f;
 
+		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
+			flushAndReset();
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
@@ -173,11 +189,15 @@ namespace Melone
 		sData.QuadVBOPtr++;
 
 		sData.QuadIndexCount += 6;
+		sData.Info.QuadCount++;
 	}
 
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
+			flushAndReset();
 
 		float textureIndex = 0.0f;
 		for (unsigned int i = 1; i < sData.TextureSlotIndex; i++)
@@ -228,6 +248,7 @@ namespace Melone
 		sData.QuadVBOPtr++;
 
 		sData.QuadIndexCount += 6;
+		sData.Info.QuadCount++;
 	}
 
 	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
@@ -240,6 +261,9 @@ namespace Melone
 		const float textureIndex = 0.0f; // White Texture
 		const float tilingFactor = 1.0f;
 
+		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
+			flushAndReset();
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
@@ -273,6 +297,7 @@ namespace Melone
 		sData.QuadVBOPtr++;
 
 		sData.QuadIndexCount += 6;
+		sData.Info.QuadCount++;
 	}
 
 	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
@@ -283,6 +308,9 @@ namespace Melone
 	void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
+			flushAndReset();
 
 		float textureIndex = 0.0f;
 		for (unsigned int i = 1; i < sData.TextureSlotIndex; i++)
@@ -334,6 +362,17 @@ namespace Melone
 		sData.QuadVBOPtr++;
 
 		sData.QuadIndexCount += 6;
+		sData.Info.QuadCount++;
+	}
+
+	void Renderer2D::resetStats(void)
+	{
+		memset(&sData.Info, 0, sizeof(Stats));
+	}
+
+	Renderer2D::Stats Renderer2D::getStats(void)
+	{
+		return sData.Info;
 	}
 
 	void Renderer2D::shutdown(void)
