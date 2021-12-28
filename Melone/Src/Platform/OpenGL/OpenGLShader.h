@@ -23,6 +23,7 @@ namespace Melone
 		virtual const std::string& getName(void) const override { return mName; }
 
 		void setUniformInt(const std::string& name, int value) override;
+		void setUniformIntArray(const std::string& name, int* values, unsigned int count) override;
 
 		void setUniformFloat(const std::string& name, const float value) override;
 		void setUniformFloat2(const std::string& name, const glm::vec2& value) override;

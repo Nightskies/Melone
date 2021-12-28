@@ -25,6 +25,11 @@ namespace Melone
 		virtual int getHeight(void) const override { return mHeight; };
 
 		virtual void setData(void* data, unsigned int size) override;
+
+		virtual bool operator==(const ITexture& other) const override
+		{
+			return mRendererID == static_cast<const OpenGLTexture2D&>(other).mRendererID;
+		}
 	};
 }
 

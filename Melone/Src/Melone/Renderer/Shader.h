@@ -16,6 +16,7 @@ namespace Melone
 		virtual void unbind(void) const = 0;
 
 		virtual void setUniformInt(const std::string& name, int value) = 0;
+		virtual void setUniformIntArray(const std::string& name, int* value, unsigned int count) = 0;
 
 		virtual void setUniformFloat(const std::string& name, const float value) = 0;
 		virtual void setUniformFloat2(const std::string& name, const glm::vec2& value) = 0;

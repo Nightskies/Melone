@@ -13,6 +13,8 @@ namespace Melone
 		virtual int getHeight(void) const = 0;
 
 		virtual void setData(void* data, unsigned int size) = 0;
+
+		virtual bool operator==(const ITexture& other) const = 0;
 	};
 
 	class Texture2D : public ITexture

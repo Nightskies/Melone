@@ -14,6 +14,9 @@ namespace Melone
 		glm::vec3 Position;
 		glm::vec4 Color;
 		glm::vec2 TexCoord;
+		
+		float TextureIndex;
+		float TilingFactor;
 	};
 
 	struct Renderer2DStash
@@ -21,6 +24,7 @@ namespace Melone
 		const unsigned int MaxQuads = 10000;
 		const unsigned int MaxVertices = MaxQuads * 4;
 		const unsigned int MaxIndices = MaxQuads * 6;
+		static const unsigned int MaxTextureSlots = 32;
 
 		std::shared_ptr<VAO> QuadVAO;
 		std::shared_ptr<VBO> QuadVBO;
@@ -30,6 +34,9 @@ namespace Melone
 		unsigned int QuadIndexCount = 0;
 		QuadVertex* QuadVBOBase = nullptr;
 		QuadVertex* QuadVBOPtr = nullptr;
+
+		std::array<std::shared_ptr<Texture2D>, MaxTextureSlots> TextureSlots;
+		unsigned int TextureSlotIndex = 1;
 	};
 
 	static Renderer2DStash sData;
@@ -42,7 +49,9 @@ namespace Melone
 		sData.QuadVBO->setLayout({
 			{ ShaderDataType::Float3, "aPosition" },
 			{ ShaderDataType::Float4, "aColor" },
-			{ ShaderDataType::Float2, "aTexCoord" }
+			{ ShaderDataType::Float2, "aTexCoord" },
+			{ ShaderDataType::Float, "aTexIndex"},
+			{ ShaderDataType::Float, "aTilingFactor" }
 			});
 		sData.QuadVAO->addVBO(sData.QuadVBO);
 
@@ -72,14 +81,15 @@ namespace Melone
 		unsigned int whiteTextureData = 0xffffffff;
 		sData.WhiteTexture->setData(&whiteTextureData, sizeof(unsigned int));
 
+		int samplers[sData.MaxTextureSlots];
+		for (unsigned int i = 0; i < sData.MaxTextureSlots; i++)
+			samplers[i] = i;
+
 		sData.TextureShader = Shader::create("Assets/Shaders/TextureShader.glsl");
 		sData.TextureShader->bind();
-		sData.TextureShader->setUniformInt("uTexture", 0);
-	}
+		sData.TextureShader->setUniformIntArray("uTextures", samplers, sData.MaxTextureSlots);
 
-	void Renderer2D::shutdown(void)
-	{
-
+		sData.TextureSlots[0] = sData.WhiteTexture;
 	}
 
 	void Renderer2D::beginScene(const OrthographicCamera& camera)
@@ -89,6 +99,8 @@ namespace Melone
 
 		sData.QuadIndexCount = 0;
 		sData.QuadVBOPtr = sData.QuadVBOBase;
+
+		sData.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::endScene(void)
@@ -101,6 +113,9 @@ namespace Melone
 
 	void Renderer2D::flush(void)
 	{
+		for (unsigned int i = 0; i < sData.TextureSlotIndex; i++)
+			sData.TextureSlots[i]->bind(i);
+
 		RenderCommand::drawIndexed(sData.QuadVAO, sData.QuadIndexCount);
 	}
 
@@ -116,24 +131,35 @@ namespace Melone
 
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		const float texIndex = 0.0f; // White Texture
+		const float tilingFactor = 1.0f;
+
 		sData.QuadVBOPtr->Position = position;
 		sData.QuadVBOPtr->Color = color;
 		sData.QuadVBOPtr->TexCoord = { 0.0f, 0.0f };
+		sData.QuadVBOPtr->TextureIndex = texIndex;
+		sData.QuadVBOPtr->TilingFactor = tilingFactor;
 		sData.QuadVBOPtr++;
 
 		sData.QuadVBOPtr->Position = { position.x + size.x, position.y, 0.0f };
 		sData.QuadVBOPtr->Color = color;
 		sData.QuadVBOPtr->TexCoord = { 1.0f, 0.0f };
+		sData.QuadVBOPtr->TextureIndex = texIndex;
+		sData.QuadVBOPtr->TilingFactor = tilingFactor;
 		sData.QuadVBOPtr++;
 
 		sData.QuadVBOPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
 		sData.QuadVBOPtr->Color = color;
 		sData.QuadVBOPtr->TexCoord = { 1.0f, 1.0f };
+		sData.QuadVBOPtr->TextureIndex = texIndex;
+		sData.QuadVBOPtr->TilingFactor = tilingFactor;
 		sData.QuadVBOPtr++;
 
 		sData.QuadVBOPtr->Position = { position.x, position.y + size.y, 0.0f };
 		sData.QuadVBOPtr->Color = color;
 		sData.QuadVBOPtr->TexCoord = { 0.0f, 1.0f };
+		sData.QuadVBOPtr->TextureIndex = texIndex;
+		sData.QuadVBOPtr->TilingFactor = tilingFactor;
 		sData.QuadVBOPtr++;
 
 		sData.QuadIndexCount += 6;
@@ -151,7 +177,57 @@ namespace Melone
 
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
-		sData.TextureShader->setUniformFloat4("uColor", tintColor);
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		float textureIndex = 0.0f;
+		for (unsigned int i = 1; i < sData.TextureSlotIndex; i++)
+		{
+			if (*sData.TextureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)sData.TextureSlotIndex;
+			sData.TextureSlots[sData.TextureSlotIndex] = texture;
+			sData.TextureSlotIndex++;
+		}
+
+		sData.QuadVBOPtr->Position = position;
+		sData.QuadVBOPtr->Color = color;
+		sData.QuadVBOPtr->TexCoord = { 0.0f, 0.0f };
+		sData.QuadVBOPtr->TextureIndex = textureIndex;
+		sData.QuadVBOPtr->TilingFactor = tilingFactor;
+		sData.QuadVBOPtr++;
+
+		sData.QuadVBOPtr->Position = { position.x + size.x, position.y, 0.0f };
+		sData.QuadVBOPtr->Color = color;
+		sData.QuadVBOPtr->TexCoord = { 1.0f, 0.0f };
+		sData.QuadVBOPtr->TextureIndex = textureIndex;
+		sData.QuadVBOPtr->TilingFactor = tilingFactor;
+		sData.QuadVBOPtr++;
+
+		sData.QuadVBOPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
+		sData.QuadVBOPtr->Color = color;
+		sData.QuadVBOPtr->TexCoord = { 1.0f, 1.0f };
+		sData.QuadVBOPtr->TextureIndex = textureIndex;
+		sData.QuadVBOPtr->TilingFactor = tilingFactor;
+		sData.QuadVBOPtr++;
+
+		sData.QuadVBOPtr->Position = { position.x, position.y + size.y, 0.0f };
+		sData.QuadVBOPtr->Color = color;
+		sData.QuadVBOPtr->TexCoord = { 0.0f, 1.0f };
+		sData.QuadVBOPtr->TextureIndex = textureIndex;
+		sData.QuadVBOPtr->TilingFactor = tilingFactor;
+		sData.QuadVBOPtr++;
+
+		sData.QuadIndexCount += 6;
+
+
+		/*sData.TextureShader->setUniformFloat4("uColor", tintColor);
 		sData.TextureShader->setUniformFloat("uTilingFactor", tilingFactor);
 		texture->bind();
 
@@ -160,7 +236,7 @@ namespace Melone
 		sData.TextureShader->setUniformMat4("uTransform", transform);
 
 		sData.QuadVAO->bind();
-		RenderCommand::drawIndexed(sData.QuadVAO);
+		RenderCommand::drawIndexed(sData.QuadVAO);*/
 	}
 
 	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
@@ -201,5 +277,9 @@ namespace Melone
 
 		sData.QuadVAO->bind();
 		RenderCommand::drawIndexed(sData.QuadVAO);
+	}
+
+	void Renderer2D::shutdown(void)
+	{
 	}
 }

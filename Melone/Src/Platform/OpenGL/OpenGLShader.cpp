@@ -172,6 +172,11 @@ namespace Melone
 		glUniform1i(getUniformLocation(name), value);
 	}
 
+	void OpenGLShader::setUniformIntArray(const std::string& name, int* values, unsigned int count)
+	{
+		glUniform1iv(getUniformLocation(name), count, values);
+	}
+
 	void OpenGLShader::setUniformFloat(const std::string& name, float value)
 	{
 		glUniform1f(getUniformLocation(name), value);
