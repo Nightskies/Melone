@@ -92,9 +92,12 @@ namespace Melone
 		virtual void bind(void) const = 0;
 		virtual void unbind(void) const = 0;
 
+		virtual void setData(const void* data, unsigned int size) = 0;
+
 		virtual const VBOLayout& getLayout() const = 0;
 		virtual void setLayout(const VBOLayout& layout) = 0;
 
+		static std::shared_ptr<VBO> create(unsigned int size);
 		static std::shared_ptr<VBO> create(float* vertices, unsigned int size);
 	};
 

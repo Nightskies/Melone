@@ -13,6 +13,7 @@ namespace Melone
 
 		static void init(void);
 		static void shutdown(void);
+		static void flush(void);
 
 		static void beginScene(const OrthographicCamera& camera);
 		static void endScene(void);

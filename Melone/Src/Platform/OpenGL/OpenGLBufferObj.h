@@ -10,13 +10,17 @@ namespace Melone
 		VBOLayout mLayout;
 	public:
 		OpenGLVBO(float* vertices, unsigned int size);
+		OpenGLVBO(unsigned int size);
 		~OpenGLVBO(void);
-	public:
+
 		virtual void bind(void) const override;
 		virtual void unbind(void) const override;
 
+		virtual void setData(const void* data, unsigned int size) override;
+
 		virtual const VBOLayout& getLayout(void) const override { return mLayout; }
 		virtual void setLayout(const VBOLayout& layout) override { mLayout = layout; }
+
 	};
 
 	class OpenGLIBO : public IBO
@@ -27,7 +31,7 @@ namespace Melone
 	public:
 		OpenGLIBO(unsigned int* indices, unsigned int count);
 		~OpenGLIBO(void);
-	public:
+
 		virtual void bind(void) const override;
 		virtual void unbind(void) const override;
 

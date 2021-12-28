@@ -14,6 +14,6 @@ namespace Melone
 		void clear(void) override;
 		void setClearColor(const glm::vec4& color) override;
 
-		void drawIndexed(const std::shared_ptr<VAO>& VAO) override;
+		void drawIndexed(const std::shared_ptr<VAO>& VAO, unsigned int indexCount = 0) override;
 	};
 }

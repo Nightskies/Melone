@@ -24,9 +24,9 @@ namespace Melone
 			sRendererAPI->setClearColor(color);
 		}
 
-		static void drawIndexed(const std::shared_ptr<VAO>& VAO)
+		static void drawIndexed(const std::shared_ptr<VAO>& VAO, unsigned int count = 0)
 		{
-			sRendererAPI->drawIndexed(VAO);
+			sRendererAPI->drawIndexed(VAO, count);
 		}
 
 		static void setViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)

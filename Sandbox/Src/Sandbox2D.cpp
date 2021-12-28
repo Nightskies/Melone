@@ -8,7 +8,7 @@
 Sandbox2D::Sandbox2D(void)
 	:
 	Layer("Sandbox2D"),
-	mCameraController(1280.0f / 720.0f)
+	mCameraController(1280.0f / 720.0f, true)
 {}
 
 void Sandbox2D::onAttach(void)
@@ -31,9 +31,10 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 
 	Melone::Renderer2D::beginScene(mCameraController.getCamera());
 
-	Melone::Renderer2D::drawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
+	//Melone::Renderer2D::drawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
+	//Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, mCheckerboardTexture);
+	Melone::Renderer2D::drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 	Melone::Renderer2D::drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-	Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, mCheckerboardTexture);
 
 	Melone::Renderer2D::endScene();
 }

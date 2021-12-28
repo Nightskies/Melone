@@ -28,9 +28,10 @@ namespace Melone
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRendererAPI::drawIndexed(const std::shared_ptr<VAO>& VAO)
+	void OpenGLRendererAPI::drawIndexed(const std::shared_ptr<VAO>& VAO, unsigned int indexCount)
 	{
-		glDrawElements(GL_TRIANGLES, VAO->getIBO()->getCount(), GL_UNSIGNED_INT, nullptr);
+		unsigned int count = indexCount ? VAO->getIBO()->getCount() : indexCount;
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

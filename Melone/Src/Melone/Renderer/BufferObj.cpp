@@ -67,6 +67,23 @@ namespace Melone
 		}
 	}
 
+	std::shared_ptr<VBO> VBO::create(unsigned int size)
+	{
+		switch (Renderer::getAPI())
+		{
+		case RendererAPI::API::Undefined:
+			MELONE_CORE_ASSERT(false, "RendererAPI is undefined");
+			return nullptr;
+
+		case RendererAPI::API::OpenGL:
+			return std::make_shared<OpenGLVBO>(size);
+
+		default:
+			MELONE_CORE_ASSERT(false, "Unknown renderer api");
+			return nullptr;
+		}
+	}
+
 	std::shared_ptr<VBO> VBO::create(float* vertices, unsigned int size)
 	{
 		switch (Renderer::getAPI())

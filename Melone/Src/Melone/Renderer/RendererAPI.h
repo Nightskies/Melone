@@ -24,7 +24,7 @@ namespace Melone
 		virtual void clear(void) = 0;
 		virtual void setClearColor(const glm::vec4& color) = 0;
 
-		virtual void drawIndexed(const std::shared_ptr<VAO>& VAO) = 0;
+		virtual void drawIndexed(const std::shared_ptr<VAO>& VAO, unsigned int indexCount = 0) = 0;
 
 		static API getAPI(void) { return sAPI; }
 	};
