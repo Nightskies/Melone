@@ -29,14 +29,16 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 	Melone::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Melone::RenderCommand::clear();
 
+	static float rotation = 0.0f;
+	rotation += ts * 50.0f;
+
 	Melone::Renderer2D::beginScene(mCameraController.getCamera());
 
-	//Melone::Renderer2D::drawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
-	//Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, mCheckerboardTexture);
+	Melone::Renderer2D::drawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, -45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
 	Melone::Renderer2D::drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 	Melone::Renderer2D::drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-	Melone::Renderer2D::drawQuad({ -5.0f, -5.0f, -0.1f }, { 10.0f, 10.0f }, mCheckerboardTexture, 10.0f);
-	Melone::Renderer2D::drawQuad({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, mCheckerboardTexture, 20.0f);
+	Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, mCheckerboardTexture, 10.0f);
+	Melone::Renderer2D::drawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, mCheckerboardTexture, 20.0f);
 
 	Melone::Renderer2D::endScene();
 }
