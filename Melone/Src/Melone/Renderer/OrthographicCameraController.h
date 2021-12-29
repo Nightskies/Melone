@@ -46,10 +46,12 @@ namespace Melone
 		const OrthographicCamera& getCamera(void) const { return mCamera; }
 
 		float getZoomLevel(void) const { return mZoomLevel; }
-		void setZoomLevel(float level) { mZoomLevel = level; }
+		void setZoomLevel(float level) { mZoomLevel = level; calculateView(); }
 
 		const OrthographicCameraBounds& getBounds(void) const { return mBounds; }
 	private:
+		void calculateView(void);
+
 		bool onMouseScrolled(MouseScrolledEvent& e);
 		bool onWindowResized(WindowResizeEvent& e);
 	};

@@ -5,6 +5,22 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+static const unsigned int sMapWidth = 22;
+static const char* sMapTiles =
+"WWWWWWWWWWWWWWWWWWWWWW"
+"WWWWWWDDDDDDDDDDWWWWWW"
+"WWWWDDDDDDDDDDDDDWWWWW"
+"WWWDDDDDDDDDDDDDDDWWWW"
+"WWWDDDDDDDDDDDDDDDWWWW"
+"WWWDDDWWWWDDDDDSDDWWWW"
+"WWWDDDWWWWDDDDDDDDWWWW"
+"WWWDDDDDDDDDDDDDDDWWWW"
+"WWWDDDDDDDDDDDDDDWWWWW"
+"WWWWWDDDDDDDDDDDWWWWWW"
+"WWWWWWDDDDDDDDDWWWWWWW"
+"WWWWWWWWDDDDDWWWWWWWWW"
+"WWWWWWWWWWWWWWWWWWWWWW";
+
 Sandbox2D::Sandbox2D(void)
 	:
 	Layer("Sandbox2D"),
@@ -17,8 +33,14 @@ void Sandbox2D::onAttach(void)
 	mSpriteSheet = Melone::Texture2D::create("Assets/Game/Textures/RPGpack_sheet_2X.png");
 
 	mTextureStairs = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 7, 6 }, { 128, 128 });
-	mTextureTree = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 2, 1 }, { 128, 128 }, { 1, 2 });
 	mTextureWindow = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 10, 2 }, { 128, 128 });
+	mTextureTree = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 2, 1 }, { 128, 128 }, { 1, 2 });
+
+	sTextureMap['D'] = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 6, 11 }, { 128, 128 });
+	sTextureMap['W'] = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 11, 11 }, { 128, 128 });
+
+	mMapWidth = sMapWidth;
+	mMapHeight = strlen(sMapTiles) / sMapWidth;
 
 	mParticle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	mParticle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
@@ -87,10 +109,28 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 	mParticleSystem.onUpdate(ts);
 	mParticleSystem.onRender(mCameraController.getCamera());
 
+	// Rendering sprites
 	Melone::Renderer2D::beginScene(mCameraController.getCamera());
-	Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, 0.5f }, { 1.0f, 1.0f }, mTextureStairs);
-	Melone::Renderer2D::drawQuad({ -2.0f, 0.0f, 0.5f }, { 1.0f, 2.0f }, mTextureTree);
-	Melone::Renderer2D::drawQuad({ 1.0f, 0.0f, 0.5f }, { 1.0f, 1.0f }, mTextureWindow);
+
+	for (size_t y = 0; y < mMapHeight; y++)
+	{
+		for (size_t x = 0; x < mMapWidth; x++)
+		{
+			char tileType = sMapTiles[x + y * mMapWidth];
+			std::shared_ptr<Melone::SubTexture2D> texture;
+
+			if (sTextureMap.find(tileType) != sTextureMap.end())
+				texture = sTextureMap[tileType];
+			else
+				texture = mTextureWindow;
+
+			Melone::Renderer2D::drawQuad({ x - mMapWidth / 2.0f, mMapHeight - y - mMapHeight / 2.0f, 0.5f }, { 1.0f, 1.0f }, texture);
+		}
+	}
+
+	//Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, 0.5f }, { 1.0f, 1.0f }, mTextureStairs);
+	//Melone::Renderer2D::drawQuad({ 1.0f, 0.0f, 0.5f }, { 1.0f, 1.0f }, mTextureWindow);
+	//Melone::Renderer2D::drawQuad({ -1.0f, 0.0f, 0.5f }, { 1.0f, 2.0f }, mTextureTree);
 	Melone::Renderer2D::endScene();
 }
 

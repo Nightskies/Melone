@@ -32,4 +32,8 @@ private:
 
 	ParticleProps mParticle;
 	ParticleSystem mParticleSystem;
+
+	unsigned int mMapWidth;
+	unsigned int mMapHeight;
+	std::unordered_map<char, std::shared_ptr<Melone::SubTexture2D>> sTextureMap;
 };
