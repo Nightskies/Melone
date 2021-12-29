@@ -14,6 +14,11 @@ Sandbox2D::Sandbox2D(void)
 void Sandbox2D::onAttach(void)
 {
 	mCheckerboardTexture = Melone::Texture2D::create("Assets/Textures/Checkerboard.png");
+	mSpriteSheet = Melone::Texture2D::create("Assets/Game/Textures/RPGpack_sheet_2X.png");
+
+	mTextureStairs = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 7, 6 }, { 128, 128 });
+	mTextureTree = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 2, 1 }, { 128, 128 }, { 1, 2 });
+	mTextureWindow = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 10, 2 }, { 128, 128 });
 
 	mParticle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	mParticle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
@@ -37,7 +42,7 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 	Melone::Renderer2D::resetStats();
 	Melone::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Melone::RenderCommand::clear();
-
+#if 0
 	static float rotation = 0.0f;
 	rotation += ts * 50.0f;
 
@@ -61,7 +66,7 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 		}
 	}
 	Melone::Renderer2D::endScene();
-
+#endif
 	if (Melone::Input::isMouseButtonPressed(MELONE_MOUSE_BUTTON_LEFT))
 	{
 		auto [x, y] = Melone::Input::getMousePosition();
@@ -81,6 +86,12 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 
 	mParticleSystem.onUpdate(ts);
 	mParticleSystem.onRender(mCameraController.getCamera());
+
+	Melone::Renderer2D::beginScene(mCameraController.getCamera());
+	Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, 0.5f }, { 1.0f, 1.0f }, mTextureStairs);
+	Melone::Renderer2D::drawQuad({ -2.0f, 0.0f, 0.5f }, { 1.0f, 2.0f }, mTextureTree);
+	Melone::Renderer2D::drawQuad({ 1.0f, 0.0f, 0.5f }, { 1.0f, 1.0f }, mTextureWindow);
+	Melone::Renderer2D::endScene();
 }
 
 void Sandbox2D::onImGuiRender(void)

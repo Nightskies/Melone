@@ -151,8 +151,10 @@ namespace Melone
 
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		const float textureIndex = 0.0f; // White Texture
-		const float tilingFactor = 1.0f;
+		constexpr float textureIndex = 0.0f; // White Texture
+		constexpr float tilingFactor = 1.0f;
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
 		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
 			flushAndReset();
@@ -160,41 +162,31 @@ namespace Melone
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[0];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 0.0f, 0.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
-
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[1];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 1.0f, 0.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
-
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[2];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 1.0f, 1.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
-
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[3];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 0.0f, 1.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[i];
+			sData.QuadVBOPtr->Color = color;
+			sData.QuadVBOPtr->TexCoord = textureCoords[i];
+			sData.QuadVBOPtr->TextureIndex = textureIndex;
+			sData.QuadVBOPtr->TilingFactor = tilingFactor;
+			sData.QuadVBOPtr++;
+		}
 
 		sData.QuadIndexCount += 6;
 		sData.Info.QuadCount++;
 	}
 
-	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
 	{
+		drawQuad({ position.x, position.y, 0.0f }, size, subTexture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		const glm::vec2* textureCoords = subTexture->getTextureCoords();
+		const std::shared_ptr<Texture2D> texture = subTexture->getTexture();
 
 		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
 			flushAndReset();
@@ -219,33 +211,58 @@ namespace Melone
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[0];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 0.0f, 0.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[i];
+			sData.QuadVBOPtr->Color = color;
+			sData.QuadVBOPtr->TexCoord = textureCoords[i];
+			sData.QuadVBOPtr->TextureIndex = textureIndex;
+			sData.QuadVBOPtr->TilingFactor = tilingFactor;
+			sData.QuadVBOPtr++;
+		}
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[1];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 1.0f, 0.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+		sData.QuadIndexCount += 6;
+		sData.Info.QuadCount++;
+	}
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[2];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 1.0f, 1.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[3];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 0.0f, 1.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
+			flushAndReset();
+
+		float textureIndex = 0.0f;
+		for (unsigned int i = 1; i < sData.TextureSlotIndex; i++)
+		{
+			if (*sData.TextureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)sData.TextureSlotIndex;
+			sData.TextureSlots[sData.TextureSlotIndex] = texture;
+			sData.TextureSlotIndex++;
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[i];
+			sData.QuadVBOPtr->Color = color;
+			sData.QuadVBOPtr->TexCoord = textureCoords[i];
+			sData.QuadVBOPtr->TextureIndex = textureIndex;
+			sData.QuadVBOPtr->TilingFactor = tilingFactor;
+			sData.QuadVBOPtr++;
+		}
 
 		sData.QuadIndexCount += 6;
 		sData.Info.QuadCount++;
@@ -258,8 +275,10 @@ namespace Melone
 
 	void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
-		const float textureIndex = 0.0f; // White Texture
-		const float tilingFactor = 1.0f;
+		constexpr float textureIndex = 0.0f; // White Texture
+		constexpr float tilingFactor = 1.0f;
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
 		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
 			flushAndReset();
@@ -268,33 +287,15 @@ namespace Melone
 			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[0];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 0.0f, 0.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
-
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[1];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 1.0f, 0.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
-
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[2];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 1.0f, 1.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
-
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[3];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 0.0f, 1.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[i];
+			sData.QuadVBOPtr->Color = color;
+			sData.QuadVBOPtr->TexCoord = textureCoords[i];
+			sData.QuadVBOPtr->TextureIndex = textureIndex;
+			sData.QuadVBOPtr->TilingFactor = tilingFactor;
+			sData.QuadVBOPtr++;
+		}
 
 		sData.QuadIndexCount += 6;
 		sData.Info.QuadCount++;
@@ -307,7 +308,9 @@ namespace Melone
 
 	void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
+		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
 		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
 			flushAndReset();
@@ -333,33 +336,65 @@ namespace Melone
 			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[0];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 0.0f, 0.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[i];
+			sData.QuadVBOPtr->Color = color;
+			sData.QuadVBOPtr->TexCoord = textureCoords[i];
+			sData.QuadVBOPtr->TextureIndex = textureIndex;
+			sData.QuadVBOPtr->TilingFactor = tilingFactor;
+			sData.QuadVBOPtr++;
+		}
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[1];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 1.0f, 0.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+		sData.QuadIndexCount += 6;
+		sData.Info.QuadCount++;
+	}
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[2];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 1.0f, 1.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		drawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, subTexture, tilingFactor, tintColor);
+	}
 
-		sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[3];
-		sData.QuadVBOPtr->Color = color;
-		sData.QuadVBOPtr->TexCoord = { 0.0f, 1.0f };
-		sData.QuadVBOPtr->TextureIndex = textureIndex;
-		sData.QuadVBOPtr->TilingFactor = tilingFactor;
-		sData.QuadVBOPtr++;
+	void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		const glm::vec2* textureCoords = subTexture->getTextureCoords();
+		const std::shared_ptr<Texture2D> texture = subTexture->getTexture();
+
+		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
+			flushAndReset();
+
+		float textureIndex = 0.0f;
+		for (unsigned int i = 1; i < sData.TextureSlotIndex; i++)
+		{
+			if (*sData.TextureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)sData.TextureSlotIndex;
+			sData.TextureSlots[sData.TextureSlotIndex] = texture;
+			sData.TextureSlotIndex++;
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[i];
+			sData.QuadVBOPtr->Color = color;
+			sData.QuadVBOPtr->TexCoord = textureCoords[i];
+			sData.QuadVBOPtr->TextureIndex = textureIndex;
+			sData.QuadVBOPtr->TilingFactor = tilingFactor;
+			sData.QuadVBOPtr++;
+		}
 
 		sData.QuadIndexCount += 6;
 		sData.Info.QuadCount++;

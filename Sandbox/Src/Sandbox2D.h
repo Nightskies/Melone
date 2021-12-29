@@ -22,6 +22,11 @@ private:
 	std::shared_ptr<Melone::VAO> mSquareVAO;
 	std::shared_ptr<Melone::Shader> mFlatColorShader;
 	std::shared_ptr<Melone::Texture2D> mCheckerboardTexture;
+	std::shared_ptr<Melone::Texture2D> mSpriteSheet;
+
+	std::shared_ptr<Melone::SubTexture2D> mTextureStairs;
+	std::shared_ptr<Melone::SubTexture2D> mTextureTree;
+	std::shared_ptr<Melone::SubTexture2D> mTextureWindow;
 
 	glm::vec4 mSquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
