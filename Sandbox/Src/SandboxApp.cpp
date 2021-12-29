@@ -1,4 +1,4 @@
-#include "../ExampleLayer.h"
+#include "ExampleLayer.h"
 
 #include "Sandbox2D.h"
 

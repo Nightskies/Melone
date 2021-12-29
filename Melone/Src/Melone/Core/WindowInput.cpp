@@ -19,7 +19,7 @@ namespace Melone
 	bool WindowInput::isMouseButtonPressedImpl(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(App::getInstance().getWindow().getNativeWindow());
-		auto state = glfwGetKey(window, button);
+		auto state = glfwGetMouseButton(window, button);
 
 		return state == GLFW_PRESS;
 	}
@@ -35,7 +35,7 @@ namespace Melone
 		return { (float)xPos, (float)yPos };
 	}
 
-	float WindowInput::getMouseXImpl()
+	float WindowInput::getMouseXImpl(void)
 	{
 		auto window = static_cast<GLFWwindow*>(App::getInstance().getWindow().getNativeWindow());
 		double xPos;
@@ -46,7 +46,7 @@ namespace Melone
 		return (float)xPos;
 	}
 
-	float WindowInput::getMouseYImpl()
+	float WindowInput::getMouseYImpl(void)
 	{
 		auto window = static_cast<GLFWwindow*>(App::getInstance().getWindow().getNativeWindow());
 		double xPos;

@@ -14,6 +14,14 @@ Sandbox2D::Sandbox2D(void)
 void Sandbox2D::onAttach(void)
 {
 	mCheckerboardTexture = Melone::Texture2D::create("Assets/Textures/Checkerboard.png");
+
+	mParticle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+	mParticle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+	mParticle.SizeBegin = 0.5f, mParticle.SizeVariation = 0.3f, mParticle.SizeEnd = 0.0f;
+	mParticle.LifeTime = 5.0f;
+	mParticle.Velocity = { 0.0f, 0.0f };
+	mParticle.VelocityVariation = { 3.0f, 1.0f };
+	mParticle.Position = { 0.0f, 0.0f };
 }
 
 void Sandbox2D::onDetach(void)
@@ -35,11 +43,11 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 
 	Melone::Renderer2D::beginScene(mCameraController.getCamera());
 
-	Melone::Renderer2D::drawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, -45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Melone::Renderer2D::drawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
 	Melone::Renderer2D::drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 	Melone::Renderer2D::drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
 	Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, mCheckerboardTexture, 10.0f);
-	Melone::Renderer2D::drawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, mCheckerboardTexture, 20.0f);
+	Melone::Renderer2D::drawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, glm::radians(rotation), mCheckerboardTexture, 20.0f);
 
 	Melone::Renderer2D::endScene();
 
@@ -53,6 +61,26 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 		}
 	}
 	Melone::Renderer2D::endScene();
+
+	if (Melone::Input::isMouseButtonPressed(MELONE_MOUSE_BUTTON_LEFT))
+	{
+		auto [x, y] = Melone::Input::getMousePosition();
+		auto [w, h] = Melone::App::getInstance().getWindow().getWinDimentions();
+
+		// bounds width and bounds height
+		auto [bw, bh] = mCameraController.getBounds().getCameraDimentions();
+		auto pos = mCameraController.getCamera().getPos();
+
+		x = (x / w) * bw - bw * 0.5f;
+		y = bh * 0.5f - (y / h) * bh;
+		mParticle.Position = { x + pos.x, y + pos.y };
+
+		for (int i = 0; i < 5; i++)
+			mParticleSystem.emit(mParticle);
+	}
+
+	mParticleSystem.onUpdate(ts);
+	mParticleSystem.onRender(mCameraController.getCamera());
 }
 
 void Sandbox2D::onImGuiRender(void)

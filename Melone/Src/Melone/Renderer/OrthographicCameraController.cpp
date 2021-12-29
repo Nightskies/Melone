@@ -9,6 +9,7 @@ namespace Melone
 	OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation)
 		:
 		mAspectRatio(aspectRatio),
+		mBounds({ -mAspectRatio * mZoomLevel, mAspectRatio * mZoomLevel, -mZoomLevel, mZoomLevel }),
 		mCamera(-mAspectRatio * mZoomLevel, mAspectRatio * mZoomLevel, -mZoomLevel, mZoomLevel),
 		mRotation(rotation)
 	{}
@@ -51,15 +52,16 @@ namespace Melone
 	{
 		mZoomLevel -= e.getYOffset() * 0.25f;
 		mZoomLevel = std::max(mZoomLevel, 0.25f);
-		mCamera.setProjection(-mAspectRatio * mZoomLevel, mAspectRatio * mZoomLevel, -mZoomLevel, mZoomLevel);
+		mBounds = { -mAspectRatio * mZoomLevel, mAspectRatio * mZoomLevel, -mZoomLevel, mZoomLevel };
+		mCamera.setProjection(mBounds.Left, mBounds.Right, mBounds.Bottom, mBounds.Top);
 		return false;
 	}
 
 	bool OrthographicCameraController::onWindowResized(WindowResizeEvent& e)
 	{
-		auto dimensions = e.getWinDimensions();
-		mAspectRatio = (float)dimensions.first / (float)dimensions.second; // width / height
-		mCamera.setProjection(-mAspectRatio * mZoomLevel, mAspectRatio * mZoomLevel, -mZoomLevel, mZoomLevel);
+		auto [w, h] = e.getWinDimensions();
+		mAspectRatio = (float)w / (float)h;
+		mCamera.setProjection(mBounds.Left, mBounds.Right, mBounds.Bottom, mBounds.Top);
 		return false;
 	}
 }

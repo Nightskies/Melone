@@ -1,6 +1,8 @@
 #pragma once
 
-#include <Melone.h>
+//#include <Melone.h>
+
+#include "ParticleSystem.h"
 
 class Sandbox2D : public Melone::Layer
 {
@@ -22,4 +24,7 @@ private:
 	std::shared_ptr<Melone::Texture2D> mCheckerboardTexture;
 
 	glm::vec4 mSquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
+
+	ParticleProps mParticle;
+	ParticleSystem mParticleSystem;
 };

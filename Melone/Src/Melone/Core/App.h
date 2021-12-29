@@ -35,8 +35,6 @@ namespace Melone
 		App(const App&) = delete;
 		App& operator=(App&) = delete;
 
-		const App& getApp() const { return *this; }
-
 		static App& getInstance(void) { return *sInstance; }
 		Window& getWindow(void) const { return *mWindow; }
 	
