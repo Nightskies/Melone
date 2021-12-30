@@ -92,6 +92,11 @@ namespace Melone
 		layer->onAttach();
 	}
 
+	void App::close(void)
+	{
+		mRunning = false;
+	}
+
 	App::~App(void)
 	{
 		Renderer::shutdown();

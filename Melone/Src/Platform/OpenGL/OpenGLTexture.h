@@ -21,8 +21,9 @@ namespace Melone
 	public:
 		virtual void bind(unsigned int slot = 0) const override;
 
-		virtual int getWidth(void) const override { return mWidth; };
-		virtual int getHeight(void) const override { return mHeight; };
+		virtual unsigned int getWidth(void) const override { return mWidth; };
+		virtual unsigned int getHeight(void) const override { return mHeight; };
+		virtual unsigned int getRendererID(void) const override { return mRendererID; }
 
 		virtual void setData(void* data, unsigned int size) override;
 

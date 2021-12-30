@@ -39,6 +39,7 @@ namespace Melone
 		Window& getWindow(void) const { return *mWindow; }
 	
 		void run(void);
+		void close(void);
 
 		void onEvent(Event& e);
 		bool onWindowClose(WindowCloseEvent& e);
