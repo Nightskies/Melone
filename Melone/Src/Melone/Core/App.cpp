@@ -57,7 +57,11 @@ namespace Melone
 		dispatcher.dispatch<WindowResizeEvent>(BIND_EVENT_FN(onWindowResize));
 
 		for (auto it = mLayerStack.end(); it != mLayerStack.begin();)
+		{
+			if (e.handled)
+				break;
 			(*--it)->onEvent(e);
+		}
 	}
 
 	bool App::onWindowClose(WindowCloseEvent& e)

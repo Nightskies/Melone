@@ -16,6 +16,8 @@ namespace Melone
 		~KeyEvent(void) = default;
 	public:
 		int getKeyCode(void) const { return mKeyCode; }
+
+		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	};
 
 	class KeyPressedEvent : public KeyEvent

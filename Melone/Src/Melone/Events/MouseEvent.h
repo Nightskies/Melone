@@ -25,6 +25,7 @@ namespace Melone
 		}
 
 		EVENT_CLASS_TYPE(MouseMoved)
+		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	};
 
 	class MouseScrolledEvent : public Event
@@ -52,12 +53,15 @@ namespace Melone
 		}
 
 		EVENT_CLASS_TYPE(MouseScrolled)
+		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	};
 
 	class MouseButtonEvent : public Event
 	{
 	protected:
 		int mButton;
+	public:
+		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
 		MouseButtonEvent(int button)
 			:

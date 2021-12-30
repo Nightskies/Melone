@@ -47,6 +47,16 @@ namespace Melone
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
+	void ImGuiLayer::onEvent(Event& e)
+	{
+		if (mBlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.handled |= e.isInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.handled |= e.isInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
+	}
+
 	void ImGuiLayer::onDetach(void)
 	{
 		ImGui_ImplOpenGL3_Shutdown();

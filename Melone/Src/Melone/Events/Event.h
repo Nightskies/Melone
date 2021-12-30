@@ -12,14 +12,34 @@ namespace Melone
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
+	enum EventCategory
+	{
+		None = 0,
+		EventCategoryApplication = BIT(0),
+		EventCategoryInput = BIT(1),
+		EventCategoryKeyboard = BIT(2),
+		EventCategoryMouse = BIT(3),
+		EventCategoryMouseButton = BIT(4)
+	};
+
+#define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags(void) const override { return category; }
+
 	class Event
 	{
+	public:
+		bool handled = false;
 	public:
 		virtual ~Event(void) = default;
 
 		virtual EventType getEventType(void) const = 0;
-		virtual const char* getName() const = 0;
+		virtual const char* getName(void) const = 0;
+		virtual int getCategoryFlags(void) const = 0;
 		virtual std::string toString(void) const { return getName(); }
+
+		bool isInCategory(EventCategory category)
+		{
+			return getCategoryFlags() & category;
+		}
 	};
 
 #define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return EventType::##type; }\
@@ -46,10 +66,15 @@ namespace Melone
 		{
 			if (mEvent.getEventType() == T::getStaticType())
 			{
-				func(*(static_cast<T*>(&mEvent)));
+				mEvent.handled = func(*(static_cast<T*>(&mEvent)));
 				return true;
 			}
 			return false;
+		}
+
+		friend std::ostream& operator<<(std::ostream& os, const Event& e)
+		{
+			return os << e.toString();
 		}
 	};
 }

@@ -38,6 +38,8 @@ namespace Melone
 
 		static App& getInstance(void) { return *sInstance; }
 		Window& getWindow(void) const { return *mWindow; }
+
+		ImGuiLayer* getImGuiLayer(void) { return mImGuiLayer; }
 	
 		void run(void);
 		void close(void);

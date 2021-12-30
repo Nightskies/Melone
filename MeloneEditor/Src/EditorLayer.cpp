@@ -27,7 +27,8 @@ namespace Melone
 	void EditorLayer::onUpdate(Timestep ts)
 	{
 		// Update
-		mCameraController.onUpdate(ts);
+		if (mViewportFocused)
+			mCameraController.onUpdate(ts);
 
 		// Render
 		Renderer2D::resetStats();
@@ -137,6 +138,11 @@ namespace Melone
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+
+		mViewportFocused = ImGui::IsWindowFocused();
+		mViewportHovered = ImGui::IsWindowHovered();
+		App::getInstance().getImGuiLayer()->blockEvents(!mViewportFocused || !mViewportHovered);
+
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		if (mViewportSize != *((glm::vec2*)&viewportPanelSize))
 		{

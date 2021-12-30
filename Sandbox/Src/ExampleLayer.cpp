@@ -47,7 +47,7 @@ ExampleLayer::ExampleLayer(void)
 
 void ExampleLayer::onEvent(Melone::Event& e)
 {
-	MELONE_INFO("{0}", e.toString());
+	MELONE_INFO("{0}", e);
 
 	mCameraController.onEvent(e);
 }
