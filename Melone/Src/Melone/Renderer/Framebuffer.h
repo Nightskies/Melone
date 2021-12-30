@@ -20,6 +20,8 @@ namespace Melone
 		virtual void bind(void) = 0;
 		virtual void unbind(void) = 0;
 
+		virtual void resize(unsigned int width, unsigned int height) = 0;
+
 		virtual unsigned int getColorAttachmentRendererID(void) const = 0;
 		virtual const FramebufferSpecification& getSpecification(void) const = 0;
 

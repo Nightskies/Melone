@@ -41,6 +41,7 @@ namespace Melone
 
 		void onUpdate(Timestep ts);
 		void onEvent(Event& e);
+		void onResize(float width, float height);
 
 		OrthographicCamera& getCamera(void) { return mCamera; }
 		const OrthographicCamera& getCamera(void) const { return mCamera; }

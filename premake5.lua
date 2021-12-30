@@ -1,6 +1,6 @@
 workspace "Melone"
 	architecture "x86_64"
-	startproject "Sandbox"
+	startproject "MeloneEditor"
 
 	configurations
 	{

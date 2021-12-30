@@ -15,13 +15,15 @@ namespace Melone
 		virtual void bind(void) override;
 		virtual void unbind(void) override;
 
+		virtual void resize(unsigned int width, unsigned int height) override;
+
 		virtual unsigned int getColorAttachmentRendererID(void) const override { return mColorAttachment; }
 
 		virtual const FramebufferSpecification& getSpecification(void) const override { return mSpecification; }
 	private:
-		unsigned int mRendererID;
-		unsigned int mColorAttachment;
-		unsigned int mDepthAttachment;
+		unsigned int mRendererID = 0;
+		unsigned int mColorAttachment = 0;
+		unsigned int mDepthAttachment = 0;
 		FramebufferSpecification mSpecification;
 	};
 }

@@ -48,6 +48,12 @@ namespace Melone
 		dispatcher.dispatch<WindowResizeEvent>(MELONE_BIND_EVENT_FN(OrthographicCameraController::onWindowResized));
 	}
 
+	void OrthographicCameraController::onResize(float width, float height)
+	{
+		mAspectRatio = width / height;
+		mCamera.setProjection(-mAspectRatio * mZoomLevel, mAspectRatio * mZoomLevel, -mZoomLevel, mZoomLevel);
+	}
+
 	void OrthographicCameraController::calculateView(void)
 	{
 		mBounds = { -mAspectRatio * mZoomLevel, mAspectRatio * mZoomLevel, -mZoomLevel, mZoomLevel };
@@ -65,8 +71,7 @@ namespace Melone
 	bool OrthographicCameraController::onWindowResized(WindowResizeEvent& e)
 	{
 		auto [w, h] = e.getWinDimensions();
-		mAspectRatio = (float)w / (float)h;
-		calculateView();
+		onResize((float)w, (float)h);
 		return false;
 	}
 }
