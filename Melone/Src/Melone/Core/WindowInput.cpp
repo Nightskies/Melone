@@ -1,14 +1,13 @@
 #include "mlpch.h"
-#include "WindowInput.h"
+#include "Melone/Core/Input.h"
+
 
 #include "Melone/Core/App.h"
 #include <GLFW/glfw3.h>
 
 namespace Melone
 {
-	Input* Input::sInstance = new WindowInput();
-
-	bool WindowInput::isKeyPressedImpl(int keyCode)
+	bool Input::isKeyPressed(int keyCode)
 	{
 		auto window = static_cast<GLFWwindow*>(App::getInstance().getWindow().getNativeWindow());
 		auto state = glfwGetKey(window, keyCode);
@@ -16,7 +15,7 @@ namespace Melone
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowInput::isMouseButtonPressedImpl(int button)
+	bool Input::isMouseButtonPressed(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(App::getInstance().getWindow().getNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
@@ -24,7 +23,7 @@ namespace Melone
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowInput::getMousePositionImpl()
+	std::pair<float, float> Input::getMousePosition(void)
 	{
 		auto window = static_cast<GLFWwindow*>(App::getInstance().getWindow().getNativeWindow());
 		double xPos;
@@ -35,7 +34,7 @@ namespace Melone
 		return { (float)xPos, (float)yPos };
 	}
 
-	float WindowInput::getMouseXImpl(void)
+	float Input::getMouseX(void)
 	{
 		auto window = static_cast<GLFWwindow*>(App::getInstance().getWindow().getNativeWindow());
 		double xPos;
@@ -46,7 +45,7 @@ namespace Melone
 		return (float)xPos;
 	}
 
-	float WindowInput::getMouseYImpl(void)
+	float Input::getMouseY(void)
 	{
 		auto window = static_cast<GLFWwindow*>(App::getInstance().getWindow().getNativeWindow());
 		double xPos;
