@@ -30,8 +30,9 @@ namespace Melone
 		
 		static App* sInstance;
 	public:
-		App(void);
+		App(const std::string& name = "Melone Engine App");
 		virtual ~App(void);
+
 		App(const App&) = delete;
 		App& operator=(App&) = delete;
 

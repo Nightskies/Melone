@@ -22,7 +22,7 @@ namespace Melone
 		std::string mTitle;
 		bool mVSync;
 	public:
-		Window(int32_t width = 1280, int32_t height = 720, std::string title = "Melone Engine");
+		Window(const std::string& title, int width = 1280, int height = 720);
 
 		~Window() = default;
 

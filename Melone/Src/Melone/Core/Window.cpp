@@ -17,9 +17,9 @@ namespace Melone
 		MELONE_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window::Window(int width, int height, std::string title)
+	Window::Window(const std::string& title, int width, int height)
 		:
-		mTitle(std::move(title)),
+		mTitle(title),
 		mWinDimensions(width, height)
 	{
 		int success = glfwInit();

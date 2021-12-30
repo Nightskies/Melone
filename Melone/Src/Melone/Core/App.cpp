@@ -14,12 +14,12 @@ namespace Melone
 
 	App* App::sInstance;
 
-	App::App(void)
+	App::App(const std::string& name)
 	{
 		MELONE_CORE_ASSERT(!sInstance, "App already exists!");
 		sInstance = this;
 
-		mWindow = std::make_unique<Window>(1280, 720);
+		mWindow = std::make_unique<Window>(name, 1280, 720);
 		mWindow->setEventCallback(BIND_EVENT_FN(onEvent));
 
 		Renderer::init();
