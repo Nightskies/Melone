@@ -30,6 +30,10 @@ Sandbox2D::Sandbox2D(void)
 void Sandbox2D::onAttach(void)
 {
 	mCheckerboardTexture = Melone::Texture2D::create("Assets/Textures/Checkerboard.png");
+	Melone::FramebufferSpecification fbSpec = { 1280, 720 };
+	mFramebuffer = Melone::Framebuffer::create(fbSpec);
+
+#if 0
 	mSpriteSheet = Melone::Texture2D::create("Assets/Game/Textures/RPGpack_sheet_2X.png");
 
 	mTextureStairs = Melone::SubTexture2D::createFromCoords(mSpriteSheet, { 7, 6 }, { 128, 128 });
@@ -49,6 +53,7 @@ void Sandbox2D::onAttach(void)
 	mParticle.Velocity = { 0.0f, 0.0f };
 	mParticle.VelocityVariation = { 3.0f, 1.0f };
 	mParticle.Position = { 0.0f, 0.0f };
+#endif
 }
 
 void Sandbox2D::onDetach(void)
@@ -62,6 +67,7 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 
 	// Render
 	Melone::Renderer2D::resetStats();
+	mFramebuffer->bind();
 	Melone::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Melone::RenderCommand::clear();
 
@@ -88,7 +94,9 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 		}
 	}
 	Melone::Renderer2D::endScene();
+	mFramebuffer->unbind();
 
+#if 0
 	if (Melone::Input::isMouseButtonPressed(MELONE_MOUSE_BUTTON_LEFT))
 	{
 		auto [x, y] = Melone::Input::getMousePosition();
@@ -109,7 +117,7 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 	mParticleSystem.onUpdate(ts);
 	mParticleSystem.onRender(mCameraController.getCamera());
 
-#if 0
+
 	// Rendering sprites
 	Melone::Renderer2D::beginScene(mCameraController.getCamera());
 
@@ -188,7 +196,7 @@ void Sandbox2D::onImGuiRender(void)
 
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::BeginMenu("File"))
+			if (ImGui::BeginMenu("FILE"))
 			{
 				// Disabling fullscreen would allow the window to be moved to the front of other windows, 
 				// which we can't undo at the moment without finer window depth/z control.
@@ -212,10 +220,27 @@ void Sandbox2D::onImGuiRender(void)
 
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(mSquareColor));
 
-		uint32_t textureID = mCheckerboardTexture->getRendererID();
-		ImGui::Image((void*)textureID, ImVec2{ 256.0f, 256.0f });
+		unsigned int textureID = mFramebuffer->getColorAttachmentRendererID();
+		ImGui::Image((void*)textureID, ImVec2{ 1280.0f, 720.0f });
 		ImGui::End();
 
+		ImGui::End();
+	}
+	else
+	{
+		ImGui::Begin("Settings");
+
+		auto stats = Melone::Renderer2D::getStats();
+		ImGui::Text("Renderer2D Stats:");
+		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+		ImGui::Text("Quads: %d", stats.QuadCount);
+		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
+		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(mSquareColor));
+
+		unsigned int textureID = mFramebuffer->getColorAttachmentRendererID();
+		ImGui::Image((void*)textureID, ImVec2{ 1280.0f, 720.0f });
 		ImGui::End();
 	}
 }

@@ -18,6 +18,7 @@
 
 #include "Melone/Renderer/BufferObj.h"
 #include "Melone/Renderer/ArrayObj.h"
+#include "Melone/Renderer/Framebuffer.h"
 #include "Melone/Renderer/Shader.h"
 #include "Melone/Renderer/SubTexture2D.h"
 #include "Melone/Renderer/Texture.h"
