@@ -144,7 +144,7 @@ namespace Melone
 		App::getInstance().getImGuiLayer()->blockEvents(!mViewportFocused || !mViewportHovered);
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (mViewportSize != *((glm::vec2*)&viewportPanelSize))
+		if (mViewportSize != *((glm::vec2*)&viewportPanelSize) && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
 		{
 			mFramebuffer->resize((unsigned int)viewportPanelSize.x, (unsigned int)viewportPanelSize.y);
 			mViewportSize = { viewportPanelSize.x, viewportPanelSize.y };

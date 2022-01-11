@@ -5,6 +5,7 @@
 
 namespace Melone 
 {
+	static const unsigned int sMaxFramebufferSize = 8192;
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
 		: 
@@ -56,6 +57,12 @@ namespace Melone
 
 	void OpenGLFramebuffer::resize(unsigned int width, unsigned int height)
 	{
+		if (width == 0 || height == 0 || width > sMaxFramebufferSize || height > sMaxFramebufferSize)
+		{
+			MELONE_CORE_WARN("Attempted to resize framebuffer to {0}, {1}", width, height);
+			return;
+		}
+
 		mSpecification.Width = width;
 		mSpecification.Height = height;
 
