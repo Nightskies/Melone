@@ -22,12 +22,12 @@ IncludeDir["glm"] = "Melone/Vendor/glm"
 IncludeDir["Glad"] = "Melone/Vendor/Glad/include"
 IncludeDir["ImGui"] = "Melone/Vendor/imgui"
 IncludeDir["stb_image"] = "Melone/Vendor/stb_image"
+IncludeDir["entt"] = "Melone/Vendor/entt/include"
 
 group "Dependencies"
 	include "Melone/Vendor/GLFW"
 	include "Melone/Vendor/Glad"
 	include "Melone/Vendor/imgui"
-
 group ""
 
 project "Melone"
@@ -49,8 +49,8 @@ project "Melone"
 		"%{prj.name}/Src/**.cpp",
 		"%{prj.name}/Vendor/glm/glm/**.hpp",
 		"%{prj.name}/Vendor/glm/glm/**.inl",
-		"%{prj.name}/vendor/stb_image/**.h",
-		"%{prj.name}/vendor/stb_image/**.cpp"
+		"%{prj.name}/Vendor/stb_image/**.h",
+		"%{prj.name}/Vendor/stb_image/**.cpp"
 	}
 
 	defines
@@ -66,7 +66,8 @@ project "Melone"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 
 	links 
@@ -168,7 +169,8 @@ project "MeloneEditor"
 		"Melone/Vendor/spdlog/include",
 		"Melone/Src",
 		"Melone/Vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
