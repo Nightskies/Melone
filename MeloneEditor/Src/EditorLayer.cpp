@@ -33,6 +33,35 @@ namespace Melone
 		mSecondCamera = mActiveScene->createEntity("Clip-Space Entity");
 		auto& cc = mSecondCamera.addComponent<CameraComponent>();
 		cc.Primary = false;
+
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate()
+			{
+			}
+
+			void OnDestroy()
+			{
+			}
+
+			void OnUpdate(Timestep ts)
+			{
+				auto& transform = getComponent<TransformComponent>().Transform;
+				float speed = 5.0f;
+
+				if (Input::isKeyPressed(MELONE_KEY_A))
+					transform[3][0] -= speed * ts;
+				if (Input::isKeyPressed(MELONE_KEY_D))
+					transform[3][0] += speed * ts;
+				if (Input::isKeyPressed(MELONE_KEY_W))
+					transform[3][1] += speed * ts;
+				if (Input::isKeyPressed(MELONE_KEY_S))
+					transform[3][1] -= speed * ts;
+			}
+		};
+
+		mCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
 	}
 
 	void EditorLayer::onDetach(void)

@@ -15,6 +15,7 @@
 #include "Melone/Scene/Scene.h"
 #include "Melone/Scene/Entity.h"
 #include "Melone/Scene/Components.h"
+#include "Melone/Scene/ScriptableEntity.h"
 
 #include "Melone/Renderer/Renderer.h"
 #include "Melone/Renderer/Renderer2D.h"
