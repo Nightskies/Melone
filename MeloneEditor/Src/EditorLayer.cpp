@@ -18,6 +18,14 @@ namespace Melone
 		mCheckerboardTexture = Texture2D::create("Assets/Textures/Checkerboard.png");
 		FramebufferSpecification fbSpec = { 1280, 720 };
 		mFramebuffer = Framebuffer::create(fbSpec);
+
+		mActiveScene = std::make_shared<Scene>();
+
+		// Entity
+		auto square = mActiveScene->createEntity("Green Square");
+		square.addComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+
+		mSquareEntity = square;
 	}
 
 	void EditorLayer::onDetach(void)
@@ -31,34 +39,19 @@ namespace Melone
 			mCameraController.onUpdate(ts);
 
 		// Render
+		// Render
 		Renderer2D::resetStats();
 		mFramebuffer->bind();
-		RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::clear();
 
-		static float rotation = 0.0f;
-		rotation += ts * 50.0f;
-
 		Renderer2D::beginScene(mCameraController.getCamera());
 
-		Renderer2D::drawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
-		Renderer2D::drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		Renderer2D::drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		Renderer2D::drawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, mCheckerboardTexture, 10.0f);
-		Renderer2D::drawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, glm::radians(rotation), mCheckerboardTexture, 20.0f);
+		// Update scene
+		mActiveScene->onUpdate(ts);
 
 		Renderer2D::endScene();
 
-		Renderer2D::beginScene(mCameraController.getCamera());
-		for (float y = -5.0f; y < 5.0f; y += 0.5f)
-		{
-			for (float x = -5.0f; x < 5.0f; x += 0.5f)
-			{
-				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f };
-				Melone::Renderer2D::drawQuad({ x, y }, { 0.45f, 0.45f }, color);
-			}
-		}
-		Renderer2D::endScene();
 		mFramebuffer->unbind();
 	}
 
@@ -133,7 +126,17 @@ namespace Melone
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
 
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(mSquareColor));
+		if (mSquareEntity)
+		{
+			ImGui::Separator();
+			auto& tag = mSquareEntity.getComponent<TagComponent>().Tag;
+			ImGui::Text("%s", tag.c_str());
+
+			auto& squareColor = mSquareEntity.getComponent<SpriteRendererComponent>().Color;
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+			ImGui::Separator();
+		}
+
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });

@@ -122,7 +122,8 @@ project "Sandbox"
 		"Melone/Vendor/spdlog/include",
 		"Melone/Src",
 		"Melone/Vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links

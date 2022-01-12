@@ -12,6 +12,10 @@
 
 #include "Melone/Core/Timestep.h"
 
+#include "Melone/Scene/Scene.h"
+#include "Melone/Scene/Entity.h"
+#include "Melone/Scene/Components.h"
+
 #include "Melone/Renderer/Renderer.h"
 #include "Melone/Renderer/Renderer2D.h"
 #include "Melone/Renderer/RenderCommand.h"

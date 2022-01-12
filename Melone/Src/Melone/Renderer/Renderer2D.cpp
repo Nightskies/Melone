@@ -268,6 +268,70 @@ namespace Melone
 		sData.Info.QuadCount++;
 	}
 
+	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color)
+	{
+		constexpr size_t quadVertexCount = 4;
+		const float textureIndex = 0.0f;
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+		const float tilingFactor = 1.0f;
+
+		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
+			flushAndReset();
+
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[i];
+			sData.QuadVBOPtr->Color = color;
+			sData.QuadVBOPtr->TexCoord = textureCoords[i];
+			sData.QuadVBOPtr->TextureIndex = textureIndex;
+			sData.QuadVBOPtr->TilingFactor = tilingFactor;
+			sData.QuadVBOPtr++;
+		}
+
+		sData.QuadIndexCount += 6;
+		sData.Info.QuadCount++;
+	}
+
+	void Renderer2D::drawQuad(const glm::mat4& transform, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+
+		if (sData.QuadIndexCount >= Renderer2DStash::MaxIndices)
+			flushAndReset();
+
+		float textureIndex = 0.0f;
+		for (unsigned int i = 1; i < sData.TextureSlotIndex; i++)
+		{
+			if (*sData.TextureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)sData.TextureSlotIndex;
+			sData.TextureSlots[sData.TextureSlotIndex] = texture;
+			sData.TextureSlotIndex++;
+		}
+
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			sData.QuadVBOPtr->Position = transform * sData.QuadVertexPositions[i];
+			sData.QuadVBOPtr->Color = color;
+			sData.QuadVBOPtr->TexCoord = textureCoords[i];
+			sData.QuadVBOPtr->TextureIndex = textureIndex;
+			sData.QuadVBOPtr->TilingFactor = tilingFactor;
+			sData.QuadVBOPtr++;
+		}
+
+		sData.QuadIndexCount += 6;
+		sData.Info.QuadCount++;
+	}
+
 	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
 		drawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, color);
