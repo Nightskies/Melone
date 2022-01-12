@@ -28,7 +28,11 @@ namespace Melone
 		mSquareEntity = square;
 
 		mCameraEntity = mActiveScene->createEntity("Camera Entity");
-		mCameraEntity.addComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+		mCameraEntity.addComponent<CameraComponent>();
+
+		mSecondCamera = mActiveScene->createEntity("Clip-Space Entity");
+		auto& cc = mSecondCamera.addComponent<CameraComponent>();
+		cc.Primary = false;
 	}
 
 	void EditorLayer::onDetach(void)
@@ -44,6 +48,8 @@ namespace Melone
 		{
 			mFramebuffer->resize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
 			mCameraController.onResize(mViewportSize.x, mViewportSize.y);
+
+			mActiveScene->onViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
 		}
 
 		// Update
@@ -143,6 +149,23 @@ namespace Melone
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 			ImGui::Separator();
 		}
+
+		ImGui::DragFloat3("Camera Transform",
+			glm::value_ptr(mCameraEntity.getComponent<TransformComponent>().Transform[3]));
+
+		if (ImGui::Checkbox("Camera A", &mPrimaryCamera))
+		{
+			mCameraEntity.getComponent<CameraComponent>().Primary = mPrimaryCamera;
+			mSecondCamera.getComponent<CameraComponent>().Primary = !mPrimaryCamera;
+		}
+
+		{
+			auto& camera = mSecondCamera.getComponent<CameraComponent>().Camera;
+			float orthoSize = camera.getOrthographicSize();
+			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
+				camera.setOrthographicSize(orthoSize);
+		}
+
 
 		ImGui::End();
 

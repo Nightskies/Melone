@@ -33,10 +33,10 @@ namespace Melone
 		glm::mat4* cameraTransform = nullptr;
 
 		{
-			auto group = mRegistry.view<TransformComponent, CameraComponent>();
-			for (auto entity : group)
+			auto view = mRegistry.view<TransformComponent, CameraComponent>();
+			for (auto entity : view)
 			{
-				auto& [transform, camera] = group.get<TransformComponent, CameraComponent>(entity);
+				auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
 
 				if (camera.Primary)
 				{
@@ -63,4 +63,18 @@ namespace Melone
 		}
 	}
 
+	void Scene::onViewportResize(unsigned int width, unsigned int height)
+	{
+		mViewportWidth = width;
+		mViewportHeight = height;
+
+		// Resize our non-FixedAspectRatio cameras
+		auto view = mRegistry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraComponent = view.get<CameraComponent>(entity);
+			if (!cameraComponent.FixedAspectRatio)
+				cameraComponent.Camera.setViewportSize(width, height);
+		}
+	}
 }

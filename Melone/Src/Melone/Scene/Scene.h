@@ -14,15 +14,15 @@ namespace Melone
 		friend class Entity;
 
 		entt::registry mRegistry;
+		unsigned int mViewportWidth = 0;
+		unsigned int mViewportHeight = 0;
 	public:
 		Scene(void);
 		~Scene(void);
 
-		Entity Scene::createEntity(const std::string& name);
+		Entity createEntity(const std::string& name);
 
-		// temp
-		entt::registry& reg(void) { return mRegistry; }
-
+		void onViewportResize(unsigned int width, unsigned int height);
 		void onUpdate(Timestep ts);
 	};
 }
