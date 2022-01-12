@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Melone/Renderer/Camera.h"
+
 namespace Melone
 {
 	class TagComponent
@@ -43,6 +45,20 @@ namespace Melone
 		SpriteRendererComponent(const glm::vec4& color)
 			: 
 			Color(color) 
+		{}
+	};
+
+	class CameraComponent
+	{
+	public:
+		Camera Camera;
+		bool Primary = true;
+
+		CameraComponent(void) = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const glm::mat4& projection)
+			: 
+			Camera(projection) 
 		{}
 	};
 }

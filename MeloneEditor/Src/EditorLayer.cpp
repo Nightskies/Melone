@@ -26,6 +26,9 @@ namespace Melone
 		square.addComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
 		mSquareEntity = square;
+
+		mCameraEntity = mActiveScene->createEntity("Camera Entity");
+		mCameraEntity.addComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 	}
 
 	void EditorLayer::onDetach(void)
@@ -48,18 +51,13 @@ namespace Melone
 			mCameraController.onUpdate(ts);
 
 		// Render
-		// Render
 		Renderer2D::resetStats();
 		mFramebuffer->bind();
 		RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::clear();
 
-		Renderer2D::beginScene(mCameraController.getCamera());
-
 		// Update scene
 		mActiveScene->onUpdate(ts);
-
-		Renderer2D::endScene();
 
 		mFramebuffer->unbind();
 	}

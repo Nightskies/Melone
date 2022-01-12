@@ -27,6 +27,7 @@ namespace Melone
 
 		std::shared_ptr<Scene> mActiveScene;
 		Entity mSquareEntity;
+		Entity mCameraEntity;
 
 		glm::vec2 mViewportSize = { 0.0f, 0.0f };
 

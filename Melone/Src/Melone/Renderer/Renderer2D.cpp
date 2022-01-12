@@ -112,6 +112,19 @@ namespace Melone
 		sData.TextureSlotIndex = 1;
 	}
 
+	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform)
+	{
+		glm::mat4 viewProj = camera.getProjection() * glm::inverse(transform);
+
+		sData.TextureShader->bind();
+		sData.TextureShader->setUniformMat4("uViewProjection", viewProj);
+
+		sData.QuadIndexCount = 0;
+		sData.QuadVBOPtr = sData.QuadVBOBase;
+
+		sData.TextureSlotIndex = 1;
+	}
+
 	void Renderer2D::endScene(void)
 	{
 		unsigned int dataSize = (uint8_t*)sData.QuadVBOPtr - (uint8_t*)sData.QuadVBOBase;
