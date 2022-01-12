@@ -34,6 +34,15 @@ namespace Melone
 
 	void EditorLayer::onUpdate(Timestep ts)
 	{
+		// Resize
+		if (FramebufferSpecification spec = mFramebuffer->getSpecification();
+			mViewportSize.x > 0.0f && mViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+			(spec.Width != mViewportSize.x || spec.Height != mViewportSize.y))
+		{
+			mFramebuffer->resize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
+			mCameraController.onResize(mViewportSize.x, mViewportSize.y);
+		}
+
 		// Update
 		if (mViewportFocused)
 			mCameraController.onUpdate(ts);
@@ -147,13 +156,8 @@ namespace Melone
 		App::getInstance().getImGuiLayer()->blockEvents(!mViewportFocused || !mViewportHovered);
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (mViewportSize != *((glm::vec2*)&viewportPanelSize) && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
-		{
-			mFramebuffer->resize((unsigned int)viewportPanelSize.x, (unsigned int)viewportPanelSize.y);
-			mViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+		mViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-			mCameraController.onResize(viewportPanelSize.x, viewportPanelSize.y);
-		}
 		unsigned int textureID = mFramebuffer->getColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
