@@ -37,11 +37,13 @@ namespace Melone
 		class CameraController : public ScriptableEntity
 		{
 		public:
-			void OnCreate()
+			void OnCreate(void)
 			{
+				auto& transform = getComponent<TransformComponent>().Transform;
+				transform[3][0] = rand() % 10 - 5.0f;
 			}
 
-			void OnDestroy()
+			void OnDestroy(void)
 			{
 			}
 
@@ -62,6 +64,8 @@ namespace Melone
 		};
 
 		mCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
+
+		mSecondCamera.addComponent<NativeScriptComponent>().bind<CameraController>();
 	}
 
 	void EditorLayer::onDetach(void)
