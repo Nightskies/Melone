@@ -25,12 +25,15 @@ namespace Melone
 		auto square = mActiveScene->createEntity("Green Square");
 		square.addComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
+		auto redSquare = mActiveScene->createEntity("Red Square");
+		redSquare.addComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+
 		mSquareEntity = square;
 
-		mCameraEntity = mActiveScene->createEntity("Camera Entity");
+		mCameraEntity = mActiveScene->createEntity("Camera A");
 		mCameraEntity.addComponent<CameraComponent>();
 
-		mSecondCamera = mActiveScene->createEntity("Clip-Space Entity");
+		mSecondCamera = mActiveScene->createEntity("Camera B");
 		auto& cc = mSecondCamera.addComponent<CameraComponent>();
 		cc.Primary = false;
 
@@ -167,7 +170,7 @@ namespace Melone
 
 		mSceneHierarchyPanel.onImGuiRender();
 
-		ImGui::Begin("Settings");
+		ImGui::Begin("Stats");
 
 		auto stats = Melone::Renderer2D::getStats();
 		ImGui::Text("Renderer2D Stats:");
