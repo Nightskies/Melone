@@ -18,6 +18,7 @@ namespace Melone
 		void onImGuiRender(void);
 	private:
 		void drawEntityNode(Entity entity);
+		void drawComponents(Entity entity);
 	private:
 		std::shared_ptr<Scene> mContext;
 		Entity mSelectionContext;
