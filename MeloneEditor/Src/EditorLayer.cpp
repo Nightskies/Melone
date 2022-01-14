@@ -66,6 +66,8 @@ namespace Melone
 		mCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
 
 		mSecondCamera.addComponent<NativeScriptComponent>().bind<CameraController>();
+
+		mSceneHierarchyPanel.setContext(mActiveScene);
 	}
 
 	void EditorLayer::onDetach(void)
@@ -162,6 +164,8 @@ namespace Melone
 
 			ImGui::EndMenuBar();
 		}
+
+		mSceneHierarchyPanel.onImGuiRender();
 
 		ImGui::Begin("Settings");
 

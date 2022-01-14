@@ -2,20 +2,12 @@
 
 #include <Melone.h>
 
+#include "Panels/SceneHierarchyPanel.h"
+
 namespace Melone 
 {
 	class EditorLayer : public Layer
 	{
-	public:
-		EditorLayer(void);
-		~EditorLayer(void) = default;
-
-		virtual void onAttach(void) override;
-		virtual void onDetach(void) override;
-
-		void onUpdate(Timestep ts) override;
-		virtual void onImGuiRender(void) override;
-		void onEvent(Event& e) override;
 	private:
 		OrthographicCameraController mCameraController;
 
@@ -38,5 +30,18 @@ namespace Melone
 
 		bool mViewportFocused = false;
 		bool mViewportHovered = false;
+
+		// Panels
+		SceneHierarchyPanel mSceneHierarchyPanel;
+	public:
+		EditorLayer(void);
+		~EditorLayer(void) = default;
+
+		virtual void onAttach(void) override;
+		virtual void onDetach(void) override;
+
+		void onUpdate(Timestep ts) override;
+		virtual void onImGuiRender(void) override;
+		void onEvent(Event& e) override;
 	};
 }

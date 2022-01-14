@@ -41,7 +41,19 @@ namespace Melone
 			mScene->mRegistry.remove<T>(mEntityHandle);
 		}
 
-		operator bool() const { return mEntityHandle != entt::null; }
+		operator bool(void) const { return mEntityHandle != entt::null; }
+
+		operator unsigned int(void) const { return (unsigned int)mEntityHandle; }
+
+		bool operator==(const Entity& other) const
+		{
+			return mEntityHandle == other.mEntityHandle && mScene == other.mScene;
+		}
+
+		bool operator!=(const Entity& other) const
+		{
+			return !(*this == other);
+		}
 	};
 
 }

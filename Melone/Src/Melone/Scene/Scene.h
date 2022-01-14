@@ -12,6 +12,7 @@ namespace Melone
 	{
 	private:
 		friend class Entity;
+		friend class SceneHierarchyPanel;
 
 		entt::registry mRegistry;
 		unsigned int mViewportWidth = 0;
