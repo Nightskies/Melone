@@ -27,6 +27,11 @@ namespace Melone
 		return entity;
 	}
 
+	void Scene::destroyEntity(Entity entity)
+	{
+		mRegistry.destroy(entity);
+	}
+
 	void Scene::onUpdate(Timestep ts)
 	{
 		// Update scripts
@@ -91,5 +96,37 @@ namespace Melone
 			if (!cameraComponent.FixedAspectRatio)
 				cameraComponent.Camera.setViewportSize(width, height);
 		}
+	}
+
+	template<typename T>
+	void Scene::onComponentAdded(Entity entity, T& component)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void Scene::onComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::onComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		component.Camera.setViewportSize(mViewportWidth, mViewportHeight);
+	}
+
+	template<>
+	void Scene::onComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::onComponentAdded<TagComponent>(Entity entity, TagComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::onComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
 	}
 }

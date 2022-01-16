@@ -18,7 +18,9 @@ namespace Melone
 		T& addComponent(Args&&... args)
 		{
 			MELONE_CORE_ASSERT(!hasComponent<T>(), "Entity already has component!");
-			return mScene->mRegistry.emplace<T>(mEntityHandle, std::forward<Args>(args)...);
+			T& component = mScene->mRegistry.emplace<T>(mEntityHandle, std::forward<Args>(args)...);
+			mScene->onComponentAdded<T>(*this, component);
+			return component;
 		}
 
 		template<typename T>
@@ -42,7 +44,7 @@ namespace Melone
 		}
 
 		operator bool(void) const { return mEntityHandle != entt::null; }
-
+		operator entt::entity(void) const { return mEntityHandle; }
 		operator unsigned int(void) const { return (unsigned int)mEntityHandle; }
 
 		bool operator==(const Entity& other) const

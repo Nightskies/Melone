@@ -22,9 +22,13 @@ namespace Melone
 		~Scene(void);
 
 		Entity createEntity(const std::string& name);
+		void destroyEntity(Entity entity);
 
 		void onViewportResize(unsigned int width, unsigned int height);
 		void onUpdate(Timestep ts);
+	private:
+		template<typename T>
+		void onComponentAdded(Entity entity, T& component);
 	};
 }
 
