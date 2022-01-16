@@ -45,7 +45,7 @@ namespace Melone
 		}
 
 		Camera* mainCamera = nullptr;
-		glm::mat4* cameraTransform = nullptr;
+		glm::mat4 cameraTransform;
 
 		{
 			auto view = mRegistry.view<TransformComponent, CameraComponent>();
@@ -56,7 +56,7 @@ namespace Melone
 				if (camera.Primary)
 				{
 					mainCamera = &camera.Camera;
-					cameraTransform = &transform.Transform;
+					cameraTransform = transform.getTransform();
 					break;
 				}
 			}
@@ -64,14 +64,14 @@ namespace Melone
 
 		if (mainCamera)
 		{
-			Renderer2D::beginScene(mainCamera->getProjection(), *cameraTransform);
+			Renderer2D::beginScene(*mainCamera, cameraTransform);
 
 			auto group = mRegistry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				Renderer2D::drawQuad(transform, sprite.Color);
+				Renderer2D::drawQuad(transform.getTransform(), sprite.Color);
 			}
 
 			Renderer2D::endScene();

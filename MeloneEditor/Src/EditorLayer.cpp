@@ -42,8 +42,8 @@ namespace Melone
 		public:
 			void OnCreate(void)
 			{
-				auto& transform = getComponent<TransformComponent>().Transform;
-				transform[3][0] = rand() % 10 - 5.0f;
+				auto& translation = getComponent<TransformComponent>().Translation;
+				translation.x = rand() % 10 - 5.0f;
 			}
 
 			void OnDestroy(void)
@@ -52,17 +52,17 @@ namespace Melone
 
 			void OnUpdate(Timestep ts)
 			{
-				auto& transform = getComponent<TransformComponent>().Transform;
+				auto& translation = getComponent<TransformComponent>().Translation;
 				float speed = 5.0f;
 
 				if (Input::isKeyPressed(MELONE_KEY_A))
-					transform[3][0] -= speed * ts;
+					translation.x -= speed * ts;
 				if (Input::isKeyPressed(MELONE_KEY_D))
-					transform[3][0] += speed * ts;
+					translation.x += speed * ts;
 				if (Input::isKeyPressed(MELONE_KEY_W))
-					transform[3][1] += speed * ts;
+					translation.y += speed * ts;
 				if (Input::isKeyPressed(MELONE_KEY_S))
-					transform[3][1] -= speed * ts;
+					translation.y -= speed * ts;
 			}
 		};
 
@@ -178,34 +178,6 @@ namespace Melone
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
-
-		if (mSquareEntity)
-		{
-			ImGui::Separator();
-			auto& tag = mSquareEntity.getComponent<TagComponent>().Tag;
-			ImGui::Text("%s", tag.c_str());
-
-			auto& squareColor = mSquareEntity.getComponent<SpriteRendererComponent>().Color;
-			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-			ImGui::Separator();
-		}
-
-		ImGui::DragFloat3("Camera Transform",
-			glm::value_ptr(mCameraEntity.getComponent<TransformComponent>().Transform[3]));
-
-		if (ImGui::Checkbox("Camera A", &mPrimaryCamera))
-		{
-			mCameraEntity.getComponent<CameraComponent>().Primary = mPrimaryCamera;
-			mSecondCamera.getComponent<CameraComponent>().Primary = !mPrimaryCamera;
-		}
-
-		{
-			auto& camera = mSecondCamera.getComponent<CameraComponent>().Camera;
-			float orthoSize = camera.getOrthographicSize();
-			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
-				camera.setOrthographicSize(orthoSize);
-		}
-
 
 		ImGui::End();
 
