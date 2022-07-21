@@ -1,7 +1,5 @@
 #include "mlpch.h"
-#include "ImGuiLayer.h"
-
-#include "Melone/Core/App.h"
+#include "GUI.h"
 
 #include "imgui.h"
 #include "examples/imgui_impl_glfw.h"
@@ -12,10 +10,9 @@
 
 namespace Melone
 {
-	// Init static repeatCount
-	int KeyPressedEvent::repeatCount;
-
-	void ImGuiLayer::onAttach(void)
+	GUI::GUI(const Window& window)
+		:
+		mWindow(window)
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -40,43 +37,24 @@ namespace Melone
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		App& app = App::getInstance();
-
 		// Setup Platform/Renderer bindings
-		ImGui_ImplGlfw_InitForOpenGL(app.getWindow().getNativeWindow(), true);
+		ImGui_ImplGlfw_InitForOpenGL(mWindow.GetNativeWindow(), true);
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
-	void ImGuiLayer::onEvent(Event& e)
-	{
-		if (mBlockEvents)
-		{
-			ImGuiIO& io = ImGui::GetIO();
-			e.handled |= e.isInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-			e.handled |= e.isInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
-		}
-	}
-
-	void ImGuiLayer::onDetach(void)
-	{
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-	}
-
-	void ImGuiLayer::begin(void)
+	void GUI::Begin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
 
-	void ImGuiLayer::end(void)
+	void GUI::End()
 	{
-		App& app = App::getInstance();
+		auto [width, height] = mWindow.GetProperties().mDimensions;
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2((float)app.getWindow().getWinDimentions().first, (float)app.getWindow().getWinDimentions().second);
+		io.DisplaySize = ImVec2(width, height);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -91,5 +69,12 @@ namespace Melone
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
+	}
+
+	GUI::~GUI()
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
 	}
 }

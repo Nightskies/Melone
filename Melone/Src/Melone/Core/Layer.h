@@ -1,6 +1,8 @@
 #pragma once
-#include "Melone/Events/Event.h"
-#include "Melone/Core/Timestep.h"
+#include "Timestep.h"
+#include "Core.h"
+
+#include <string>
 
 namespace Melone
 {
@@ -9,19 +11,24 @@ namespace Melone
 	protected:
 		std::string mName;
 	public:
-		Layer(std::string name)
+		virtual ~Layer() = default;
+
+		Layer(std::string&& name)
 			:
 			mName(std::move(name))
 		{}
 
-		virtual ~Layer(void) = default;
+	public:
+		virtual void OnUpdate(Timestep ts) = 0;
+		virtual void OnAttach() = 0;
+		virtual void OnImGuiRender() = 0;
+		virtual void OnDetach() = 0;
 
-		virtual void onUpdate(Timestep ts) {};
-		virtual void onEvent(Event& e) {};
-		virtual void onAttach(void) {};
-		virtual void onImGuiRender(void) {}
-		virtual void onDetach(void) {};
+		constexpr bool operator==(const Layer& r) const
+		{
+			return *this == r;
+		}
 
-		const std::string getName(void) const { return mName; }
+		const std::string& GetName() const { return mName; }
 	};
 }

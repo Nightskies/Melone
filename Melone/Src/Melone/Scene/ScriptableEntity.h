@@ -11,16 +11,16 @@ namespace Melone
 
 		friend class Scene;
 	public:
-		virtual ~ScriptableEntity(void) = default;
+		virtual ~ScriptableEntity() = default;
 
 		template<typename T>
-		T& getComponent(void)
+		T& GetComponent()
 		{
-			return mEntity.getComponent<T>();
+			return mEntity.GetComponent<T>();
 		}
 	protected:
-		virtual void OnCreate(void) {}
-		virtual void OnDestroy(void) {}
+		virtual void OnCreate() {}
+		virtual void OnDestroy() {}
 		virtual void OnUpdate(Timestep ts) {}
 	};
 }

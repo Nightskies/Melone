@@ -5,16 +5,16 @@
 
 namespace Melone 
 {
-	static const unsigned int sMaxFramebufferSize = 8192;
+	constexpr static unsigned int sMaxFramebufferSize = 8192;
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
 		: 
 		mSpecification(spec)
 	{
-		invalidate();
+		Invalidate();
 	}
 
-	void OpenGLFramebuffer::invalidate(void)
+	void OpenGLFramebuffer::Invalidate()
 	{
 		if (mRendererID)
 		{
@@ -44,18 +44,18 @@ namespace Melone
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFramebuffer::bind(void)
+	void OpenGLFramebuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, mRendererID);
 		glViewport(0, 0, mSpecification.Width, mSpecification.Height);
 	}
 
-	void OpenGLFramebuffer::unbind(void)
+	void OpenGLFramebuffer::Unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFramebuffer::resize(unsigned int width, unsigned int height)
+	void OpenGLFramebuffer::Resize(unsigned int width, unsigned int height)
 	{
 		if (width == 0 || height == 0 || width > sMaxFramebufferSize || height > sMaxFramebufferSize)
 		{
@@ -66,10 +66,10 @@ namespace Melone
 		mSpecification.Width = width;
 		mSpecification.Height = height;
 
-		invalidate();
+		Invalidate();
 	}
 
-	OpenGLFramebuffer::~OpenGLFramebuffer(void)
+	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &mRendererID);
 		glDeleteTextures(1, &mColorAttachment);

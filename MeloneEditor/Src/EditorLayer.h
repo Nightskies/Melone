@@ -3,21 +3,22 @@
 #include <Melone.h>
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Melone/Renderer/Camera/EditorCamera.h"
 
 namespace Melone 
 {
 	class EditorLayer : public Layer
 	{
 	private:
-		OrthographicCameraController mCameraController;
+		EditorCamera mEditorCamera;
 
-		std::shared_ptr<VAO> mSquareVAO;
-		std::shared_ptr<Shader> mFlatColorShader;
-		std::shared_ptr<Framebuffer> mFramebuffer;
+		SPtr<VAO> mSquareVAO;
+		SPtr<Shader> mFlatColorShader;
+		SPtr<Framebuffer> mFramebuffer;
 
-		std::shared_ptr<Texture2D> mCheckerboardTexture;
+		SPtr<Texture2D> mCheckerboardTexture;
 
-		std::shared_ptr<Scene> mActiveScene;
+		SPtr<Scene> mActiveScene;
 		Entity mSquareEntity;
 		Entity mCameraEntity;
 		Entity mSecondCamera;
@@ -34,14 +35,13 @@ namespace Melone
 		// Panels
 		SceneHierarchyPanel mSceneHierarchyPanel;
 	public:
-		EditorLayer(void);
-		~EditorLayer(void) = default;
+		EditorLayer();
+		~EditorLayer() = default;
 
-		virtual void onAttach(void) override;
-		virtual void onDetach(void) override;
+		void OnAttach() override;
+		void OnDetach() override;
 
-		void onUpdate(Timestep ts) override;
-		virtual void onImGuiRender(void) override;
-		void onEvent(Event& e) override;
+		void OnUpdate(Timestep ts) override;
+		void OnImGuiRender() override;
 	};
 }

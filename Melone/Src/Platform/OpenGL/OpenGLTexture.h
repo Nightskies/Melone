@@ -16,18 +16,18 @@ namespace Melone
 		GLenum mInternalFormat, mDataFormat;
 	public:
 		OpenGLTexture2D(unsigned int width, unsigned int height);
-		OpenGLTexture2D(const std::string& path);
-		~OpenGLTexture2D(void);
+		OpenGLTexture2D(std::string&& path);
+		~OpenGLTexture2D();
 	public:
-		virtual void bind(unsigned int slot = 0) const override;
+		void Bind(unsigned int slot = 0) const override;
 
-		virtual unsigned int getWidth(void) const override { return mWidth; };
-		virtual unsigned int getHeight(void) const override { return mHeight; };
-		virtual unsigned int getRendererID(void) const override { return mRendererID; }
+		unsigned int GetWidth() const override { return mWidth; };
+		unsigned int GetHeight() const override { return mHeight; };
+		unsigned int GetRendererID() const override { return mRendererID; }
 
-		virtual void setData(void* data, unsigned int size) override;
+		void SetData(void* data, unsigned int size) override;
 
-		virtual bool operator==(const ITexture& other) const override
+		bool operator==(const ITexture& other) const override
 		{
 			return mRendererID == static_cast<const OpenGLTexture2D&>(other).mRendererID;
 		}

@@ -4,20 +4,19 @@
 
 namespace Melone
 {
-	// Vertex Array Object
 	class VAO
 	{
 	public:
-		virtual ~VAO(void) = default;
+		virtual ~VAO() = default;
 
-		virtual void bind(void) const = 0;
-		virtual void unbind(void) const = 0;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		virtual void addVBO(const std::shared_ptr<VBO>& VBO) = 0;
-		virtual void setIBO(const std::shared_ptr<IBO>& IBO) = 0;
+		virtual void AddVBO(const SPtr<VBO>& VBO) = 0;
+		virtual void SetIBO(const SPtr<IBO>& IBO) = 0;
 
-		virtual const std::shared_ptr<IBO>& getIBO(void) const = 0;
+		virtual const SPtr<IBO>& GetIBO() const = 0;
 
-		static std::shared_ptr<VAO> create(void);
+		static SPtr<VAO> Create();
 	};
 }

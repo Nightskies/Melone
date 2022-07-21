@@ -5,15 +5,15 @@ namespace Melone
 	class ITexture
 	{
 	public:
-		virtual ~ITexture(void) = default;
+		virtual ~ITexture() = default;
 
-		virtual void bind(unsigned int slot = 0) const = 0;
+		virtual void Bind(unsigned int slot = 0) const = 0;
 
-		virtual unsigned int getWidth(void) const = 0;
-		virtual unsigned int getHeight(void) const = 0;
-		virtual unsigned int getRendererID(void) const = 0;
+		virtual unsigned int GetWidth() const = 0;
+		virtual unsigned int GetHeight() const = 0;
+		virtual unsigned int GetRendererID() const = 0;
 
-		virtual void setData(void* data, unsigned int size) = 0;
+		virtual void SetData(void* data, unsigned int size) = 0;
 
 		virtual bool operator==(const ITexture& other) const = 0;
 	};
@@ -21,7 +21,7 @@ namespace Melone
 	class Texture2D : public ITexture
 	{
 	public:
-		static std::shared_ptr<Texture2D> create(unsigned int width, unsigned int height);
-		static std::shared_ptr<Texture2D> create(const std::string& path);
+		static SPtr<Texture2D> Create(unsigned int width, unsigned int height);
+		static SPtr<Texture2D> Create(std::string&& path);
 	};
 }

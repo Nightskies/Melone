@@ -21,15 +21,15 @@ static const char* sMapTiles =
 "WWWWWWWWDDDDDWWWWWWWWW"
 "WWWWWWWWWWWWWWWWWWWWWW";
 
-Sandbox2D::Sandbox2D(void)
+Sandbox2D::Sandbox2D()
 	:
 	Layer("Sandbox2D"),
-	mCameraController(1280.0f / 720.0f, true)
+	mCamera()
 {}
 
-void Sandbox2D::onAttach(void)
+void Sandbox2D::OnAttach()
 {
-	mCheckerboardTexture = Melone::Texture2D::create("Assets/Textures/Checkerboard.png");
+	mCheckerboardTexture = Melone::Texture2D::Create("Assets/Textures/Checkerboard.png");
 
 #if 0
 	mSpriteSheet = Melone::Texture2D::create("Assets/Game/Textures/RPGpack_sheet_2X.png");
@@ -43,7 +43,7 @@ void Sandbox2D::onAttach(void)
 
 	mMapWidth = sMapWidth;
 	mMapHeight = strlen(sMapTiles) / sMapWidth;
-#endif
+
 
 	mParticle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	mParticle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
@@ -53,67 +53,71 @@ void Sandbox2D::onAttach(void)
 	mParticle.VelocityVariation = { 3.0f, 1.0f };
 	mParticle.Position = { 0.0f, 0.0f };
 
+#endif
+
 }
 
-void Sandbox2D::onDetach(void)
+void Sandbox2D::OnDetach()
 {
 }
 
-void Sandbox2D::onUpdate(Melone::Timestep ts)
+void Sandbox2D::OnUpdate(Melone::Timestep ts)
 {
+#if 0
 	// Update
-	mCameraController.onUpdate(ts);
+	mCamera.OnUpdate(ts);
 
 	// Render
-	Melone::Renderer2D::resetStats();
-	Melone::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	Melone::RenderCommand::clear();
+	Melone::Renderer2D::ResetStats();
+	Melone::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+	Melone::RenderCommand::Clear();
 
 	static float rotation = 0.0f;
 	rotation += ts * 50.0f;
 
-	Melone::Renderer2D::beginScene(mCameraController.getCamera());
+	Melone::Renderer2D::BeginScene(mCamera);
 
-	Melone::Renderer2D::drawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
-	Melone::Renderer2D::drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-	Melone::Renderer2D::drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-	Melone::Renderer2D::drawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, mCheckerboardTexture, 10.0f);
-	Melone::Renderer2D::drawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, glm::radians(rotation), mCheckerboardTexture, 20.0f);
+	Melone::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, -45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Melone::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Melone::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, mSquareColor);
+	Melone::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, mCheckerboardTexture, 10.0f);
+	Melone::Renderer2D::DrawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, mCheckerboardTexture, 20.0f);
+		
+	Melone::Renderer2D::EndScene();
 
-	Melone::Renderer2D::endScene();
-
-	Melone::Renderer2D::beginScene(mCameraController.getCamera());
+	Melone::Renderer2D::BeginScene(mCamera);
 	for (float y = -5.0f; y < 5.0f; y += 0.5f)
 	{
 		for (float x = -5.0f; x < 5.0f; x += 0.5f)
 		{
 			glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f };
-			Melone::Renderer2D::drawQuad({ x, y }, { 0.45f, 0.45f }, color);
+			Melone::Renderer2D::DrawQuad({ x, y }, { 0.45f, 0.45f }, color);
 		}
 	}
-	Melone::Renderer2D::endScene();
+	Melone::Renderer2D::EndScene();
 
-	if (Melone::Input::isMouseButtonPressed(MELONE_MOUSE_BUTTON_LEFT))
+
+	if (Melone::Input::IsMouseButtonPressed(Melone::Mouse::ButtonLeft));
 	{
-		auto [x, y] = Melone::Input::getMousePosition();
-		auto [w, h] = Melone::App::getInstance().getWindow().getWinDimentions();
+		auto [x, y] = Melone::Input::GetMousePosition();
+		auto [w, h] = mProperties->Dimensions;
 
 		// bounds width and bounds height
-		auto [bw, bh] = mCameraController.getBounds().getCameraDimentions();
-		auto pos = mCameraController.getCamera().getPos();
+		auto [bw, bh] = mCameraController.GetBounds().GetCameraDimentions();
+		auto pos = mCameraController.GetCamera().GetPos();
 
 		x = (x / w) * bw - bw * 0.5f;
 		y = bh * 0.5f - (y / h) * bh;
 		mParticle.Position = { x + pos.x, y + pos.y };
 
 		for (int i = 0; i < 5; i++)
-			mParticleSystem.emit(mParticle);
+			mParticleSystem.Emit(mParticle);
 	}
 
-	mParticleSystem.onUpdate(ts);
-	mParticleSystem.onRender(mCameraController.getCamera());
+	mParticleSystem.OnUpdate(ts);
+	mParticleSystem.OnRender(mCameraController.GetCamera());
 
-#if 0
+
 	// Rendering sprites
 	Melone::Renderer2D::beginScene(mCameraController.getCamera());
 
@@ -140,23 +144,17 @@ void Sandbox2D::onUpdate(Melone::Timestep ts)
 #endif
 }
 
-void Sandbox2D::onImGuiRender(void)
+void Sandbox2D::OnImGuiRender()
 {
 		ImGui::Begin("Settings");
 
-		auto stats = Melone::Renderer2D::getStats();
+		auto stats = Melone::Renderer2D::GetStats();
+
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-		ImGui::Text("Quads: %d", stats.QuadCount);
-		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
-
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(mSquareColor));
+	    ImGui::Text("Quads: %d", stats.QuadCount);
+		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
 		ImGui::End();
-}
-
-void Sandbox2D::onEvent(Melone::Event& e)
-{
-	mCameraController.onEvent(e);
 }

@@ -2,14 +2,15 @@
 
 #ifdef MELONE_PLATFORM_WINDOWS
 
-	extern Melone::App* Melone::createApp();
+	extern Melone::Application* Melone::CreateApplication();
 
 	int main(int argc, char** argv)
 	{
-		Melone::Log::init();
+		Melone::Log::Init();
 
-		auto app = Melone::createApp();
-		app->run();
+		Melone::Application* app = Melone::CreateApplication();
+		app->Run();
+		delete app;
 	}
 
 #endif

@@ -1,89 +1,93 @@
 #pragma once
-#include "Event.h"
+#include "EventCategory.h"
+
+#include <sstream>
 
 namespace Melone
 {
-	class KeyEvent : public Event
+	class KeyEvent
 	{
 	protected:
 		int mKeyCode;
 	protected:
+		KeyEvent() = default;
+
 		KeyEvent(int keyCode)
 			:
 			mKeyCode(keyCode)
 		{}
 
-		~KeyEvent(void) = default;
+		virtual ~KeyEvent() = default;
 	public:
-		int getKeyCode(void) const { return mKeyCode; }
+		int GetKeyCode() const { return mKeyCode; }
 
-		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+		static constexpr unsigned char GetCategory() { return EventCategoryKeyboard | EventCategoryInput; }
 	};
 
 	class KeyPressedEvent : public KeyEvent
 	{
 	public:
-		static int repeatCount;
+		static inline int RepeatCount;
 	public:
+		KeyPressedEvent() = default;
+
 		KeyPressedEvent(int keyCode, int repeat)
 			:
 			KeyEvent(keyCode)
 		{
 			if (repeat)
-				repeatCount++;
+				RepeatCount++;
 			else
-				repeatCount = 0;
+				RepeatCount = 0;
 		}
 
-		~KeyPressedEvent(void) = default;
+		~KeyPressedEvent() override = default;
 
-		std::string toString(void) const
+		std::string ToString() const
 		{
 			std::stringstream ss;
-			ss << "KeyPressedEvent[" << mKeyCode << " (" << repeatCount << " repeats)]";
+			ss << "KeyPressedEvent[" << mKeyCode << " (" << RepeatCount << " repeats)]";
 			return ss.str();
 		}
-
-		EVENT_CLASS_TYPE(KeyPressed);
 	};
 
 	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
+		KeyReleasedEvent() = default;
+
 		KeyReleasedEvent(int keyCode)
 			:
 			KeyEvent(keyCode)
 		{}
 
-		~KeyReleasedEvent(void) = default;
+		~KeyReleasedEvent() override = default;
 
-		std::string toString(void) const
+		std::string ToString() const
 		{
 			std::stringstream ss;
 			ss << "KeyReleasedEvent[" << mKeyCode << "]";
 			return ss.str();
 		}
-
-		EVENT_CLASS_TYPE(KeyReleased);
 	};
 
 	class KeyTypedEvent : public KeyEvent
 	{
 	public:
+		KeyTypedEvent() = default;
+
 		KeyTypedEvent(int keyCode)
 			:
 			KeyEvent(keyCode)
 		{}
 
-		~KeyTypedEvent(void) = default;
+		~KeyTypedEvent() override = default;
 
-		std::string toString(void) const
+		std::string ToString() const
 		{
 			std::stringstream ss;
 			ss << "KeyTypedEvent[" << mKeyCode << "]";
 			return ss.str();
 		}
-
-		EVENT_CLASS_TYPE(KeyTyped)
 	};
 }

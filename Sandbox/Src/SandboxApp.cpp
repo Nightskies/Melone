@@ -1,21 +1,21 @@
-#include "ExampleLayer.h"
-
 #include "Sandbox2D.h"
 
 #include <Melone/Core/EntryPoint.h>
 
-class Sandbox : public Melone::App
+class Sandbox : public Melone::Application
 {
 public:
-	Sandbox(void)
+	Sandbox()
+		:
+		Melone::Application("Sandbox")
 	{
-		pushLayer(new Sandbox2D());
+		AddLayer(std::make_unique<Sandbox2D>());
 	}
 
-	~Sandbox(void) = default;
+	~Sandbox() = default;
 };
 
-Melone::App* Melone::createApp(void)
+Melone::Application* Melone::CreateApplication()
 {
-	return new Sandbox;
+	return new Sandbox();
 }

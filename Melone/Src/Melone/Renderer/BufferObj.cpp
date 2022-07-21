@@ -7,17 +7,17 @@
 
 namespace Melone
 {
-	VBOElement::VBOElement(ShaderDataType elType, std::string elName, bool elNormalized)
+	VBOElement::VBOElement(ShaderDataType elType, std::string&& elName, bool elNormalized)
 		:
-		type(elType),
-		name(std::move(elName)),
-		size(ShaderDataTypeSize(elType)),
-		normalized(elNormalized)
+		Type(elType),
+		Name(std::move(elName)),
+		Size(ShaderDataTypeSize(elType)),
+		Normalized(elNormalized)
 	{}
 
-	unsigned int VBOElement::getComponentCount(void) const
+	unsigned int VBOElement::GetComponentCount() const
 	{
-		switch (type)
+		switch (Type)
 		{
 			case Melone::ShaderDataType::Float:
 				return 1;
@@ -47,27 +47,27 @@ namespace Melone
 		}
 	}
 
-	VBOLayout::VBOLayout(std::initializer_list<VBOElement> el)
+	VBOLayout::VBOLayout(std::initializer_list<VBOElement>&& el)
 		:
 		mElements(std::move(el))
 	{
-		calculateOffsetAndStride();
+		CalculateOffsetAndStride();
 	}
 
-	void VBOLayout::calculateOffsetAndStride(void)
+	void VBOLayout::CalculateOffsetAndStride()
 	{
 		unsigned int offset = 0;
 		mStride = 0;
 
 		for (auto& el : mElements)
 		{
-			el.offset = offset;
-			offset += el.size;
-			mStride += el.size;
+			el.Offset = offset;
+			offset += el.Size;
+			mStride += el.Size;
 		}
 	}
 
-	std::shared_ptr<VBO> VBO::create(unsigned int size)
+	SPtr<VBO> VBO::Create(unsigned int size)
 	{
 		switch (Renderer::getAPI())
 		{
@@ -84,7 +84,7 @@ namespace Melone
 		}
 	}
 
-	std::shared_ptr<VBO> VBO::create(float* vertices, unsigned int size)
+	SPtr<VBO> VBO::Create(float* vertices, unsigned int size)
 	{
 		switch (Renderer::getAPI())
 		{
@@ -101,7 +101,24 @@ namespace Melone
 		}
 	}
 
-	std::shared_ptr<IBO> IBO::create(unsigned int* indices, unsigned int count)
+	SPtr<IBO> IBO::Create(unsigned int count)
+	{
+		switch (Renderer::getAPI())
+		{
+		case RendererAPI::API::Undefined:
+			MELONE_CORE_ASSERT(false, "RendererAPI is undefined");
+			return nullptr;
+
+		case RendererAPI::API::OpenGL:
+			return std::make_shared<OpenGLIBO>(count);
+
+		default:
+			MELONE_CORE_ASSERT(false, "Unknown renderer api");
+			return nullptr;
+		}
+	}
+
+	SPtr<IBO> IBO::Create(unsigned int* indices, unsigned int count)
 	{
 		switch (Renderer::getAPI())
 		{

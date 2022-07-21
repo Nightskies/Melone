@@ -11,16 +11,13 @@ namespace Melone
 	OpenGLContext::OpenGLContext(GLFWwindow* window)
 		:
 		mWindow(window)
-	{}
-
-	void OpenGLContext::init(void)
 	{
 		glfwMakeContextCurrent(mWindow);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		MELONE_CORE_ASSERT(status, "Failed to initialize Glad!");
 	}
 
-	void OpenGLContext::swapBuffers(void)
+	void OpenGLContext::SwapBuffers() const
 	{
 		glfwSwapBuffers(mWindow);
 	}

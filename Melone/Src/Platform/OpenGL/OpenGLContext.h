@@ -1,19 +1,18 @@
 #pragma once
-#include "Melone/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 
 namespace Melone
 {
-	class OpenGLContext : public IGraphicsContext
+	class OpenGLContext
 	{
+	private:
+		GLFWwindow* mWindow = nullptr;
 	public:
-		GLFWwindow* mWindow;
-	public:
+		OpenGLContext() = default;
 		OpenGLContext(GLFWwindow* window);
-		~OpenGLContext(void) = default;
+		~OpenGLContext() = default;
 
-		virtual void init(void) override;
-		virtual void swapBuffers(void) override;
+		void SwapBuffers() const;
 	};
 }

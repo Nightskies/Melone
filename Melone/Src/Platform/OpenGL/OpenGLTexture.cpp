@@ -25,9 +25,9 @@ namespace Melone
 		glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
+	OpenGLTexture2D::OpenGLTexture2D(std::string&& path)
 		:
-		mPath(path)
+		mPath(std::move(path))
 	{
 		int width;
 		int height;
@@ -35,7 +35,7 @@ namespace Melone
 
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = nullptr;
-		data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		data = stbi_load(mPath.c_str(), &width, &height, &channels, 0);
 
 		mWidth = width;
 		mHeight = height;
@@ -71,7 +71,7 @@ namespace Melone
 			stbi_image_free(data);
 	}
 
-	void OpenGLTexture2D::setData(void* data, unsigned int size)
+	void OpenGLTexture2D::SetData(void* data, unsigned int size)
 	{
 		unsigned int bpp = mDataFormat == GL_RGBA ? 4 : 3;
 		MELONE_CORE_ASSERT(size == mWidth * mHeight * bpp, "Data must be entire texture!");
@@ -79,7 +79,7 @@ namespace Melone
 		glTextureSubImage2D(mRendererID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
-	void OpenGLTexture2D::bind(unsigned int slot) const
+	void OpenGLTexture2D::Bind(unsigned int slot) const
 	{
 		glBindTextureUnit(slot, mRendererID);
 	}

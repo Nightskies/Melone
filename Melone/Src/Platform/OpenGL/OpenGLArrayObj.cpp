@@ -37,51 +37,51 @@ namespace Melone
 		}
 	}
 
-	OpenGLVAO::OpenGLVAO(void)
+	OpenGLVAO::OpenGLVAO()
 	{
 		glCreateVertexArrays(1, &mRendererID);
 	}
 
-	void OpenGLVAO::bind(void) const
+	void OpenGLVAO::Bind() const
 	{
 		glBindVertexArray(mRendererID);
 	}
 
-	void OpenGLVAO::unbind(void) const
+	void OpenGLVAO::Unbind() const
 	{
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVAO::addVBO(const std::shared_ptr<VBO>& VBO)
+	void OpenGLVAO::AddVBO(const SPtr<VBO>& VBO)
 	{
-		MELONE_CORE_ASSERT(VBO->getLayout().getElements().size(), "VBO has no layout");
+		MELONE_CORE_ASSERT(VBO->GetLayout().GetElements().size(), "VBO has no layout");
 
 		glBindVertexArray(mRendererID);
-		VBO->bind();
+		VBO->Bind();
 
 		unsigned int index = 0;
-		const auto& layout = VBO->getLayout();
+		const auto& layout = VBO->GetLayout();
 
 		for (const auto& el : layout)
 		{
 			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, el.getComponentCount(), ShaderDataTypeToOpenGLBaseType(el.type),
-				el.normalized ? GL_TRUE : GL_FALSE, layout.getStride(), (const void*)el.offset);
+			glVertexAttribPointer(index, el.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(el.Type),
+				el.Normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)el.Offset);
 			index++;
 		}
 
 		mVBOArr.push_back(VBO);
 	}
 
-	void OpenGLVAO::setIBO(const std::shared_ptr<IBO>& IBO)
+	void OpenGLVAO::SetIBO(const SPtr<IBO>& IBO)
 	{
 		glBindVertexArray(mRendererID);
-		IBO->bind();
+		IBO->Bind();
 
 		mIBO = IBO;
 	}
 
-	OpenGLVAO::~OpenGLVAO(void)
+	OpenGLVAO::~OpenGLVAO()
 	{
 		glDeleteVertexArrays(1, &mRendererID);
 	}

@@ -15,17 +15,17 @@ namespace Melone
 	class Framebuffer
 	{
 	public:
-		virtual ~Framebuffer(void) = default;
+		virtual ~Framebuffer() = default;
 
-		virtual void bind(void) = 0;
-		virtual void unbind(void) = 0;
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 
-		virtual void resize(unsigned int width, unsigned int height) = 0;
+		virtual void Resize(unsigned int width, unsigned int height) = 0;
 
-		virtual unsigned int getColorAttachmentRendererID(void) const = 0;
-		virtual const FramebufferSpecification& getSpecification(void) const = 0;
+		virtual unsigned int GetColorAttachmentRendererID() const = 0;
+		virtual const FramebufferSpecification& GetSpecification() const = 0;
 
-		static std::shared_ptr<Framebuffer> create(const FramebufferSpecification& spec);
+		static SPtr<Framebuffer> Create(const FramebufferSpecification& spec);
 	};
 }
 

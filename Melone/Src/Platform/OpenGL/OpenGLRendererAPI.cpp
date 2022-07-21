@@ -5,7 +5,7 @@
 
 namespace Melone
 {
-	void OpenGLRendererAPI::init(void)
+	void OpenGLRendererAPI::Init()
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -13,25 +13,24 @@ namespace Melone
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void OpenGLRendererAPI::setViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+	void OpenGLRendererAPI::SetViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 	{
 		glViewport(x, y, width, height);
 	}
 
-	void OpenGLRendererAPI::clear(void)
+	void OpenGLRendererAPI::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::setClearColor(const glm::vec4& color)
+	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRendererAPI::drawIndexed(const std::shared_ptr<VAO>& VAO, unsigned int indexCount)
+	void OpenGLRendererAPI::DrawIndexed(const SPtr<VAO>& VAO, unsigned int indexCount)
 	{
-		unsigned int count = indexCount ? VAO->getIBO()->getCount() : indexCount;
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

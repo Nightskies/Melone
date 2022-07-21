@@ -5,16 +5,13 @@
 
 namespace Melone
 {
-	std::shared_ptr<spdlog::logger> Log::sCoreLogger;
-	std::shared_ptr<spdlog::logger> Log::sClientLogger;
-
-	void Log::init()
+	void Log::Init()
 	{
 		spdlog::set_pattern("%^[%T] %n: %v%$");
-		sCoreLogger = spdlog::stdout_color_mt("MELONE");
-		sCoreLogger->set_level(spdlog::level::trace);
+		CoreLogger = spdlog::stdout_color_mt("MELONE");
+		CoreLogger->set_level(spdlog::level::trace);
 
-		sClientLogger = spdlog::stdout_color_mt("CLIENT");
-		sClientLogger->set_level(spdlog::level::trace);
+		ClientLogger = spdlog::stdout_color_mt("CLIENT");
+		ClientLogger->set_level(spdlog::level::trace);
 	}
 }

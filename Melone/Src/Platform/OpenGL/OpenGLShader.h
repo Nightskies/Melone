@@ -1,8 +1,9 @@
 #pragma once
 #include "Melone/Renderer/Shader.h"
+
 #include "glm/glm.hpp"
 
-typedef unsigned int GLenum;
+using GLenum = unsigned int;
 
 namespace Melone
 {
@@ -14,30 +15,30 @@ namespace Melone
 		std::string mName;
 		mutable std::unordered_map<std::string, int> mUniformLocationCache;
 	public:
-		OpenGLShader(const std::string& filePath);
-		~OpenGLShader(void);
+		OpenGLShader(std::string&& filePath);
+		~OpenGLShader();
 
-		virtual void bind(void) const override;
-		virtual void unbind(void) const override;
+		void Bind() const override;
+		void Unbind() const override;
 
-		virtual const std::string& getName(void) const override { return mName; }
+		const std::string& GetName() const override { return mName; }
 
-		void setUniformInt(const std::string& name, int value) override;
-		void setUniformIntArray(const std::string& name, int* values, unsigned int count) override;
+		void SetUniformInt(const std::string& name, int value) override;
+		void SetUniformIntArray(const std::string& name, int* values, unsigned int count) override;
 
-		void setUniformFloat(const std::string& name, const float value) override;
-		void setUniformFloat2(const std::string& name, const glm::vec2& value) override;
-		void setUniformFloat3(const std::string& name, const glm::vec3& value) override;
-		void setUniformFloat4(const std::string& name, const glm::vec4& value) override;
+		void SetUniformFloat(const std::string& name, const float value) override;
+		void SetUniformFloat2(const std::string& name, const glm::vec2& value) override;
+		void SetUniformFloat3(const std::string& name, const glm::vec3& value) override;
+		void SetUniformFloat4(const std::string& name, const glm::vec4& value) override;
 
-		void setUniformMat3(const std::string& name, const glm::mat3& matrix) override;
-		void setUniformMat4(const std::string& name, const glm::mat4& matrix) override;
+		void SetUniformMat3(const std::string& name, const glm::mat3& matrix) override;
+		void SetUniformMat4(const std::string& name, const glm::mat4& matrix) override;
 	private:
-		std::string readShaderFile(const std::string& path);
-		std::unordered_map<GLenum, std::string> getSourceShaders(const std::string& src);
-		void compileAndLinkShader(const std::unordered_map<GLenum, std::string>& shaderSrc);
+		std::string ReadShaderFile(const std::string& path);
+		std::unordered_map<GLenum, std::string> GetSourceShaders(const std::string_view& src);
+		void CompileAndLinkShader(const std::unordered_map<GLenum, std::string>& shaderSrc);
 
-		int getUniformLocation(const std::string& name) const;
+		int GetUniformLocation(const std::string& name) const;
 	};
 }
 

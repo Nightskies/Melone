@@ -5,5 +5,5 @@
 
 namespace Melone
 {
-	RendererAPI* RenderCommand::sRendererAPI = new OpenGLRendererAPI;
+	RendererAPI* RenderCommand::mRendererAPI = new OpenGLRendererAPI;
 }

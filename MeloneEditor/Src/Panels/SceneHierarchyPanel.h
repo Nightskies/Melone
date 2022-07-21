@@ -9,18 +9,18 @@ namespace Melone
 {
 	class SceneHierarchyPanel
 	{
-	public:
-		SceneHierarchyPanel(void) = default;
-		SceneHierarchyPanel(const std::shared_ptr<Scene>& scene);
-
-		void setContext(const std::shared_ptr<Scene>& scene);
-
-		void onImGuiRender(void);
 	private:
-		void drawEntityNode(Entity entity);
-		void drawComponents(Entity entity);
-	private:
-		std::shared_ptr<Scene> mContext;
+		SPtr<Scene> mContext;
 		Entity mSelectionContext;
+	public:
+		SceneHierarchyPanel() = default;
+		SceneHierarchyPanel(const SPtr<Scene>& scene);
+
+		void SetContext(const SPtr<Scene>& scene);
+
+		void OnImGuiRender();
+	private:
+		void DrawEntityNode(Entity entity);
+		void DrawComponents(Entity entity);
 	};
 }

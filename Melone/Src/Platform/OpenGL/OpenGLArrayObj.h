@@ -7,20 +7,20 @@ namespace Melone
 	class OpenGLVAO : public VAO
 	{
 	private:
-		std::vector<std::shared_ptr<VBO>> mVBOArr;
-		std::shared_ptr<IBO> mIBO;
+		std::vector<SPtr<VBO>> mVBOArr;
+		SPtr<IBO> mIBO;
 		unsigned int mRendererID;
 	public:
-		OpenGLVAO(void);
-		~OpenGLVAO(void);
+		OpenGLVAO();
+		~OpenGLVAO();
 
-		virtual void bind(void) const override;
-		virtual void unbind(void) const override;
+		void Bind() const override;
+		void Unbind() const override;
 
-		virtual void addVBO(const std::shared_ptr<VBO>& VBO) override;
-		virtual void setIBO(const std::shared_ptr<IBO>& IBO) override;
+		void AddVBO(const SPtr<VBO>& VBO) override;
+		void SetIBO(const SPtr<IBO>& IBO) override;
 
-		virtual const std::shared_ptr<IBO>& getIBO(void) const override { return mIBO; }
+		const SPtr<IBO>& GetIBO() const override { return mIBO; }
 	};
 }
 

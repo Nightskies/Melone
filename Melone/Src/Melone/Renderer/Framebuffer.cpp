@@ -7,7 +7,7 @@
 
 namespace Melone
 {
-	std::shared_ptr<Framebuffer> Framebuffer::create(const FramebufferSpecification& spec)
+	SPtr<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
 		switch (Renderer::getAPI())
 		{

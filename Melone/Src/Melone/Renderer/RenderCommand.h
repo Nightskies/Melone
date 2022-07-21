@@ -7,31 +7,31 @@ namespace Melone
 	class RenderCommand
 	{
 	private:
-		static RendererAPI* sRendererAPI;
+		static RendererAPI* mRendererAPI;
 	public:
-		static void init(void)
+		static void Init()
 		{
-			sRendererAPI->init();
+			mRendererAPI->Init();
 		}
 
-		static void clear(void)
+		static void Clear()
 		{
-			sRendererAPI->clear();
+			mRendererAPI->Clear();
 		}
 
-		static void setClearColor(const glm::vec4& color)
+		static void SetClearColor(const glm::vec4& color)
 		{
-			sRendererAPI->setClearColor(color);
+			mRendererAPI->SetClearColor(color);
 		}
 
-		static void drawIndexed(const std::shared_ptr<VAO>& VAO, unsigned int count = 0)
+		static void DrawIndexed(const SPtr<VAO>& VAO, unsigned int count = 0)
 		{
-			sRendererAPI->drawIndexed(VAO, count);
+			mRendererAPI->DrawIndexed(VAO, count);
 		}
 
-		static void setViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+		static void SetViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 		{
-			sRendererAPI->setViewport(x, y, width, height);
+			mRendererAPI->SetViewport(x, y, width, height);
 		}
 	};
 }

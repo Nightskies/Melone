@@ -6,27 +6,19 @@
 
 class Sandbox2D : public Melone::Layer
 {
-public:
-	Sandbox2D(void);
-	~Sandbox2D(void) = default;
-
-	virtual void onAttach(void) override;
-	virtual void onDetach(void) override;
-	virtual void onUpdate(Melone::Timestep ts) override;
-	virtual void onImGuiRender(void) override;
-	virtual void onEvent(Melone::Event& e) override;
 private:
-	Melone::OrthographicCameraController mCameraController;
+	Melone::Camera mCamera;
 
 	// Temp
-	std::shared_ptr<Melone::VAO> mSquareVAO;
-	std::shared_ptr<Melone::Shader> mFlatColorShader;
-	std::shared_ptr<Melone::Texture2D> mCheckerboardTexture;
-	std::shared_ptr<Melone::Texture2D> mSpriteSheet;
+	SPtr<Melone::VAO> mSquareVAO;
+	SPtr<Melone::Shader> mFlatColorShader;
+	SPtr<Melone::Texture2D> mCheckerboardTexture;
+	SPtr<Melone::Texture2D> mSomePicture;
+	SPtr<Melone::Texture2D> mSpriteSheet;
 
-	std::shared_ptr<Melone::SubTexture2D> mTextureStairs;
-	std::shared_ptr<Melone::SubTexture2D> mTextureTree;
-	std::shared_ptr<Melone::SubTexture2D> mTextureWindow;
+	SPtr<Melone::SubTexture2D> mTextureStairs;
+	SPtr<Melone::SubTexture2D> mTextureTree;
+	SPtr<Melone::SubTexture2D> mTextureWindow;
 
 	glm::vec4 mSquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
@@ -35,5 +27,13 @@ private:
 
 	unsigned int mMapWidth;
 	unsigned int mMapHeight;
-	std::unordered_map<char, std::shared_ptr<Melone::SubTexture2D>> sTextureMap;
+	std::unordered_map<char, SPtr<Melone::SubTexture2D>> sTextureMap;
+public:
+	Sandbox2D();
+	~Sandbox2D() override = default;
+
+	void OnAttach() override;
+	void OnDetach() override;
+	void OnUpdate(Melone::Timestep ts) override;
+	void OnImGuiRender() override;
 };

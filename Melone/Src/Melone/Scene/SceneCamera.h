@@ -1,53 +1,56 @@
 #pragma once
 
-#include "Melone/Renderer/Camera.h"
+#include "Melone/Renderer/Camera/Camera.h"
 
 namespace Melone 
 {
 	class SceneCamera : public Camera
 	{
 	public:
-		enum class ProjectionType { Perspective = 0, Orthographic = 1 };
+		enum class ProjectionType
+		{
+			Perspective,
+			Orthographic
+		};
 	private:
-		float mOrthographicSize = 10.0f;
+		ProjectionType mProjectionType = ProjectionType::Orthographic;
+
+		float mPerspectiveFOV = 45.0f;
+		float mPerspectiveNear = 0.01f;
+		float mPerspectiveFar = 1000.0f;
+
+		float mOrthographicSize = 1.0f;
 		float mOrthographicNear = -1.0f;
 		float mOrthographicFar = 1.0f;
 
 		float mAspectRatio = 0.0f;
-
-		ProjectionType mProjectionType = ProjectionType::Orthographic;
-
-		float mPerspectiveFOV = glm::radians(45.0f);
-		float mPerspectiveNear = 0.01f, mPerspectiveFar = 1000.0f;
 	public:
-		SceneCamera(void);
-		~SceneCamera(void) = default;
+		SceneCamera();
+		~SceneCamera() = default;
 
-		void setOrthographic(float size, float nearClip, float farClip);
-		void setPerspective(float verticalFOV, float nearClip, float farClip);
+		void SetPerspective(float FOV, float nearClip, float farClip);
+		void SetOrthographic(float size, float nearClip, float farClip);
 
-		float getPerspectiveVerticalFOV(void) const { return mPerspectiveFOV; }
-		void setPerspectiveVerticalFOV(float verticalFov) { mPerspectiveFOV = verticalFov; recalculateProjection(); }
-		float getPerspectiveNearClip(void) const { return mPerspectiveNear; }
-		void setPerspectiveNearClip(float nearClip) { mPerspectiveNear = nearClip; recalculateProjection(); }
-		float getPerspectiveFarClip(void) const { return mPerspectiveFar; }
-		void setPerspectiveFarClip(float farClip) { mPerspectiveFar = farClip; recalculateProjection(); }
+		void SetViewportDimensions(const std::pair<float, float>& dimensions);
 
-		void setViewportSize(unsigned int width, unsigned int height);
+		float GetPerspectiveFOV() const { return mPerspectiveFOV; }
+		void SetPerspectiveFOV(float verticalFov) { mPerspectiveFOV = verticalFov; RecalculateProjection(); }
+		float GetPerspectiveNearClip() const { return mPerspectiveNear; }
+		void SetPerspectiveNearClip(float nearClip) { mPerspectiveNear = nearClip; RecalculateProjection(); }
+		float GetPerspectiveFarClip() const { return mPerspectiveFar; }
+		void SetPerspectiveFarClip(float farClip) { mPerspectiveFar = farClip; RecalculateProjection(); }
 
-		float getOrthographicSize(void) const { return mOrthographicSize; }
-		void setOrthographicSize(float size) { mOrthographicSize = size; recalculateProjection(); }
+		float GetOrthographicSize() const { return mOrthographicSize; }
+		void SetOrthographicSize(float size) { mOrthographicSize = size; RecalculateProjection(); }
+		float GetOrthographicNearClip() const { return mOrthographicNear; }
+		void SetOrthographicNearClip(float nearClip) { mOrthographicNear = nearClip; RecalculateProjection(); }
+		float GetOrthographicFarClip() const { return mOrthographicFar; }
+		void SetOrthographicFarClip(float farClip) { mOrthographicFar = farClip; RecalculateProjection(); }
 
-		float getOrthographicNearClip(void) const { return mOrthographicNear; }
-		void setOrthographicNearClip(float nearClip) { mOrthographicNear = nearClip; recalculateProjection(); }
-		float getOrthographicFarClip(void) const { return mOrthographicFar; }
-		void setOrthographicFarClip(float farClip) { mOrthographicFar = farClip; recalculateProjection(); }
-
-		ProjectionType getProjectionType(void) const { return mProjectionType; }
-		void setProjectionType(ProjectionType type) { mProjectionType = type; recalculateProjection(); }
+		ProjectionType GetProjectionType() const { return mProjectionType; }
+		void SetProjectionType(ProjectionType type) { mProjectionType = type; RecalculateProjection(); }
 	private:
-		void recalculateProjection(void);
+		void RecalculateProjection();
 	};
-
 }
 

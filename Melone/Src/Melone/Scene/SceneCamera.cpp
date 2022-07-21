@@ -5,51 +5,52 @@
 
 namespace Melone 
 {
-	SceneCamera::SceneCamera(void)
+	SceneCamera::SceneCamera()
 	{
-		recalculateProjection();
+		RecalculateProjection();
 	}
 
-	void SceneCamera::setOrthographic(float size, float nearClip, float farClip)
+	void SceneCamera::SetPerspective(float FOV, float nearClip, float farClip)
+	{
+		mProjectionType = ProjectionType::Perspective;
+		mPerspectiveFOV = FOV;
+		mPerspectiveNear = nearClip;
+		mPerspectiveFar = farClip;
+		RecalculateProjection();
+	}
+
+	void SceneCamera::SetOrthographic(float size, float nearClip, float farClip)
 	{
 		mProjectionType = ProjectionType::Orthographic;
 		mOrthographicSize = size;
 		mOrthographicNear = nearClip;
 		mOrthographicFar = farClip;
-		recalculateProjection();
+		RecalculateProjection();
 	}
 
-	void SceneCamera::setPerspective(float verticalFOV, float nearClip, float farClip)
+	void SceneCamera::SetViewportDimensions(const std::pair<float, float>& dimensions)
 	{
-		mProjectionType = ProjectionType::Perspective;
-		mPerspectiveFOV = verticalFOV;
-		mPerspectiveNear = nearClip;
-		mPerspectiveFar = farClip;
-		recalculateProjection();
+		auto [width, height] = dimensions;
+		mAspectRatio = width / height;
+
+		RecalculateProjection();
 	}
 
-	void SceneCamera::setViewportSize(unsigned int width, unsigned int height)
-	{
-		mAspectRatio = (float)width / (float)height;
-		recalculateProjection();
-	}
-
-	void SceneCamera::recalculateProjection(void)
+	void SceneCamera::RecalculateProjection()
 	{
 		if (mProjectionType == ProjectionType::Perspective)
 		{
-			mProjection = glm::perspective(mPerspectiveFOV, mAspectRatio, mPerspectiveNear, mPerspectiveFar);
+			mProjectionMatrix = glm::perspective(glm::radians(mPerspectiveFOV), mAspectRatio, mPerspectiveNear, mPerspectiveFar);
 		}
 		else
 		{
-			float orthoLeft = -mOrthographicSize * mAspectRatio * 0.5f;
-			float orthoRight = mOrthographicSize * mAspectRatio * 0.5f;
-			float orthoBottom = -mOrthographicSize * 0.5f;
-			float orthoTop = mOrthographicSize * 0.5f;
-
-			mProjection = glm::ortho(orthoLeft, orthoRight,
-				orthoBottom, orthoTop, mOrthographicNear, mOrthographicFar);
+			mProjectionMatrix = glm::ortho(-mAspectRatio * mOrthographicSize, 
+				mAspectRatio * mOrthographicSize,
+				-mOrthographicSize, 
+				mOrthographicSize, 
+				mOrthographicNear, 
+				mOrthographicFar);
 		}
-	}
 
+	}
 }

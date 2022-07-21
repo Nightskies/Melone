@@ -11,7 +11,7 @@ namespace Melone
 		Bool
 	};
 
-	static uint32_t ShaderDataTypeSize(ShaderDataType type)
+	static int ShaderDataTypeSize(ShaderDataType type)
 	{
 		switch (type)
 		{
@@ -46,18 +46,18 @@ namespace Melone
 	class VBOElement
 	{
 	public:
-		std::string name;
-		ShaderDataType type;
-		unsigned int size;
-		unsigned int offset = 0;
-		bool normalized;
+		std::string Name;
+		ShaderDataType Type;
+		unsigned int Size;
+		unsigned int Offset = 0;
+		bool Normalized;
 	public:
-		VBOElement(void) = default;
-		~VBOElement(void) = default;
+		VBOElement() = default;
+		~VBOElement() = default;
 
-		VBOElement(ShaderDataType elType, std::string elName, bool elNormalized = false);
+		VBOElement(ShaderDataType elType, std::string&& elName, bool elNormalized = false);
 
-		unsigned int getComponentCount(void) const;
+		unsigned int GetComponentCount() const;
 	};
 
 	class VBOLayout
@@ -66,53 +66,54 @@ namespace Melone
 		std::vector<VBOElement> mElements;
 		unsigned int mStride = 0;
 	public:
-		VBOLayout(void) = default;
-		~VBOLayout(void) = default;
+		VBOLayout() = default;
+		~VBOLayout() = default;
 
-		VBOLayout(std::initializer_list<VBOElement> el);
+		VBOLayout(std::initializer_list<VBOElement>&& el);
 
-		const std::vector<VBOElement>& getElements(void) const { return mElements; }
-		unsigned int getStride(void) const { return mStride; }
+		const std::vector<VBOElement>& GetElements() const { return mElements; }
+		unsigned int GetStride() const { return mStride; }
 
-		std::vector<VBOElement>::iterator begin(void) { return mElements.begin(); }
-		std::vector<VBOElement>::iterator end(void) { return mElements.end(); }
+		std::vector<VBOElement>::iterator begin() { return mElements.begin(); }
+		std::vector<VBOElement>::iterator end() { return mElements.end(); }
 
-		std::vector<VBOElement>::const_iterator begin(void) const { return mElements.cbegin(); }
-		std::vector<VBOElement>::const_iterator end(void) const { return mElements.cend(); }
+		std::vector<VBOElement>::const_iterator begin() const { return mElements.cbegin(); }
+		std::vector<VBOElement>::const_iterator end() const { return mElements.cend(); }
 	private:
-		void calculateOffsetAndStride(void);
+		void CalculateOffsetAndStride();
 	};
 
 	// Vertex Buffer Object
 	class VBO
 	{
 	public:
-		virtual ~VBO(void) = default;
+		virtual ~VBO() = default;
 
-		virtual void bind(void) const = 0;
-		virtual void unbind(void) const = 0;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		virtual void setData(const void* data, unsigned int size) = 0;
+		virtual void SetData(const void* data, unsigned int size) = 0;
 
-		virtual const VBOLayout& getLayout() const = 0;
-		virtual void setLayout(const VBOLayout& layout) = 0;
+		virtual const VBOLayout& GetLayout() const = 0;
+		virtual void SetLayout(VBOLayout&& layout) = 0;
 
-		static std::shared_ptr<VBO> create(unsigned int size);
-		static std::shared_ptr<VBO> create(float* vertices, unsigned int size);
+		static SPtr<VBO> Create(unsigned int size);
+		static SPtr<VBO> Create(float* vertices, unsigned int size);
 	};
 
 	// Index Buffer Object
 	class IBO
 	{
 	public:
-		IBO(void) = default;
-		virtual ~IBO(void) = default;
+		IBO() = default;
+		virtual ~IBO() = default;
 
-		virtual void bind(void) const = 0;
-		virtual void unbind(void) const = 0;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		virtual unsigned int getCount(void) const = 0;
+		virtual void SetData(const void* data, unsigned int size) = 0;
 
-		static std::shared_ptr<IBO> create(unsigned int* indices, unsigned int count);
+		static SPtr<IBO> Create(unsigned int count);
+		static SPtr<IBO> Create(unsigned int* indices, unsigned int count);
 	};
 }

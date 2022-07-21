@@ -19,23 +19,23 @@ namespace Melone
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void OpenGLVBO::bind(void) const
+	void OpenGLVBO::Bind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
 	}
 
-	void OpenGLVBO::unbind(void) const
+	void OpenGLVBO::Unbind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void OpenGLVBO::setData(const void* data, unsigned int size)
+	void OpenGLVBO::SetData(const void* data, unsigned int size)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 
-	OpenGLVBO::~OpenGLVBO(void)
+	OpenGLVBO::~OpenGLVBO()
 	{
 		glDeleteBuffers(1, &mRendererID);
 	}
@@ -43,25 +43,36 @@ namespace Melone
 	/* OpenGLIBO */
 
 	OpenGLIBO::OpenGLIBO(unsigned int* indices, unsigned int count)
-		:
-		mCount(count)
 	{
 		glCreateBuffers(1, &mRendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	}
 
-	void OpenGLIBO::bind(void) const
+	OpenGLIBO::OpenGLIBO(unsigned int count)
+	{
+		glCreateBuffers(1, &mRendererID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), nullptr, GL_DYNAMIC_DRAW);
+	}
+
+	void OpenGLIBO::SetData(const void* data, unsigned int count)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, count * sizeof(unsigned int), data);
+	}
+
+	void OpenGLIBO::Bind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
 	}
 
-	void OpenGLIBO::unbind(void) const
+	void OpenGLIBO::Unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	OpenGLIBO::~OpenGLIBO(void)
+	OpenGLIBO::~OpenGLIBO()
 	{
 		glDeleteBuffers(1, &mRendererID);
 	}

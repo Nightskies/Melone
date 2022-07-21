@@ -1,12 +1,14 @@
 #include "mlpch.h"
 #include "OpenGlShader.h"
 
+#include "Melone/Core/Log.h"
+
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Melone
 {
-	static GLenum shaderTypeFromString(const std::string& type)
+	static GLenum ShaderTypeFromString(const std::string_view& type)
 	{
 		if (type == "vertex")
 			return GL_VERTEX_SHADER;
@@ -18,33 +20,34 @@ namespace Melone
 		return 0;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& filePath)
+	OpenGLShader::OpenGLShader(std::string&& filePath)
 		: 
-		mFilePath(filePath), 
+		mFilePath(std::move(filePath)), 
 		mRendererID(0)
 	{
-		std::string src = readShaderFile(filePath);
-		auto shaderSrc = getSourceShaders(src);
-		compileAndLinkShader(shaderSrc);
+		std::string src = ReadShaderFile(mFilePath);
+		auto shaderSrc = GetSourceShaders(src);
+		CompileAndLinkShader(shaderSrc);
 
-		auto lastSlash = filePath.find_last_of("/\\");
+		// get file name
+		auto lastSlash = mFilePath.find_last_of("/\\");
 		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-		auto lastDot = filePath.rfind('.');
-		auto count = lastDot == std::string::npos ? filePath.size() - lastSlash : lastDot - lastSlash;
-		mName = filePath.substr(lastSlash, count);
+		auto lastDot = mFilePath.rfind('.');
+		auto count = lastDot == std::string::npos ? mFilePath.size() - lastSlash : lastDot - lastSlash;
+		mName = mFilePath.substr(lastSlash, count);
 	}
 
-	void OpenGLShader::bind(void) const
+	void OpenGLShader::Bind() const
 	{
 		glUseProgram(mRendererID);
 	}
 
-	void OpenGLShader::unbind(void) const
+	void OpenGLShader::Unbind() const
 	{
 		glUseProgram(0);
 	}
 
-	std::string OpenGLShader::readShaderFile(const std::string& path)
+	std::string OpenGLShader::ReadShaderFile(const std::string& path)
 	{
 		std::string result;
 		std::ifstream stream(path, std::ios::in | std::ios::binary);
@@ -65,12 +68,11 @@ namespace Melone
 		return result;
 	}
 
-	std::unordered_map<GLenum, std::string> OpenGLShader::getSourceShaders(const std::string& src)
+	std::unordered_map<GLenum, std::string> OpenGLShader::GetSourceShaders(const std::string_view& src)
 	{
 		std::unordered_map<GLenum, std::string> shaderSrc;
 
-		const char* typeToken = "#type";
-		size_t typeTokenLength = strlen(typeToken);
+		std::string_view typeToken = "#type";
 		size_t pos = src.find(typeToken, 0);
 
 		while (pos != std::string::npos)
@@ -78,26 +80,26 @@ namespace Melone
 			size_t eol = src.find_first_of("\r\n", pos);
 			MELONE_CORE_ASSERT(eol != std::string::npos, "Syntax error");
 
-			size_t begin = pos + typeTokenLength + 1;
-			std::string type = src.substr(begin, eol - begin);
-			MELONE_CORE_ASSERT(shaderTypeFromString(type), "Invdlid shader type specified");
+			size_t begin = pos + typeToken.size() + 1;
+			std::string_view type = src.substr(begin, eol - begin);
+			MELONE_CORE_ASSERT(ShaderTypeFromString(type), "Invdlid shader type specified");
 
 			size_t nextLinePos = src.find_first_not_of("\r\n", eol);
 			pos = src.find(typeToken, nextLinePos);
-			shaderSrc[shaderTypeFromString(type)] = src.substr(nextLinePos,
+			shaderSrc[ShaderTypeFromString(type)] = src.substr(nextLinePos,
 				pos - (nextLinePos == std::string::npos ? src.size() - 1 : nextLinePos));
 		}
 
 		return shaderSrc;
 	}
 
-	void OpenGLShader::compileAndLinkShader(const std::unordered_map<GLenum, std::string>& shaderSrc)
+	void OpenGLShader::CompileAndLinkShader(const std::unordered_map<GLenum, std::string>& shaderSrc)
 	{
 		GLuint program = glCreateProgram();
 		std::array<GLenum, 2> glShaderIDs;
 		int shaderID = 0;
 
-		for (auto& kv : shaderSrc)
+		for (const auto& kv : shaderSrc)
 		{
 			GLenum type = kv.first;
 			const std::string& source = kv.second;
@@ -154,60 +156,66 @@ namespace Melone
 		mRendererID = program;
 	}
 
-	int OpenGLShader::getUniformLocation(const std::string& name) const
+	int OpenGLShader::GetUniformLocation(const std::string& name) const
 	{
 		if (mUniformLocationCache.find(name) != mUniformLocationCache.end())
 			return mUniformLocationCache[name];
 
 		int location = glGetUniformLocation(mRendererID, name.c_str());
-		if (location == -1)
-			std::cout << "Warning: uniform '" << name << " ' doesn't exist" << std::endl;
 
-		mUniformLocationCache[name] = location;
+		if (location == -1)
+		{
+			MELONE_CORE_WARN("Warning: uniform {} doesn't exist", name);
+		}
+		else
+		{
+			mUniformLocationCache[name] = location;
+		}
+
 		return location;
 	}
 
-	void OpenGLShader::setUniformInt(const std::string& name, int value)
+	void OpenGLShader::SetUniformInt(const std::string& name, int value)
 	{
-		glUniform1i(getUniformLocation(name), value);
+		glUniform1i(GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::setUniformIntArray(const std::string& name, int* values, unsigned int count)
+	void OpenGLShader::SetUniformIntArray(const std::string& name, int* values, unsigned int count)
 	{
-		glUniform1iv(getUniformLocation(name), count, values);
+		glUniform1iv(GetUniformLocation(name), count, values);
 	}
 
-	void OpenGLShader::setUniformFloat(const std::string& name, float value)
+	void OpenGLShader::SetUniformFloat(const std::string& name, float value)
 	{
-		glUniform1f(getUniformLocation(name), value);
+		glUniform1f(GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::setUniformFloat2(const std::string& name, const glm::vec2& value)
+	void OpenGLShader::SetUniformFloat2(const std::string& name, const glm::vec2& value)
 	{
-		glUniform2f(getUniformLocation(name), value.x, value.y);
+		glUniform2f(GetUniformLocation(name), value.x, value.y);
 	}
 
-	void OpenGLShader::setUniformFloat3(const std::string& name, const glm::vec3& value)
+	void OpenGLShader::SetUniformFloat3(const std::string& name, const glm::vec3& value)
 	{
-		glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
+		glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
 	}
 
-	void OpenGLShader::setUniformFloat4(const std::string& name, const glm::vec4& value)
+	void OpenGLShader::SetUniformFloat4(const std::string& name, const glm::vec4& value)
 	{
-		glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
+		glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w);
 	}
 
-	void OpenGLShader::setUniformMat3(const std::string& name, const glm::mat3& matrix)
+	void OpenGLShader::SetUniformMat3(const std::string& name, const glm::mat3& matrix)
 	{
-		glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
+		glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	void OpenGLShader::setUniformMat4(const std::string& name, const glm::mat4& matrix)
+	void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
+		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	OpenGLShader::~OpenGLShader(void)
+	OpenGLShader::~OpenGLShader()
 	{
 		glDeleteProgram(mRendererID);
 	}

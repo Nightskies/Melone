@@ -1,115 +1,122 @@
 #pragma once
-#include "Event.h"
+#include "EventCategory.h"
+
+#include <sstream>
 
 namespace Melone
 {
-	class MouseMovedEvent : public Event
+	class MouseMovedEvent
 	{
 	private:
 		double mX;
 		double mY;
 	public:
+		MouseMovedEvent() = default;
+
 		MouseMovedEvent(double x, double y)
 			:
 			mX(x),
 			mY(y)
 		{}
 
-		~MouseMovedEvent(void) = default;
+		~MouseMovedEvent() = default;
 
-		std::string toString(void) const
+		std::pair<double, double> GetMousePosition() const { return std::make_pair(mX, mY); }
+
+		std::string ToString() const
 		{
 			std::stringstream ss;
 			ss << "MouseMovedEvent[" << mX << "," << mY << "]";
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MouseMoved)
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+		static constexpr unsigned char GetCategory() { return EventCategoryMouse | EventCategoryInput; }
 	};
 
-	class MouseScrolledEvent : public Event
+	class MouseScrolledEvent
 	{
 	private:
 		double mXOffset;
 		double mYOffset;
 	public:
+		MouseScrolledEvent() = default;
+
 		MouseScrolledEvent(double xOffset, double yOffset)
 			:
 			mXOffset(xOffset),
 			mYOffset(yOffset)
 		{}
 
-		~MouseScrolledEvent(void) = default;
+		~MouseScrolledEvent() = default;
 
-		float getXOffset(void) const { return mXOffset; }
-		float getYOffset(void) const { return mYOffset; }
+		float GetXOffset() const { return mXOffset; }
+		float GetYOffset() const { return mYOffset; }
 
-		std::string toString(void) const
+		std::string ToString() const
 		{
 			std::stringstream ss;
 			ss << "MouseScrolledEvent[" << mXOffset << "," << mYOffset << "]";
 			return ss.str();
 		}
-
-		EVENT_CLASS_TYPE(MouseScrolled)
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+		static constexpr unsigned char GetCategory() { return EventCategoryMouse | EventCategoryInput; }
 	};
 
-	class MouseButtonEvent : public Event
+	class MouseButtonEvent
 	{
 	protected:
 		int mButton;
-	public:
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
+		MouseButtonEvent() = default;
+
 		MouseButtonEvent(int button)
 			:
 			mButton(button)
 		{}
 		
-		~MouseButtonEvent(void) = default;
+		virtual ~MouseButtonEvent() = default;
+	public:
+		static constexpr unsigned char GetCategory() { return EventCategoryMouse | EventCategoryInput; }
 	};
 
 
 	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
+		MouseButtonPressedEvent() = default;
+
 		MouseButtonPressedEvent(int button)
 			:
 			MouseButtonEvent(button)
 		{}
 
-		~MouseButtonPressedEvent(void) = default;
+		~MouseButtonPressedEvent() override = default;
 
-		std::string toString(void) const
+		std::string ToString() const
 		{
 			std::stringstream ss;
 			ss << "MouseButtonPressedEvent[" << mButton << "]";
 			return ss.str();
 		}
-
-		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
+		MouseButtonReleasedEvent() = default;
+
 		MouseButtonReleasedEvent(int button)
 			:
 			MouseButtonEvent(button)
 		{}
 
-		~MouseButtonReleasedEvent(void) = default;
+		~MouseButtonReleasedEvent() override = default;
 
-		std::string toString(void) const
+		std::string ToString() const
 		{
 			std::stringstream ss;
 			ss << "MouseButtonReleasedEvent[" << mButton << "]";
 			return ss.str();
 		}
-
-		EVENT_CLASS_TYPE(MouseButtonReleased)
 	};
 }
 

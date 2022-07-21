@@ -4,21 +4,21 @@
 
 namespace Melone
 {
-	class MeloneEditor : public App
+	class MeloneEditor : public Application
 	{
 	public:
-		MeloneEditor(void)
+		MeloneEditor()
 			:
-			App("Melone Editor")
+			Application("Melone Editor")
 		{
-			pushLayer(new EditorLayer());
+			AddLayer(std::make_unique<EditorLayer>());
 		}
 
-		~MeloneEditor(void) = default;
+		~MeloneEditor() = default;
 	};
 
-	App* createApp(void)
+	Application* CreateApplication()
 	{
-		return new MeloneEditor;
+		return new MeloneEditor();
 	}
 }

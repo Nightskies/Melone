@@ -1,42 +1,49 @@
 #pragma once
-#include "Event.h"
+#include "EventCategory.h"
 
-#include <utility>
+#include <sstream>
 
 namespace Melone
 {
-	class WindowResizeEvent : public Event
+	class WindowResizeEvent
 	{
 	private:
-		std::pair<int, int> mWinDimensions;
+		std::pair<float, float> mWinDimensions;
 	public:
+		WindowResizeEvent() = default;
+
 		WindowResizeEvent(int newWidth, int newHeight)
 			:
 			mWinDimensions(newWidth, newHeight)
 		{}
 		
-		~WindowResizeEvent(void) = default;
+		~WindowResizeEvent() = default;
 
-		const std::pair<int, int> getWinDimensions(void) const { return mWinDimensions; }
+		std::pair<float, float> GetWinDimensions() const { return mWinDimensions; }
 
-		std::string toString(void) const
+		std::string ToString() const
 		{
 			std::stringstream ss;
 			ss << "WindowResizeEvent[" << mWinDimensions.first << "x" << mWinDimensions.second << "]";
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(WindowResize)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+		static constexpr unsigned char GetCategory() { return EventCategoryApplication; }
 	};
 
-	class WindowCloseEvent : public Event
+	class WindowCloseEvent
 	{
 	public:
-		WindowCloseEvent(void) = default;
-		~WindowCloseEvent(void) = default;
+		WindowCloseEvent() = default;
+		~WindowCloseEvent() = default;
 
-		EVENT_CLASS_TYPE(WindowClose)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+		std::string ToString() const
+		{
+			std::stringstream ss;
+			ss << "WindowCloseEvent";
+			return ss.str();
+		}
+
+		static constexpr unsigned char GetCategory() { return EventCategoryApplication; }
 	};
 }

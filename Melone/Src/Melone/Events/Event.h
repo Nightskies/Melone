@@ -1,80 +1,64 @@
 #pragma once
-
 #include "mlpch.h"
+
+#include "KeyEvent.h"
+#include "MouseEvent.h"
+#include "WindowEvent.h"
 
 namespace Melone
 {
-	enum class EventType
+	namespace Event
 	{
-		Undefined,
-		WindowClose, WindowResize,
-		KeyPressed, KeyReleased, KeyTyped,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
-	};
-
-	enum EventCategory
-	{
-		None = 0,
-		EventCategoryApplication = BIT(0),
-		EventCategoryInput = BIT(1),
-		EventCategoryKeyboard = BIT(2),
-		EventCategoryMouse = BIT(3),
-		EventCategoryMouseButton = BIT(4)
-	};
-
-#define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags(void) const override { return category; }
-
-	class Event
-	{
-	public:
-		bool handled = false;
-	public:
-		virtual ~Event(void) = default;
-
-		virtual EventType getEventType(void) const = 0;
-		virtual const char* getName(void) const = 0;
-		virtual int getCategoryFlags(void) const = 0;
-		virtual std::string toString(void) const { return getName(); }
-
-		bool isInCategory(EventCategory category)
+		enum EventType
 		{
-			return getCategoryFlags() & category;
-		}
-	};
+			KeyPressed = 1,
+			KeyReleased,
+			KeyTyped,
+			MouseMoved,
+			MouseScrolled,
+			MouseButtonPressed,
+			MouseButtonReleased,
+			WindowResize,
+			WindowClose
+		};
 
-#define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return EventType::##type; }\
-	virtual EventType getEventType() const override { return getStaticType(); }\
-	virtual const char* getName() const override { return #type; }
+		using Events = std::variant<std::monostate,
+			KeyPressedEvent,
+			KeyReleasedEvent,
+			KeyTypedEvent,
+			MouseMovedEvent,
+			MouseScrolledEvent,
+			MouseButtonPressedEvent,
+			MouseButtonReleasedEvent,
+			WindowResizeEvent,
+			WindowCloseEvent>;
 
-	class EventDispatcher
-	{
-	private:
-		Event& mEvent;
-
-		template<typename T>
-		using EventFunc = std::function<bool(T&)>;
-	public:
-		EventDispatcher(Event& event)
-			: 
-			mEvent(event)
-		{}
-
-		~EventDispatcher(void) = default;
-
-		template<typename T>
-		bool dispatch(EventFunc<T> func)
+		template<typename V, typename E>
+		constexpr EventType GetEventType()
 		{
-			if (mEvent.getEventType() == T::getStaticType())
+			switch (GetVariantIndex<V, E, 1>())
 			{
-				mEvent.handled = func(*(static_cast<T*>(&mEvent)));
-				return true;
+			case 1:
+				return KeyPressed;
+			case 2:
+				return KeyReleased;
+			case 3:
+				return KeyTyped;
+			case 4:
+				return MouseMoved;
+			case 5:
+				return MouseScrolled;
+			case 6:
+				return MouseButtonPressed;
+			case 7:
+				return MouseButtonReleased;
+			case 8:
+				return WindowResize;
+			case 9:
+				return WindowClose;
+			case std::variant_size_v<V>:
+				MELONE_CORE_ERROR("Function called with invalid E (event type) or std::monostate");
 			}
-			return false;
 		}
-
-		friend std::ostream& operator<<(std::ostream& os, const Event& e)
-		{
-			return os << e.toString();
-		}
-	};
+	}
 }

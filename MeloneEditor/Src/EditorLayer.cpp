@@ -7,108 +7,107 @@
 
 namespace Melone
 {
-	EditorLayer::EditorLayer(void)
+	EditorLayer::EditorLayer()
 		:
 		Layer("EditorLayer"),
-		mCameraController(1280.0f / 720.0f, true)
+		mEditorCamera({ 1280.0f, 720.0f })
 	{}
 
-	void EditorLayer::onAttach(void)
+	void EditorLayer::OnAttach()
 	{
-		mCheckerboardTexture = Texture2D::create("Assets/Textures/Checkerboard.png");
+		mCheckerboardTexture = Texture2D::Create("Assets/Textures/Checkerboard.png");
 		FramebufferSpecification fbSpec = { 1280, 720 };
-		mFramebuffer = Framebuffer::create(fbSpec);
+		mFramebuffer = Framebuffer::Create(fbSpec);
 
-		mActiveScene = std::make_shared<Scene>();
+		mActiveScene = Scene::Create();
 
 		// Entity
-		auto square = mActiveScene->createEntity("Green Square");
-		square.addComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+		auto square = mActiveScene->CreateEntity("Green Square");
+		square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
-		auto redSquare = mActiveScene->createEntity("Red Square");
-		redSquare.addComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+		auto redSquare = mActiveScene->CreateEntity("Red Square");
+		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
 		mSquareEntity = square;
 
-		mCameraEntity = mActiveScene->createEntity("Camera A");
-		mCameraEntity.addComponent<CameraComponent>();
+		mCameraEntity = mActiveScene->CreateEntity("Camera A");
+		mCameraEntity.AddComponent<CameraComponent>();
 
-		mSecondCamera = mActiveScene->createEntity("Camera B");
-		auto& cc = mSecondCamera.addComponent<CameraComponent>();
+		mSecondCamera = mActiveScene->CreateEntity("Camera B");
+		auto& cc = mSecondCamera.AddComponent<CameraComponent>();
 		cc.Primary = false;
 
 		class CameraController : public ScriptableEntity
 		{
 		public:
-			void OnCreate(void)
+			void OnCreate()
 			{
-				auto& translation = getComponent<TransformComponent>().Translation;
+				auto& translation = GetComponent<TransformComponent>().Translation;
 				translation.x = rand() % 10 - 5.0f;
 			}
 
-			void OnDestroy(void)
+			void OnDestroy()
 			{
 			}
 
 			void OnUpdate(Timestep ts)
 			{
-				auto& translation = getComponent<TransformComponent>().Translation;
+				auto& translation = GetComponent<TransformComponent>().Translation;
 				float speed = 5.0f;
 
-				if (Input::isKeyPressed(MELONE_KEY_A))
+				if (Input::IsKeyPressed(Melone::Key::A))
 					translation.x -= speed * ts;
-				if (Input::isKeyPressed(MELONE_KEY_D))
+				if (Input::IsKeyPressed(Melone::Key::D))
 					translation.x += speed * ts;
-				if (Input::isKeyPressed(MELONE_KEY_W))
+				if (Input::IsKeyPressed(Melone::Key::W))
 					translation.y += speed * ts;
-				if (Input::isKeyPressed(MELONE_KEY_S))
+				if (Input::IsKeyPressed(Melone::Key::S))
 					translation.y -= speed * ts;
 			}
 		};
 
-		mCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
+		mCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
-		mSecondCamera.addComponent<NativeScriptComponent>().bind<CameraController>();
+		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
-		mSceneHierarchyPanel.setContext(mActiveScene);
+		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
 
-	void EditorLayer::onDetach(void)
+	void EditorLayer::OnDetach()
 	{
 	}
 
-	void EditorLayer::onUpdate(Timestep ts)
+	void EditorLayer::OnUpdate(Timestep ts)
 	{
 		// Resize
-		if (FramebufferSpecification spec = mFramebuffer->getSpecification();
+		if (FramebufferSpecification spec = mFramebuffer->GetSpecification();
 			mViewportSize.x > 0.0f && mViewportSize.y > 0.0f && // zero sized framebuffer is invalid
 			(spec.Width != mViewportSize.x || spec.Height != mViewportSize.y))
 		{
-			mFramebuffer->resize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
-			mCameraController.onResize(mViewportSize.x, mViewportSize.y);
+			mFramebuffer->Resize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
+			mEditorCamera.SetViewportDimensions({ mViewportSize.x, mViewportSize.y });
 
-			mActiveScene->onViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
+			mActiveScene->OnViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
 		}
 
 		// Update
 		if (mViewportFocused)
-			mCameraController.onUpdate(ts);
+			mEditorCamera.OnUpdate(ts);
 
 		// Render
-		Renderer2D::resetStats();
-		mFramebuffer->bind();
-		RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		RenderCommand::clear();
+		Renderer2D::ResetStats();
+		mFramebuffer->Bind();
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
 
 		// Update scene
-		mActiveScene->onUpdate(ts);
+		mActiveScene->OnUpdateEditorCamera(ts, mEditorCamera);
 
-		mFramebuffer->unbind();
+		mFramebuffer->Unbind();
 	}
 
-	void EditorLayer::onImGuiRender(void)
+	void EditorLayer::OnImGuiRender()
 	{
-
 		static bool dockspaceOpen = true;
 		static bool optFullscreenPersistant = true;
 		bool optFullscreen = optFullscreenPersistant;
@@ -161,23 +160,25 @@ namespace Melone
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 
-				if (ImGui::MenuItem("Exit")) Melone::App::getInstance().close();
+				if (ImGui::MenuItem("Exit")) 
+					Melone::Application::Close();
+
 				ImGui::EndMenu();
 			}
 
 			ImGui::EndMenuBar();
 		}
 
-		mSceneHierarchyPanel.onImGuiRender();
+		mSceneHierarchyPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
 
-		auto stats = Melone::Renderer2D::getStats();
+		auto stats = Melone::Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
 		ImGui::Text("Quads: %d", stats.QuadCount);
-		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
 		ImGui::End();
 
@@ -186,21 +187,23 @@ namespace Melone
 
 		mViewportFocused = ImGui::IsWindowFocused();
 		mViewportHovered = ImGui::IsWindowHovered();
-		App::getInstance().getImGuiLayer()->blockEvents(!mViewportFocused || !mViewportHovered);
+		if (!mViewportFocused && !mViewportHovered)
+		{
+			EventSystem::BlockEvents(EventCategoryInput);
+		}
+		else
+		{
+			EventSystem::UnBlockEvents();
+		}
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		mViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-		unsigned int textureID = mFramebuffer->getColorAttachmentRendererID();
+		unsigned int textureID = mFramebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
 
 		ImGui::End();
-	}
-
-	void EditorLayer::onEvent(Event& e)
-	{
-		mCameraController.onEvent(e);
 	}
 }

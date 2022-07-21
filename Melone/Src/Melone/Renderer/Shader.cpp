@@ -5,31 +5,31 @@
 
 namespace Melone
 {
-	std::shared_ptr<Shader> Shader::create(const std::string& shaderFilePath)
+	SPtr<Shader> Shader::Create(std::string&& shaderFilePath)
 	{
-		return std::make_shared<OpenGLShader>(shaderFilePath);
+		return std::make_shared<OpenGLShader>(std::move(shaderFilePath));
 	}
 
-	void ShaderLibrary::add(const std::shared_ptr<Shader>& shader)
+	void ShaderLibrary::Add(const SPtr<Shader>& shader)
 	{
-		auto& name = shader->getName();
+		auto& name = shader->GetName();
 		mShaders[name] = shader;
 	}
 
-	std::shared_ptr<Shader> ShaderLibrary::load(const std::string& path)
+	SPtr<Shader> ShaderLibrary::Load(std::string&& path)
 	{
-		auto shader = Shader::create(path);
-		add(shader);
+		auto shader = Shader::Create(std::move(path));
+		Add(shader);
 		return shader;
 	}
 
-	std::shared_ptr<Shader> ShaderLibrary::get(const std::string& name)
+	SPtr<Shader> ShaderLibrary::Get(const std::string& name)
 	{
-		MELONE_CORE_ASSERT(exists(name), "Shader not exist");
+		MELONE_CORE_ASSERT(Exists(name), "Shader not exist");
 		return mShaders[name];
 	}
 
-	bool ShaderLibrary::exists(const std::string& name)
+	bool ShaderLibrary::Exists(const std::string& name)
 	{
 		return mShaders.find(name) != mShaders.end();
 	}

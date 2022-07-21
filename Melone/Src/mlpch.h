@@ -7,9 +7,13 @@
 #include <utility>
 #include <algorithm>
 #include <string>
+#include <tuple>
+#include <variant>
 #include <sstream>
 #include <vector>
 #include <array>
+#include <map>
+#include <random>
 
 #include "Melone/Core/Log.h"
 

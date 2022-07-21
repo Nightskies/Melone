@@ -8,38 +8,40 @@ namespace Melone
 {
 	Renderer::SceneData* Renderer::mSceneData = new Renderer::SceneData;
 
-	void Renderer::init(void)
+	void Renderer::Init()
 	{
-		RenderCommand::init();
-		Renderer2D::init();
+		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
-	void Renderer::onWindowResize(const std::pair<unsigned int, unsigned int>& dimensions)
+	void Renderer::OnWindowResize(const std::pair<unsigned int, unsigned int>& dimensions)
 	{
-		RenderCommand::setViewport(0, 0, dimensions.first, dimensions.second);
+		auto [width, height] = dimensions;
+
+		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
-	void Renderer::beginScene(OrthographicCamera& camera)
+	void Renderer::BeginScene(Camera& camera)
 	{
-		mSceneData->ViewProjectionMatrix = camera.getViewProjectionMatrix();
+		mSceneData->ViewProjectionMatrix = camera.GetProjection();
 	}
 
-	void Renderer::endScene(void)
+	void Renderer::EndScene()
 	{
 
 	}
 
-	void Renderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VAO>& VAO, const glm::mat4& transform)
+	void Renderer::Submit(const SPtr<Shader>& shader, const SPtr<VAO>& VAO, const glm::mat4& transform)
 	{
-		shader->bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("uViewProjection", mSceneData->ViewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("uTransform", transform);
-		VAO->bind();
+		shader->Bind();
+		std::static_pointer_cast<OpenGLShader>(shader)->SetUniformMat4("uViewProjection", mSceneData->ViewProjectionMatrix);
+		std::static_pointer_cast<OpenGLShader>(shader)->SetUniformMat4("uTransform", transform);
+		VAO->Bind();
 
-		RenderCommand::drawIndexed(VAO);
+		RenderCommand::DrawIndexed(VAO);
 	}
 
-	void Renderer::shutdown(void)
+	void Renderer::Shutdown()
 	{
 
 	}

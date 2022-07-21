@@ -14,7 +14,7 @@ ParticleSystem::ParticleSystem(unsigned int maxParticles)
 	mParticlePool.resize(maxParticles);
 }
 
-void ParticleSystem::onUpdate(Melone::Timestep ts)
+void ParticleSystem::OnUpdate(Melone::Timestep ts)
 {
 	for (auto& particle : mParticlePool)
 	{
@@ -33,39 +33,39 @@ void ParticleSystem::onUpdate(Melone::Timestep ts)
 	}
 }
 
-void ParticleSystem::onRender(Melone::OrthographicCamera& camera)
+void ParticleSystem::OnRender(Melone::Camera& camera)
 {	
-	Melone::Renderer2D::beginScene(camera);
+	//Melone::Renderer2D::BeginScene(camera);
 
-	for (auto& particle : mParticlePool)
-	{
-		if (!particle.Active)
-			continue;
+	//for (auto& particle : mParticlePool)
+	//{
+	//	if (!particle.Active)
+	//		continue;
 
-		// Fade away particles
-		float life = particle.LifeRemaining / particle.LifeTime;
-		glm::vec4 color = glm::lerp(particle.ColorEnd, particle.ColorBegin, life);
-		//color.a = color.a * life;
+	//	// Fade away particles
+	//	float life = particle.LifeRemaining / particle.LifeTime;
+	//	glm::vec4 color = glm::lerp(particle.ColorEnd, particle.ColorBegin, life);
+	//	//color.a = color.a * life;
 
-		float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
-		glm::vec3 position = { particle.Position.x, particle.Position.y, 0.2f };
-		Melone::Renderer2D::drawRotatedQuad(position, { size, size }, particle.Rotation, color);
-	}
+	//	float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
+	//	glm::vec3 position = { particle.Position.x, particle.Position.y, 0.2f };
+	//	Melone::Renderer2D::DrawRotatedQuad(position, { size, size }, particle.Rotation, color);
+	//}
 
-	Melone::Renderer2D::endScene();
+	//Melone::Renderer2D::EndScene();
 }
 
-void ParticleSystem::emit(const ParticleProps& particleProps)
+void ParticleSystem::Emit(const ParticleProps& particleProps)
 {
 	Particle& particle = mParticlePool[mPoolIndex];
 	particle.Active = true;
 	particle.Position = particleProps.Position;
-	particle.Rotation = Random::rand() * 2.0f * glm::pi<float>();
+	particle.Rotation = Random::Rand() * 2.0f * glm::pi<float>();
 
 	// Velocity
 	particle.Velocity = particleProps.Velocity;
-	particle.Velocity.x += particleProps.VelocityVariation.x * (Random::rand() - 0.5f);
-	particle.Velocity.y += particleProps.VelocityVariation.y * (Random::rand() - 0.5f);
+	particle.Velocity.x += particleProps.VelocityVariation.x * (Random::Rand() - 0.5f);
+	particle.Velocity.y += particleProps.VelocityVariation.y * (Random::Rand() - 0.5f);
 
 	// Color
 	particle.ColorBegin = particleProps.ColorBegin;
@@ -73,7 +73,7 @@ void ParticleSystem::emit(const ParticleProps& particleProps)
 
 	particle.LifeTime = particleProps.LifeTime;
 	particle.LifeRemaining = particleProps.LifeTime;
-	particle.SizeBegin = particleProps.SizeBegin + particleProps.SizeVariation * (Random::rand() - 0.5f);
+	particle.SizeBegin = particleProps.SizeBegin + particleProps.SizeVariation * (Random::Rand() - 0.5f);
 	particle.SizeEnd = particleProps.SizeEnd;
 
 	mPoolIndex = --mPoolIndex % mParticlePool.size();

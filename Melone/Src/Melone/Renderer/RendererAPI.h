@@ -14,18 +14,17 @@ namespace Melone
 			OpenGL
 		};
 	private:
-		static API sAPI;
+		static inline API mAPI = API::OpenGL;
 	public:
-		RendererAPI(void) = default;
-		virtual ~RendererAPI(void) = default;
+		RendererAPI() = default;
+		virtual ~RendererAPI() = default;
 	public:
-		virtual void init(void) = 0;
-		virtual void setViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height) = 0;
-		virtual void clear(void) = 0;
-		virtual void setClearColor(const glm::vec4& color) = 0;
+		virtual void Init() = 0;
+		virtual void SetViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height) = 0;
+		virtual void Clear() = 0;
+		virtual void SetClearColor(const glm::vec4& color) = 0;
+		virtual void DrawIndexed(const SPtr<VAO>& VAO, unsigned int indexCount = 0) = 0;
 
-		virtual void drawIndexed(const std::shared_ptr<VAO>& VAO, unsigned int indexCount = 0) = 0;
-
-		static API getAPI(void) { return sAPI; }
+		static API GetAPI() { return mAPI; }
 	};
 }

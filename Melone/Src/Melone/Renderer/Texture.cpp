@@ -5,13 +5,13 @@
 
 namespace Melone
 {
-	std::shared_ptr<Texture2D> Texture2D::create(unsigned int width, unsigned int height)
+	SPtr<Texture2D> Texture2D::Create(unsigned int width, unsigned int height)
 	{
 		return std::make_shared<OpenGLTexture2D>(width, height);
 	}
 
-	std::shared_ptr<Texture2D> Texture2D::create(const std::string& path)
+	SPtr<Texture2D> Texture2D::Create(std::string&& path)
 	{
-		return std::make_shared<OpenGLTexture2D>(path);
+		return std::make_shared<OpenGLTexture2D>(std::move(path));
 	}
 }

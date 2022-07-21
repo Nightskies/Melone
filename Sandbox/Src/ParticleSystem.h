@@ -7,12 +7,12 @@
 class Random
 {
 public:
-	static void init(void)
+	static void Init()
 	{
 		sRandomEngine.seed(std::random_device()());
 	}
 
-	static float rand(void)
+	static float Rand()
 	{
 		return (float)sDistribution(sRandomEngine) / (float)std::numeric_limits<uint32_t>::max();
 	}
@@ -40,10 +40,10 @@ class ParticleSystem
 public:
 	ParticleSystem(unsigned int maxParticles = 10000);
 
-	void onUpdate(Melone::Timestep ts);
-	void onRender(Melone::OrthographicCamera& camera);
+	void OnUpdate(Melone::Timestep ts);
+	void OnRender(Melone::Camera& camera);
 
-	void emit(const ParticleProps& particleProps);
+	void Emit(const ParticleProps& particleProps);
 private:
 	struct Particle
 	{

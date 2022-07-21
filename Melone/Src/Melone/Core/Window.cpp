@@ -1,11 +1,7 @@
 #include "mlpch.h"
 #include "Window.h"
 
-#include "Log.h"
-
-#include "Melone/Events/KeyEvent.h"
-#include "Melone/Events/MouseEvent.h"
-#include "Melone/Events/WindowEvent.h"
+#include "Melone/Renderer/Renderer.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -17,130 +13,136 @@ namespace Melone
 		MELONE_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window::Window(const std::string& title, int width, int height)
+	Window::Window(WindowProperties&& winProps)
 		:
-		mTitle(title),
-		mWinDimensions(width, height)
+		mProperties(std::move(winProps)),
+		mWindowType(Windows())
 	{
 		int success = glfwInit();
 		MELONE_CORE_ASSERT(success, "Could't initialize GLFW!");
 		glfwSetErrorCallback(GLFWErrorCallback);
 
-		mWindow = glfwCreateWindow(mWinDimensions.first, mWinDimensions.second, mTitle.c_str(), nullptr, nullptr);
-		MELONE_CORE_ASSERT(mWindow, "Failed create window!");
+		auto [width, height] = mProperties.mDimensions;
+		auto title = mProperties.mTitle.c_str();
 
-		MELONE_CORE_INFO("Created window {0} ({1}, {2})", mTitle, mWinDimensions.first, mWinDimensions.second);
+		mNativeWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
+		MELONE_CORE_ASSERT(mNativeWindow, "Failed create window!");
 
-		mContext = new OpenGLContext(mWindow);
-		mContext->init();
+		mContextType = OpenGLContext(mNativeWindow);
 
-		glfwSetWindowUserPointer(mWindow, this);
-		setVSync(true);
+		MELONE_CORE_INFO("Created window {0} ({1}, {2})", title, width, height);
 
-		// Set GLFW Callbacks
+		EventSystem::Subscribe(this, &Window::OnResize);
 
-		glfwSetWindowSizeCallback(mWindow, [](GLFWwindow* window, int width, int height)
+		EventSystem::Subscribe(this, &Window::OnClose);
+
+		glfwSetWindowSizeCallback(mNativeWindow, [](GLFWwindow* window, int width, int height)
 		{
-			Window& data = *(static_cast<Window*>(glfwGetWindowUserPointer(window)));
-			data.setWinDimentions({ width, height });
-
-			WindowResizeEvent event(width, height);
-			data.mEventCallback(event);
+			EventSystem::Publish<Event::WindowResize>(width, height);
 		});
 
-		glfwSetWindowCloseCallback(mWindow, [](GLFWwindow* window)
+		glfwSetWindowCloseCallback(mNativeWindow, [](GLFWwindow* window)
 		{
-			Window& data = *(static_cast<Window*>(glfwGetWindowUserPointer(window)));
-
-			WindowCloseEvent event;
-			data.mEventCallback(event);
+			EventSystem::Publish<Event::WindowClose>();
 		});
 
-		glfwSetKeyCallback(mWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		glfwSetKeyCallback(mNativeWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
-			Window& data = *(static_cast<Window*>(glfwGetWindowUserPointer(window)));
+			switch (action)
+			{
+			case GLFW_PRESS:
+			{
+				EventSystem::Publish<Event::KeyPressed>(key, 0);
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				EventSystem::Publish<Event::KeyReleased>(key);
+				break;
+			}
+			case GLFW_REPEAT:
+			{
+				EventSystem::Publish<Event::KeyPressed>(key, 1);
+				break;
+			}
+			}
+		});
 
+		glfwSetCharCallback(mNativeWindow, [](GLFWwindow* window, unsigned int keyCode)
+		{
+			EventSystem::Publish<Event::KeyTyped>(keyCode);
+		});
+
+		glfwSetMouseButtonCallback(mNativeWindow, [](GLFWwindow* window, int button, int action, int mods)
+		{
 			switch (action)
 			{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(key, 0);
-					data.mEventCallback(event);
+					EventSystem::Publish<Event::MouseButtonPressed>(button);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent event(key);
-					data.mEventCallback(event);
-					break;
-				}
-				case GLFW_REPEAT:
-				{
-					KeyPressedEvent event(key, 1);
-					data.mEventCallback(event);
+					EventSystem::Publish<Event::MouseButtonReleased>(button);
 					break;
 				}
 			}
 		});
 
-		glfwSetCharCallback(mWindow, [](GLFWwindow* window, unsigned int keyCode)
+		glfwSetScrollCallback(mNativeWindow, [](GLFWwindow* window, double xOffset, double yOffset)
 		{
-			Window& data = *(static_cast<Window*>(glfwGetWindowUserPointer(window)));
-
-			KeyTypedEvent event(keyCode);
-			data.mEventCallback(event);
+			EventSystem::Publish<Event::MouseScrolled>(xOffset, yOffset);
 		});
 
-		glfwSetMouseButtonCallback(mWindow, [](GLFWwindow* window, int button, int action, int mods)
+		glfwSetCursorPosCallback(mNativeWindow, [](GLFWwindow* window, double xPos, double yPos)
 		{
-			Window& data = *(static_cast<Window*>(glfwGetWindowUserPointer(window)));
-
-			switch (action)
-			{
-				case GLFW_PRESS:
-				{
-					MouseButtonPressedEvent event(button);
-					data.mEventCallback(event);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					MouseButtonReleasedEvent event(button);
-					data.mEventCallback(event);
-					break;
-				}
-			}
-		});
-
-		glfwSetScrollCallback(mWindow, [](GLFWwindow* window, double xOffset, double yOffset)
-		{
-			Window& data = *(static_cast<Window*>(glfwGetWindowUserPointer(window)));
-
-			MouseScrolledEvent event(xOffset, yOffset);
-			data.mEventCallback(event);
-		});
-
-		glfwSetCursorPosCallback(mWindow, [](GLFWwindow* window, double xPos, double yPos)
-		{
-			Window& data = *(static_cast<Window*>(glfwGetWindowUserPointer(window)));
-
-			MouseMovedEvent event(xPos, yPos);
-			data.mEventCallback(event);
+			EventSystem::Publish<Event::MouseMoved>(xPos, yPos);
 		});
 	}
 
-	void Window::shutdown(void)
+	const Window& Window::GetInstance(std::optional<WindowProperties>&& winProps)
 	{
-		glfwDestroyWindow(mWindow);
+		static std::optional<Window> instance;
+
+		if (instance)
+		{
+			MELONE_CORE_ASSERT(!winProps, "Passing data when the instance has already been constructed");
+
+			return instance.value();
+		}
+		else if (winProps)
+		{
+			return instance.emplace(std::move(*winProps));
+		}
 	}
 
-	void Window::update(void)
+	void Window::OnResize(const WindowResizeEvent& e)
 	{
-		mContext->swapBuffers();
-		glfwPollEvents();
+		mProperties.mDimensions = e.GetWinDimensions();
+
+		auto [width, height] = mProperties.mDimensions;
+
+		if (width == 0 || height == 0)
+		{
+			mMinimized = true;
+		}
+		else if (mMinimized)
+		{
+			mMinimized = false;
+		}
+
+		Renderer::OnWindowResize(mProperties.mDimensions);
 	}
 
-	void Window::setVSync(bool enabled)
+	void Window::OnClose(const WindowCloseEvent& e)
+	{
+		mClosed = true;
+
+		glfwDestroyWindow(mNativeWindow);
+	}
+
+	void Window::SetVSync(bool enabled)
 	{
 		if (enabled)
 			glfwSwapInterval(1);
@@ -148,5 +150,15 @@ namespace Melone
 			glfwSwapInterval(0);
 
 		mVSync = enabled;
+	}
+
+	void Window::Update() const
+	{
+		if (!mClosed)
+		{
+			std::visit([](const auto& context) { context.SwapBuffers(); }, mContextType);
+
+			glfwPollEvents();
+		}
 	}
 }
