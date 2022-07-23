@@ -10,3 +10,6 @@
 [submodule "Melone/Vendor/imgui"]
 	path = Melone/Vendor/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "Melone/Vendor/yaml-cpp"]
+	path = Melone/Vendor/yaml-cpp
+	url = https://github.com/thecherno/yaml-cpp

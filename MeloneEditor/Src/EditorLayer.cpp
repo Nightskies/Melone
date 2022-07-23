@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Melone/Scene/SceneSerializer.h"
+
 namespace Melone
 {
 	EditorLayer::EditorLayer()
@@ -21,6 +23,7 @@ namespace Melone
 
 		mActiveScene = Scene::Create();
 
+#if 0
 		// Entity
 		auto square = mActiveScene->CreateEntity("Green Square");
 		square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
@@ -69,7 +72,7 @@ namespace Melone
 		mCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
+#endif
 		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
 
@@ -159,6 +162,17 @@ namespace Melone
 				// Disabling fullscreen would allow the window to be moved to the front of other windows, 
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
+				if (ImGui::MenuItem("Serialize"))
+				{
+					SceneSerializer serializer(mActiveScene);
+					serializer.Serialize("Assets/Scenes/Example.melone");
+				}
+
+				if (ImGui::MenuItem("Deserialize"))
+				{
+					SceneSerializer serializer(mActiveScene);
+					serializer.Deserialize("Assets/Scenes/Example.melone");
+				}
 
 				if (ImGui::MenuItem("Exit")) 
 					Melone::Application::Close();
