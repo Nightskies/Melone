@@ -76,6 +76,7 @@ namespace Melone
 	void SceneHierarchyPanel::SetContext(const SPtr<Scene>& context)
 	{
 		mContext = context;
+		mSelectionContext = {};
 	}
 
 	void SceneHierarchyPanel::OnImGuiRender()
@@ -272,7 +273,7 @@ namespace Melone
 
 			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
 			{
-				float perspectiveFov = glm::degrees(camera.GetPerspectiveFOV());
+				float perspectiveFov = camera.GetPerspectiveFOV();
 				if (ImGui::DragFloat("FOV", &perspectiveFov))
 					camera.SetPerspectiveFOV(perspectiveFov);
 

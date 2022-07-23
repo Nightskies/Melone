@@ -41,6 +41,8 @@ namespace Melone
 				RepeatCount = 0;
 		}
 
+		bool IsKeyRepeat() const { return RepeatCount ? true : false; }
+
 		~KeyPressedEvent() override = default;
 
 		std::string ToString() const

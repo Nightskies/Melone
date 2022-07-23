@@ -43,5 +43,11 @@ namespace Melone
 
 		void OnUpdate(Timestep ts) override;
 		void OnImGuiRender() override;
+	private:
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+
+		void OnKeyPressed(const KeyPressedEvent& e);
 	};
 }

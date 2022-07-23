@@ -7,6 +7,8 @@
 
 #include "Melone/Scene/SceneSerializer.h"
 
+#include "Melone/Utils/PlatformUtils.h"
+
 namespace Melone
 {
 	EditorLayer::EditorLayer()
@@ -22,7 +24,6 @@ namespace Melone
 		mFramebuffer = Framebuffer::Create(fbSpec);
 
 		mActiveScene = Scene::Create();
-
 #if 0
 		// Entity
 		auto square = mActiveScene->CreateEntity("Green Square");
@@ -73,7 +74,9 @@ namespace Melone
 
 		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
+
 		mSceneHierarchyPanel.SetContext(mActiveScene);
+
 	}
 
 	void EditorLayer::OnDetach()
@@ -162,16 +165,20 @@ namespace Melone
 				// Disabling fullscreen would allow the window to be moved to the front of other windows, 
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
-				if (ImGui::MenuItem("Serialize"))
+
+				if (ImGui::MenuItem("New", "Ctrl+N"))
 				{
-					SceneSerializer serializer(mActiveScene);
-					serializer.Serialize("Assets/Scenes/Example.melone");
+					NewScene();
 				}
 
-				if (ImGui::MenuItem("Deserialize"))
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
 				{
-					SceneSerializer serializer(mActiveScene);
-					serializer.Deserialize("Assets/Scenes/Example.melone");
+					OpenScene();
+				}
+
+				if (ImGui::MenuItem("Save As..."))
+				{
+					SaveSceneAs();
 				}
 
 				if (ImGui::MenuItem("Exit")) 
@@ -219,5 +226,69 @@ namespace Melone
 		ImGui::PopStyleVar();
 
 		ImGui::End();
+	}
+
+	void EditorLayer::OnKeyPressed(const KeyPressedEvent& e)
+	{
+		if (e.IsKeyRepeat())
+			return;
+
+		bool control = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
+		bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
+		switch (e.GetKeyCode())
+		{
+		case Key::N:
+		{
+			if (control)
+				NewScene();
+
+			break;
+		}
+		case Key::O:
+		{
+			if (control)
+				OpenScene();
+
+			break;
+		}
+		case Key::S:
+		{
+			if (control && shift)
+				SaveSceneAs();
+
+			break;
+		}
+		}
+	}
+
+	void EditorLayer::NewScene()
+	{
+		mActiveScene = std::make_shared<Scene>();
+		mActiveScene->OnViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
+		mSceneHierarchyPanel.SetContext(mActiveScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		auto filePath = FileDialogs::OpenFile("Melone Scene (*.melone)\0*.melone\0");
+		if (filePath)
+		{
+			mActiveScene = std::make_shared<Scene>();
+			mActiveScene->OnViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
+			mSceneHierarchyPanel.SetContext(mActiveScene);
+
+			SceneSerializer serializer(mActiveScene);
+			serializer.Deserialize(std::move(*filePath));
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		auto filePath = FileDialogs::SaveFile("Melone Scene (*.melone)\0*.melone\0");
+		if (filePath)
+		{
+			SceneSerializer serializer(mActiveScene);
+			serializer.Serialize(std::move(*filePath));
+		}
 	}
 }
