@@ -231,11 +231,8 @@ namespace Melone
 
 		// Gizmos
 		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
-
-		MELONE_CORE_INFO("ASD{}", selectedEntity.mEntityHandle);
 		if (selectedEntity && mGizmoType != -1)
 		{
-			MELONE_CORE_INFO("WW{}");
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
