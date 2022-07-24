@@ -18,6 +18,8 @@ namespace Melone
 		void SetViewportDimensions(const std::pair<float, float>& dimensions);
 
 		const glm::mat4& GetViewProjectionMatrix() const { return mVPMatrix; }
+		const glm::mat4 GetViewMatrix() const { return mViewMatrix; }
+		const glm::mat4 GetProjectionMatrix() const { return mProjectionMatrix; }
 	private:
 		void MouseRotate(const glm::vec2& mousePositionOffset);
 		void MouseTranslation(const glm::vec2& mousePositionOffset);

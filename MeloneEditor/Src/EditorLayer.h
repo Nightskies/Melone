@@ -32,6 +32,8 @@ namespace Melone
 		bool mViewportFocused = false;
 		bool mViewportHovered = false;
 
+		int mGizmoType = -1;
+
 		// Panels
 		SceneHierarchyPanel mSceneHierarchyPanel;
 	public:

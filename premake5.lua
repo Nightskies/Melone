@@ -24,6 +24,7 @@ IncludeDir["ImGui"] = "Melone/Vendor/imgui"
 IncludeDir["stb_image"] = "Melone/Vendor/stb_image"
 IncludeDir["entt"] = "Melone/Vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Melone/Vendor/yaml-cpp/include"
+IncludeDir["ImGuizmo"] = "Melone/Vendor/ImGuizmo"
 
 group "Dependencies"
 	include "Melone/Vendor/GLFW"
@@ -52,7 +53,9 @@ project "Melone"
 		"%{prj.name}/Vendor/glm/glm/**.hpp",
 		"%{prj.name}/Vendor/glm/glm/**.inl",
 		"%{prj.name}/Vendor/stb_image/**.h",
-		"%{prj.name}/Vendor/stb_image/**.cpp"
+		"%{prj.name}/Vendor/stb_image/**.cpp",
+		"%{prj.name}/Vendor/ImGuizmo/ImGuizmo.h",
+		"%{prj.name}/Vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	defines
@@ -70,7 +73,8 @@ project "Melone"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
-		"%{IncludeDir.yaml_cpp}"
+		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links 
@@ -81,6 +85,9 @@ project "Melone"
 		"yaml-cpp",
 		"opengl32.lib"
 	}
+
+	filter "files:Melone/Vendor/ImGuizmo/**.cpp"
+	flags { "NoPCH" }
 
 	filter "system:windows"
 		systemversion "latest"
@@ -175,7 +182,8 @@ project "MeloneEditor"
 		"Melone/Src",
 		"Melone/Vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links

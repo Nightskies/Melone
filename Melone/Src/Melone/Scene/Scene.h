@@ -29,6 +29,8 @@ namespace Melone
 		void OnViewportResize(unsigned int width, unsigned int height);
 		void OnUpdate(Timestep ts);
 
+		Entity GetPrimaryCameraEntity();
+
 		static SPtr<Scene> Create();
 	private:
 		template<typename T>

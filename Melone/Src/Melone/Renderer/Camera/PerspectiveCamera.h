@@ -12,9 +12,6 @@ namespace Melone
 	class PerspectiveCamera
 	{
 	private:
-		glm::mat4 mProjectionMatrix = glm::mat4(1.0f);
-		glm::mat4 mViewMatrix = glm::mat4(1.0f);
-
 		glm::vec3 mPosition;
 
 		glm::vec3 mFocalPoint = { 0.0f, 0.0f, 0.0f };
@@ -30,6 +27,8 @@ namespace Melone
 		float mAspectRatio;
 	protected:
 		glm::mat4 mVPMatrix;
+		glm::mat4 mProjectionMatrix = glm::mat4(1.0f);
+		glm::mat4 mViewMatrix = glm::mat4(1.0f);
 
 		float mDistance = 10.0f;
 

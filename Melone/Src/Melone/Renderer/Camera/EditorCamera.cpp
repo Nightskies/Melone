@@ -37,7 +37,11 @@ namespace Melone
 
 		}
 
-		PerspectiveCamera::OnUpdate(ts);
+		// Moving camera by using the keyboard
+		if (Input::IsKeyPressed(Key::Space))
+		{
+			PerspectiveCamera::OnUpdate(ts);
+		}
 	}
 
 	void EditorCamera::MouseRotate(const glm::vec2& mousePositionOffset)

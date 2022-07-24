@@ -13,3 +13,6 @@
 [submodule "Melone/Vendor/yaml-cpp"]
 	path = Melone/Vendor/yaml-cpp
 	url = https://github.com/thecherno/yaml-cpp
+[submodule "Melone/Vendor/ImGuizmo"]
+	path = Melone/Vendor/ImGuizmo
+	url = https://github.com/thecherno/imguizmo

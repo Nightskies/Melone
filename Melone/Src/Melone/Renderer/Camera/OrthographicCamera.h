@@ -12,9 +12,6 @@ namespace Melone
 	class OrthographicCamera
 	{
 	private:
-		glm::mat4 mProjectionMatrix = glm::mat4(1.0f);
-		glm::mat4 mViewMatrix = glm::mat4(1.0f);
-
 		glm::vec3 mPosition = { 0.0f, 0.0f, 0.0f };
 
 		float mSize = 1.0f;
@@ -25,6 +22,8 @@ namespace Melone
 		float mAspectRatio;
 	protected:
 		glm::mat4 mVPMatrix;
+		glm::mat4 mProjectionMatrix = glm::mat4(1.0f);
+		glm::mat4 mViewMatrix = glm::mat4(1.0f);
 
 		float mCameraTranslationSpeed = 5.0f;
 		float mCameraRotationSpeed = 90.0f;

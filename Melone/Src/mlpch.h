@@ -12,6 +12,7 @@
 #include <sstream>
 #include <vector>
 #include <array>
+#include <optional>
 #include <map>
 #include <random>
 
