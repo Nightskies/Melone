@@ -34,6 +34,8 @@ namespace Melone
 
 		int mGizmoType = -1;
 
+		glm::vec2 mViewportBounds[2];
+
 		// Panels
 		SceneHierarchyPanel mSceneHierarchyPanel;
 	public:

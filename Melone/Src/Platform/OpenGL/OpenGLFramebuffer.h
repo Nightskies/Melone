@@ -8,22 +8,34 @@ namespace Melone
 	{
 	private:
 		unsigned int mRendererID = 0;
-		unsigned int mColorAttachment = 0;
-		unsigned int mDepthAttachment = 0;
 		FramebufferSpecification mSpecification;
+
+		std::vector<FramebufferTextureSpecification> mColorAttachmentSpecifications;
+		FramebufferTextureSpecification mDepthAttachmentSpecification = FramebufferTextureFormat::None;
+
+		std::vector<unsigned int> mColorAttachments;
+		unsigned int mDepthAttachment = 0;
 	public:
 		OpenGLFramebuffer(const FramebufferSpecification& spec);
 		~OpenGLFramebuffer();
 
 		void Invalidate();
 
-		virtual void Bind() override;
-		virtual void Unbind() override;
+		void Bind() override;
+		void Unbind() override;
 
-		virtual void Resize(unsigned int width, unsigned int height) override;
+		void Resize(unsigned int width, unsigned int height) override;
 
-		virtual unsigned int GetColorAttachmentRendererID() const override { return mColorAttachment; }
+		int ReadPixel(unsigned int attachmentIndex, int x, int y) override;
 
-		virtual const FramebufferSpecification& GetSpecification() const override { return mSpecification; }
+		void ClearAttachment(unsigned int attachmentIndex, int value) override;
+
+		unsigned int GetColorAttachmentRendererID(unsigned int index = 0) const override
+		{ 
+			MELONE_CORE_ASSERT(index < mColorAttachments.size(), "Invalid index");
+			return mColorAttachments[index]; 
+		}
+
+		const FramebufferSpecification& GetSpecification() const override { return mSpecification; }
 	};
 }

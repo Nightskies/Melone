@@ -26,7 +26,10 @@ namespace Melone
 	void EditorLayer::OnAttach()
 	{
 		mCheckerboardTexture = Texture2D::Create("Assets/Textures/Checkerboard.png");
-		FramebufferSpecification fbSpec = { 1280, 720 };
+		FramebufferSpecification fbSpec;
+		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
+		fbSpec.Width = 1280;
+		fbSpec.Height = 720;
 		mFramebuffer = Framebuffer::Create(fbSpec);
 
 		mActiveScene = Scene::Create();
@@ -112,8 +115,25 @@ namespace Melone
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 
+		// Clear our entity ID attachment to -1
+		mFramebuffer->ClearAttachment(1, -1);
+
 		// Update scene
 		mActiveScene->OnUpdateEditorCamera(ts, mEditorCamera);
+
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= mViewportBounds[0].x;
+		my -= mViewportBounds[0].y;
+		glm::vec2 viewportSize = mViewportBounds[1] - mViewportBounds[0];
+		my = viewportSize.y - my;
+		int mouseX = (int)mx;
+		int mouseY = (int)my;
+
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		{
+			int pixelData = mFramebuffer->ReadPixel(1, mouseX, mouseY);
+			MELONE_CORE_WARN("Pixel data = {0}", pixelData);
+		}
 
 		mFramebuffer->Unbind();
 	}
@@ -212,6 +232,8 @@ namespace Melone
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 
+		auto viewportOffset = ImGui::GetCursorPos(); // Includes tab bar
+
 		mViewportFocused = ImGui::IsWindowFocused();
 		mViewportHovered = ImGui::IsWindowHovered();
 		if (!mViewportFocused && !mViewportHovered)
@@ -229,13 +251,19 @@ namespace Melone
 		unsigned int textureID = mFramebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
+		auto windowSize = ImGui::GetWindowSize();
+		ImVec2 minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+
+		ImVec2 maxBound = { minBound.x + mViewportSize.x, minBound.y + mViewportSize.y };
+		mViewportBounds[0] = { minBound.x, minBound.y };
+		mViewportBounds[1] = { maxBound.x, maxBound.y };
+
 		// Gizmos
 		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
-
-		MELONE_CORE_INFO("ASD{}", selectedEntity.mEntityHandle);
 		if (selectedEntity && mGizmoType != -1)
 		{
-			MELONE_CORE_INFO("WW{}");
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
