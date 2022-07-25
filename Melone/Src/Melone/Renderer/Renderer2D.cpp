@@ -17,6 +17,8 @@ namespace Melone
 
 		float TextureIndex;
 		float TilingFactor;
+
+		int EntityID;
 	};
 
 	static struct Renderer2DStash
@@ -54,7 +56,8 @@ namespace Melone
 			{ ShaderDataType::Float4, "aColor" },
 			{ ShaderDataType::Float2, "aTexCoord" },
 			{ ShaderDataType::Float, "aTexIndex"},
-			{ ShaderDataType::Float, "aTilingFactor" }
+			{ ShaderDataType::Float, "aTilingFactor" },
+			{ ShaderDataType::Int, "aEntityID" }
 			});
 
 		Renderer2DData.QuadVAO->AddVBO(Renderer2DData.QuadVBO);
@@ -280,7 +283,7 @@ namespace Melone
 		Renderer2DData.Info.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID)
 	{
 		constexpr size_t quadVertexCount = 4;
 		const float textureIndex = 0.0f;
@@ -297,6 +300,7 @@ namespace Melone
 			Renderer2DData.QuadVBOPtr->TexCoord = textureCoords[i];
 			Renderer2DData.QuadVBOPtr->TextureIndex = textureIndex;
 			Renderer2DData.QuadVBOPtr->TilingFactor = tilingFactor;
+			Renderer2DData.QuadVBOPtr->EntityID = entityID;
 			Renderer2DData.QuadVBOPtr++;
 		}
 
@@ -304,7 +308,7 @@ namespace Melone
 		Renderer2DData.Info.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const SPtr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const SPtr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor, int entityID)
 	{
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -337,6 +341,7 @@ namespace Melone
 			Renderer2DData.QuadVBOPtr->TexCoord = textureCoords[i];
 			Renderer2DData.QuadVBOPtr->TextureIndex = textureIndex;
 			Renderer2DData.QuadVBOPtr->TilingFactor = tilingFactor;
+			Renderer2DData.QuadVBOPtr->EntityID = entityID;
 			Renderer2DData.QuadVBOPtr++;
 		}
 
@@ -474,6 +479,11 @@ namespace Melone
 
 		Renderer2DData.QuadIndexCount += 6;
 		Renderer2DData.Info.QuadCount++;
+	}
+
+	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID)
+	{
+		DrawQuad(transform, src.Color, entityID);
 	}
 
 	void Renderer2D::ResetStats()

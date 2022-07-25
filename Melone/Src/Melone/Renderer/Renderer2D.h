@@ -6,6 +6,8 @@
 #include "Texture.h"
 #include "SubTexture2D.h"
 
+#include "Melone/Scene/Components.h"
+
 namespace Melone
 {
 	class Renderer2D
@@ -22,6 +24,7 @@ namespace Melone
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 
+
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const SPtr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
@@ -30,8 +33,8 @@ namespace Melone
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const SPtr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const SPtr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
-		static void DrawQuad(const glm::mat4& transform, const SPtr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor);
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
+		static void DrawQuad(const glm::mat4& transform, const SPtr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor, int entityID = -1);
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
 
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color);
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color);
@@ -40,6 +43,8 @@ namespace Melone
 
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const SPtr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const SPtr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+
+		static void DrawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID);
 
 		// Stats info
 		struct Stats

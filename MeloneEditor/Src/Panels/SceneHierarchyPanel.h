@@ -20,6 +20,7 @@ namespace Melone
 
 		void OnImGuiRender();
 
+		void SetSelectedEntity(Entity entity);
 		Entity GetSelectedEntity() const { return mSelectionContext; }
 	private:
 		void DrawEntityNode(Entity entity);

@@ -10,6 +10,7 @@ namespace Melone
 		std::vector<SPtr<VBO>> mVBOArr;
 		SPtr<IBO> mIBO;
 		unsigned int mRendererID;
+		unsigned int mVertexBufferIndex = 0;
 	public:
 		OpenGLVAO();
 		~OpenGLVAO();

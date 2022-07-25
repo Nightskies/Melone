@@ -73,6 +73,11 @@ namespace Melone
 		SetContext(context);
 	}
 
+	void SceneHierarchyPanel::SetSelectedEntity(Entity entity)
+	{
+		mSelectionContext = entity;
+	}
+
 	void SceneHierarchyPanel::SetContext(const SPtr<Scene>& context)
 	{
 		mContext = context;

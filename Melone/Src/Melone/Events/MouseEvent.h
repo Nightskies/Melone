@@ -76,6 +76,8 @@ namespace Melone
 		virtual ~MouseButtonEvent() = default;
 	public:
 		static constexpr unsigned char GetCategory() { return EventCategoryMouse | EventCategoryInput; }
+
+		int GetPressedButton() const { return mButton; }
 	};
 
 

@@ -22,6 +22,7 @@ namespace Melone
 		Entity mSquareEntity;
 		Entity mCameraEntity;
 		Entity mSecondCamera;
+		Entity mHoveredEntity;
 
 		bool mPrimaryCamera = true;
 
@@ -53,5 +54,6 @@ namespace Melone
 		void SaveSceneAs();
 
 		void OnKeyPressed(const KeyPressedEvent& e);
+		void OnMouseButtonPressed(const MouseButtonPressedEvent& e);
 	};
 }

@@ -21,6 +21,7 @@ namespace Melone
 		mEditorCamera({ 1280.0f, 720.0f })
 	{
 		EventSystem::Subscribe(this, &EditorLayer::OnKeyPressed);
+		EventSystem::Subscribe(this, &EditorLayer::OnMouseButtonPressed);
 	}
 
 	void EditorLayer::OnAttach()
@@ -132,7 +133,7 @@ namespace Melone
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = mFramebuffer->ReadPixel(1, mouseX, mouseY);
-			MELONE_CORE_WARN("Pixel data = {0}", pixelData);
+			mHoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, mActiveScene.get());
 		}
 
 		mFramebuffer->Unbind();
@@ -220,6 +221,11 @@ namespace Melone
 
 		ImGui::Begin("Stats");
 
+		std::string name = "None";
+		if (mHoveredEntity)
+			name = mHoveredEntity.GetComponent<TagComponent>().Tag;
+		ImGui::Text("Hovered Entity: %s", name.c_str());
+
 		auto stats = Melone::Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
@@ -232,7 +238,11 @@ namespace Melone
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 
-		auto viewportOffset = ImGui::GetCursorPos(); // Includes tab bar
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+		auto viewportOffset = ImGui::GetWindowPos();
+		mViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+		mViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
 		mViewportFocused = ImGui::IsWindowFocused();
 		mViewportHovered = ImGui::IsWindowHovered();
@@ -251,15 +261,6 @@ namespace Melone
 		unsigned int textureID = mFramebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
-		auto windowSize = ImGui::GetWindowSize();
-		ImVec2 minBound = ImGui::GetWindowPos();
-		minBound.x += viewportOffset.x;
-		minBound.y += viewportOffset.y;
-
-		ImVec2 maxBound = { minBound.x + mViewportSize.x, minBound.y + mViewportSize.y };
-		mViewportBounds[0] = { minBound.x, minBound.y };
-		mViewportBounds[1] = { maxBound.x, maxBound.y };
-
 		// Gizmos
 		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && mGizmoType != -1)
@@ -267,9 +268,7 @@ namespace Melone
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+			ImGuizmo::SetRect(mViewportBounds[0].x, mViewportBounds[0].y, mViewportBounds[1].x - mViewportBounds[0].x, mViewportBounds[1].y - mViewportBounds[0].y);
 
 			// Runtime camera from entity
 			/*auto cameraEntity = mActiveScene->GetPrimaryCameraEntity();
@@ -361,6 +360,15 @@ namespace Melone
 		case Key::R:
 			mGizmoType = ImGuizmo::OPERATION::SCALE;
 			break;
+		}
+	}
+
+	void EditorLayer::OnMouseButtonPressed(const MouseButtonPressedEvent& e)
+	{
+		if (e.GetPressedButton() == Mouse::ButtonLeft)
+		{
+			if (mViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
+				mSceneHierarchyPanel.SetSelectedEntity(mHoveredEntity);
 		}
 	}
 
