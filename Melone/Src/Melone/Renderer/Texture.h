@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Melone/Core/Core.h"
+
+#include <string>
+
 namespace Melone
 {
 	class ITexture

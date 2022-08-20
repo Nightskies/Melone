@@ -218,6 +218,7 @@ namespace Melone
 		}
 
 		mSceneHierarchyPanel.OnImGuiRender();
+		mContentBrowserPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
 

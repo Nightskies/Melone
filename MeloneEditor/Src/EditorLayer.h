@@ -3,6 +3,8 @@
 #include <Melone.h>
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
+
 #include "Melone/Renderer/Camera/EditorCamera.h"
 
 namespace Melone 
@@ -39,6 +41,7 @@ namespace Melone
 
 		// Panels
 		SceneHierarchyPanel mSceneHierarchyPanel;
+		ContentBrowserPanel mContentBrowserPanel;
 	public:
 		EditorLayer();
 		~EditorLayer() = default;
