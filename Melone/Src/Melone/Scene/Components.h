@@ -7,7 +7,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include "SceneCamera.h"
-
+#include "Melone/Renderer/Texture.h"
 #include "ScriptableEntity.h"
 
 namespace Melone
@@ -53,6 +53,8 @@ namespace Melone
 	{
 	public:
 		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		SPtr<Texture2D> Texture;
+		float TilingFactor = 1.0f;
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;

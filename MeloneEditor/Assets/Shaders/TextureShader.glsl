@@ -41,7 +41,7 @@ in float vTexIndex;
 in float vTilingFactor;
 in flat int vEntityID;
 
-uniform sampler2D uTextures[32];
+layout(binding = 0) uniform sampler2D uTextures[32];
 
 void main()
 {
