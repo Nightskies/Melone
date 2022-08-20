@@ -15,6 +15,8 @@
 
 namespace Melone
 {
+	extern const std::filesystem::path AssetPath;
+
 	EditorLayer::EditorLayer()
 		:
 		Layer("EditorLayer"),
@@ -262,6 +264,17 @@ namespace Melone
 		unsigned int textureID = mFramebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(std::filesystem::path(AssetPath) / path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+
 		// Gizmos
 		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && mGizmoType != -1)
@@ -385,13 +398,18 @@ namespace Melone
 		auto filePath = FileDialogs::OpenFile("Melone Scene (*.melone)\0*.melone\0");
 		if (filePath)
 		{
-			mActiveScene = std::make_shared<Scene>();
-			mActiveScene->OnViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
-			mSceneHierarchyPanel.SetContext(mActiveScene);
-
-			SceneSerializer serializer(mActiveScene);
-			serializer.Deserialize(std::move(*filePath));
+			OpenScene(*filePath);
 		}
+	}
+
+	void EditorLayer::OpenScene(const std::filesystem::path& path)
+	{
+		mActiveScene = std::make_shared<Scene>();
+		mActiveScene->OnViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
+		mSceneHierarchyPanel.SetContext(mActiveScene);
+
+		SceneSerializer serializer(mActiveScene);
+		serializer.Deserialize(path.string());
 	}
 
 	void EditorLayer::SaveSceneAs()
