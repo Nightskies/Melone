@@ -1,5 +1,5 @@
 #type vertex
-#version 330 core
+#version 450 core
 
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec4 aColor;
@@ -8,13 +8,16 @@ layout(location = 3) in float aTexIndex;
 layout(location = 4) in float aTilingFactor;
 layout(location = 5) in int aEntityID;
 
+layout(std140) uniform Camera
+{
+	mat4 uViewProjection;
+};
+
 out vec4 vColor;
 out vec2 vTexCoord;
 out float vTexIndex;
 out float vTilingFactor;
 out flat int vEntityID;
-
-uniform mat4 uViewProjection;
 
 void main()
 {
@@ -27,7 +30,7 @@ void main()
 };
 
 #type fragment
-#version 330 core
+#version 450 core
 
 layout(location = 0) out vec4 color;
 layout(location = 1) out int color2;

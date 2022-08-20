@@ -69,7 +69,7 @@ namespace Melone
 
 	SPtr<VBO> VBO::Create(unsigned int size)
 	{
-		switch (Renderer::getAPI())
+		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::Undefined:
 			MELONE_CORE_ASSERT(false, "RendererAPI is undefined");
@@ -86,7 +86,7 @@ namespace Melone
 
 	SPtr<VBO> VBO::Create(float* vertices, unsigned int size)
 	{
-		switch (Renderer::getAPI())
+		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::Undefined:
 				MELONE_CORE_ASSERT(false, "RendererAPI is undefined");
@@ -103,7 +103,7 @@ namespace Melone
 
 	SPtr<IBO> IBO::Create(unsigned int count)
 	{
-		switch (Renderer::getAPI())
+		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::Undefined:
 			MELONE_CORE_ASSERT(false, "RendererAPI is undefined");
@@ -120,7 +120,7 @@ namespace Melone
 
 	SPtr<IBO> IBO::Create(unsigned int* indices, unsigned int count)
 	{
-		switch (Renderer::getAPI())
+		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::Undefined:
 				MELONE_CORE_ASSERT(false, "RendererAPI is undefined");

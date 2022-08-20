@@ -9,7 +9,7 @@ namespace Melone
 {
 	SPtr<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
-		switch (Renderer::getAPI())
+		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::Undefined:
 			MELONE_CORE_ASSERT(false, "RendererAPI is undefined");

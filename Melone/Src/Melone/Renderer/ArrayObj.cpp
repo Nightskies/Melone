@@ -8,7 +8,7 @@ namespace Melone
 {
 	SPtr<VAO> VAO::Create()
 	{
-		switch (Renderer::getAPI())
+		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::Undefined:
 				MELONE_CORE_ASSERT(false, "RendererAPI is undefined");

@@ -4,6 +4,7 @@
 #include "ArrayObj.h"
 #include "Shader.h"
 #include "RenderCommand.h"
+#include "UniformBuffer.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -41,6 +42,13 @@ namespace Melone
 		unsigned int TextureSlotIndex = 1;
 
 		glm::vec4 QuadVertexPositions[4];
+
+		struct CameraData
+		{
+			glm::mat4 ViewProjection;
+		};
+		CameraData CameraBuffer;
+		SPtr<UniformBuffer> CameraUniformBuffer;
 
 		Renderer2D::Stats Info;
 	} Renderer2DData;
@@ -92,8 +100,6 @@ namespace Melone
 			samplers[i] = i;
 
 		Renderer2DData.TextureShader = Shader::Create("Assets/Shaders/TextureShader.glsl");
-		Renderer2DData.TextureShader->Bind();
-		Renderer2DData.TextureShader->SetUniformIntArray("uTextures", samplers, Renderer2DData.MaxTextureSlots);
 
 		Renderer2DData.TextureSlots[0] = Renderer2DData.WhiteTexture;
 
@@ -101,12 +107,14 @@ namespace Melone
 		Renderer2DData.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
 		Renderer2DData.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		Renderer2DData.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
+		Renderer2DData.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DStash::CameraData), 0);
 	}
 
 	void Renderer2D::BeginScene(const EditorCamera& camera)
 	{
-		Renderer2DData.TextureShader->Bind();
-		Renderer2DData.TextureShader->SetUniformMat4("uViewProjection", camera.GetViewProjectionMatrix());
+		Renderer2DData.CameraBuffer.ViewProjection = camera.GetViewProjectionMatrix();
+		Renderer2DData.CameraUniformBuffer->SetData(&Renderer2DData.CameraBuffer, sizeof(Renderer2DStash::CameraData));
 
 		Renderer2DData.QuadIndexCount = 0;
 		Renderer2DData.QuadVBOPtr = Renderer2DData.QuadVBOBase;
@@ -116,10 +124,8 @@ namespace Melone
 
 	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
 	{
-		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
-
-		Renderer2DData.TextureShader->Bind();
-		Renderer2DData.TextureShader->SetUniformMat4("uViewProjection", viewProj);
+		Renderer2DData.CameraBuffer.ViewProjection = camera.GetProjection() * glm::inverse(transform);
+		Renderer2DData.CameraUniformBuffer->SetData(&Renderer2DData.CameraBuffer, sizeof(Renderer2DStash::CameraData));
 
 		Renderer2DData.QuadIndexCount = 0;
 		Renderer2DData.QuadVBOPtr = Renderer2DData.QuadVBOBase;
@@ -140,6 +146,7 @@ namespace Melone
 		for (unsigned int i = 0; i < Renderer2DData.TextureSlotIndex; i++)
 			Renderer2DData.TextureSlots[i]->Bind(i);
 
+		Renderer2DData.TextureShader->Bind();
 		RenderCommand::DrawIndexed(Renderer2DData.QuadVAO, Renderer2DData.QuadIndexCount);
 		Renderer2DData.Info.DrawCalls++;
 	}

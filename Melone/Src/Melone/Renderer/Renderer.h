@@ -29,6 +29,6 @@ namespace Melone
 
 		static void Submit(const SPtr<Shader>& shader, const SPtr<VAO>& VAO, const glm::mat4& transform = glm::mat4(1.0f));
 
-		static const RendererAPI::API getAPI() { return RendererAPI::GetAPI(); }
+		static const RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	};
 }
