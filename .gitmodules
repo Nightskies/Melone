@@ -16,3 +16,6 @@
 [submodule "Melone/Vendor/ImGuizmo"]
 	path = Melone/Vendor/ImGuizmo
 	url = https://github.com/thecherno/imguizmo
+[submodule "Melone/Vendor/Box2D"]
+	path = Melone/Vendor/Box2D
+	url = https://github.com/thecherno/box2d

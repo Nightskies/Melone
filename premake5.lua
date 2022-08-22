@@ -25,12 +25,14 @@ IncludeDir["stb_image"] = "Melone/Vendor/stb_image"
 IncludeDir["entt"] = "Melone/Vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Melone/Vendor/yaml-cpp/include"
 IncludeDir["ImGuizmo"] = "Melone/Vendor/ImGuizmo"
+IncludeDir["Box2D"] = "Melone/Vendor/Box2D/include"
 
 group "Dependencies"
 	include "Melone/Vendor/GLFW"
 	include "Melone/Vendor/Glad"
 	include "Melone/Vendor/imgui"
 	include "Melone/Vendor/yaml-cpp"
+	include "Melone/Vendor/Box2D"
 group ""
 
 project "Melone"
@@ -74,7 +76,8 @@ project "Melone"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.ImGuizmo}"
+		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.Box2D}"
 	}
 
 	links 
@@ -83,6 +86,7 @@ project "Melone"
 		"Glad",
 		"ImGui",
 		"yaml-cpp",
+		"Box2D",
 		"opengl32.lib"
 	}
 

@@ -5,6 +5,8 @@
 #include "Melone/Core/Timestep.h"
 #include "Melone/Renderer/Camera/EditorCamera.h"
 
+class b2World;
+
 namespace Melone 
 {
 	class Scene
@@ -14,6 +16,8 @@ namespace Melone
 		
 		unsigned int mViewportWidth = 0;
 		unsigned int mViewportHeight = 0;
+
+		b2World* mPhysicsWorld = nullptr;
 
 		friend class Entity;
 		friend class SceneHierarchyPanel;
@@ -28,6 +32,9 @@ namespace Melone
 		void OnUpdateEditorCamera(Timestep ts, const EditorCamera& camera);
 		void OnViewportResize(unsigned int width, unsigned int height);
 		void OnUpdate(Timestep ts);
+
+		void OnRuntimeStart();
+		void OnRuntimeStop();
 
 		Entity GetPrimaryCameraEntity();
 

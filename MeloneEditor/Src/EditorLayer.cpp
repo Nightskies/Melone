@@ -468,10 +468,12 @@ namespace Melone
 	void EditorLayer::OnScenePlay()
 	{
 		mSceneState = SceneState::Play;
+		mActiveScene->OnRuntimeStart();
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
 		mSceneState = SceneState::Edit;
+		mActiveScene->OnRuntimeStop();
 	}
 }
