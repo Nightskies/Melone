@@ -176,11 +176,16 @@ namespace Melone
 
 	bool SceneSerializer::Deserialize(std::string&& filePath)
 	{
-		std::ifstream stream(std::move(filePath));
-		std::stringstream strStream;
-		strStream << stream.rdbuf();
+		YAML::Node data;
+		try
+		{
+			data = YAML::LoadFile(filePath);
+		}
+		catch (YAML::ParserException e)
+		{
+			return false;
+		}
 
-		YAML::Node data = YAML::Load(strStream.str());
 		if (!data["Scene"])
 			return false;
 

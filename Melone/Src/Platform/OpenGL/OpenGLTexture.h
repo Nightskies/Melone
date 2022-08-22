@@ -13,7 +13,9 @@ namespace Melone
 		std::string mPath;
 		unsigned int mWidth;
 		unsigned int mHeight;
-		GLenum mInternalFormat, mDataFormat;
+		bool mIsLoaded = false;
+		GLenum mInternalFormat;
+		GLenum mDataFormat;
 	public:
 		OpenGLTexture2D(unsigned int width, unsigned int height);
 		OpenGLTexture2D(std::string&& path);
@@ -26,6 +28,8 @@ namespace Melone
 		unsigned int GetRendererID() const override { return mRendererID; }
 
 		void SetData(void* data, unsigned int size) override;
+
+		bool IsLoaded() const override { return mIsLoaded; }
 
 		bool operator==(const ITexture& other) const override
 		{

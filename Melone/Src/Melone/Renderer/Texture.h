@@ -19,6 +19,8 @@ namespace Melone
 
 		virtual void SetData(void* data, unsigned int size) = 0;
 
+		virtual bool IsLoaded() const = 0;
+
 		virtual bool operator==(const ITexture& other) const = 0;
 	};
 

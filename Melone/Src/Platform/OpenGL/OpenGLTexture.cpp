@@ -37,38 +37,45 @@ namespace Melone
 		stbi_uc* data = nullptr;
 		data = stbi_load(mPath.c_str(), &width, &height, &channels, 0);
 
-		mWidth = width;
-		mHeight = height;
-
-		GLenum internalFormat = 0;
-		GLenum dataFormat = 0;
-
-		if (channels == 4)
-		{
-			internalFormat = GL_RGBA8;
-			dataFormat = GL_RGBA;
-		}
-		else if (channels == 3)
-		{
-			internalFormat = GL_RGB8;
-			dataFormat = GL_RGB;
-		}
-
-		MELONE_CORE_ASSERT(internalFormat & dataFormat, "Format not supported");
-
-		glCreateTextures(GL_TEXTURE_2D, 1, &mRendererID);
-		glTextureStorage2D(mRendererID, 1, internalFormat, mWidth, mHeight);
-
-		// Filters for texture when increasing or decreasing size(mipmap)
-		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTextureSubImage2D(mRendererID, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
-
 		if (data)
+		{
+			mIsLoaded = true;
+
+			mWidth = width;
+			mHeight = height;
+
+			GLenum internalFormat = 0;
+			GLenum dataFormat = 0;
+
+			if (channels == 4)
+			{
+				internalFormat = GL_RGBA8;
+				dataFormat = GL_RGBA;
+			}
+			else if (channels == 3)
+			{
+				internalFormat = GL_RGB8;
+				dataFormat = GL_RGB;
+			}
+
+			mInternalFormat = internalFormat;
+			mDataFormat = dataFormat;
+
+			MELONE_CORE_ASSERT(internalFormat & dataFormat, "Format not supported");
+
+			glCreateTextures(GL_TEXTURE_2D, 1, &mRendererID);
+			glTextureStorage2D(mRendererID, 1, internalFormat, mWidth, mHeight);
+
+			// Filters for texture when increasing or decreasing size(mipmap)
+			glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			glTextureSubImage2D(mRendererID, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
+
 			stbi_image_free(data);
+		}
 	}
 
 	void OpenGLTexture2D::SetData(void* data, unsigned int size)
