@@ -20,7 +20,7 @@ namespace Melone
 
 		// Filters for texture when increasing or decreasing size(mipmap)
 		glTextureParameteri(mRendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(mRendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(mRendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
@@ -61,7 +61,7 @@ namespace Melone
 
 		// Filters for texture when increasing or decreasing size(mipmap)
 		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 

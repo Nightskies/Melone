@@ -39,6 +39,16 @@ namespace Melone
 
 		glm::vec2 mViewportBounds[2];
 
+		enum class SceneState
+		{
+			Edit = 0, Play = 1
+		};
+		SceneState mSceneState = SceneState::Edit;
+
+		// Editor resources
+		SPtr<Texture2D> mIconPlay;
+		SPtr<Texture2D> mIconStop;
+
 		// Panels
 		SceneHierarchyPanel mSceneHierarchyPanel;
 		ContentBrowserPanel mContentBrowserPanel;
@@ -56,6 +66,11 @@ namespace Melone
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
 		void SaveSceneAs();
+
+		void OnScenePlay();
+		void OnSceneStop();
+
+		void UIToolbar();
 
 		void OnKeyPressed(const KeyPressedEvent& e);
 		void OnMouseButtonPressed(const MouseButtonPressedEvent& e);
