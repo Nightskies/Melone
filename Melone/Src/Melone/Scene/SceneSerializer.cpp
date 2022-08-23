@@ -135,8 +135,10 @@ namespace Melone
 
 	static void SerializeEntity(YAML::Emitter& out, Entity entity)
 	{
+		MELONE_CORE_ASSERT(entity.HasComponent<IDComponent>(), "Entity has no id");
+
 		out << YAML::BeginMap; // Entity
-		out << YAML::Key << "Entity" << YAML::Value << "94934343"; // TODO: realize UUID for Entity
+		out << YAML::Key << "Entity" << YAML::Value << entity.GetUUID();
 
 		if (entity.HasComponent<TagComponent>())
 		{
@@ -279,7 +281,7 @@ namespace Melone
 		{
 			for (auto entity : entities)
 			{
-				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO UUID
+				uint64_t uuid = entity["Entity"].as<uint64_t>();
 
 				std::string name;
 				auto tagComponent = entity["TagComponent"];
@@ -288,7 +290,7 @@ namespace Melone
 
 				MELONE_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
 
-				Entity deserializedEntity = mScene->CreateEntity(std::move(name));
+				Entity deserializedEntity = mScene->CreateEntityWithUUID(uuid, std::move(name));
 
 				auto transformComponent = entity["TransformComponent"];
 				if (transformComponent)

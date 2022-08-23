@@ -1,17 +1,25 @@
 #pragma once
 
+#include "SceneCamera.h"
+#include "Melone/Renderer/Texture.h"
+#include "Melone/Core/UUID.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-#include "SceneCamera.h"
-#include "Melone/Renderer/Texture.h"
-#include "ScriptableEntity.h"
-
 namespace Melone
 {
+	struct IDComponent
+	{
+		UUID ID;
+
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+	};
+
 	class TagComponent
 	{
 	public:
@@ -74,6 +82,8 @@ namespace Melone
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
 	};
+
+	class ScriptableEntity;
 
 	class NativeScriptComponent
 	{

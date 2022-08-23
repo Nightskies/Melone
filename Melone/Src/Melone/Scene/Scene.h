@@ -4,6 +4,7 @@
 
 #include "Melone/Core/Timestep.h"
 #include "Melone/Renderer/Camera/EditorCamera.h"
+#include "Melone/Core/UUID.h"
 
 class b2World;
 
@@ -27,6 +28,7 @@ namespace Melone
 		~Scene() = default;
 
 		Entity CreateEntity(std::string&& name);
+		Entity CreateEntityWithUUID(UUID uuid, std::string&& name);
 		void DestroyEntity(Entity entity);
 
 		void OnUpdateEditorCamera(Timestep ts, const EditorCamera& camera);

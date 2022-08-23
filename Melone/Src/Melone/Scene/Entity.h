@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Scene.h"
+#include "Melone/Core/UUID.h"
+#include "Components.h"
 
 namespace Melone 
 {
@@ -56,6 +58,8 @@ namespace Melone
 		{
 			return !(*this == other);
 		}
+
+		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
 	};
 
 }

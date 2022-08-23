@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "Components.h"
+#include "ScriptableEntity.h"
 #include "Melone/Renderer/Renderer2D.h"
 
 #include <glm/glm.hpp>
@@ -39,7 +40,13 @@ namespace Melone
 
 	Entity Scene::CreateEntity(std::string&& name)
 	{
+		return CreateEntityWithUUID(UUID(), std::move(name));
+	}
+
+	Entity Scene::CreateEntityWithUUID(UUID uuid, std::string&& name)
+	{
 		Entity entity = { mRegistry.create(), this };
+		entity.AddComponent<IDComponent>(uuid);
 		entity.AddComponent<TransformComponent>();
 		auto& tag = entity.AddComponent<TagComponent>();
 		tag.Tag = std::move(name);
@@ -214,6 +221,11 @@ namespace Melone
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{
 		static_assert(false);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<IDComponent>(Entity entity, IDComponent& component)
+	{
 	}
 
 	template<>
