@@ -89,9 +89,6 @@ namespace Melone
 
 		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
-
-		mSceneHierarchyPanel.SetContext(mActiveScene);
-
 	}
 
 	void EditorLayer::OnDetach()
@@ -369,8 +366,22 @@ namespace Melone
 		}
 		case Key::S:
 		{
-			if (control && shift)
-				SaveSceneAs();
+			if (control)
+			{
+				if (shift)
+					SaveSceneAs();
+				else
+					SaveScene();
+			}
+
+			break;
+		}
+
+		// Scene Commands
+		case Key::D:
+		{
+			if (control)
+				OnDuplicateEntity();
 
 			break;
 		}
@@ -406,6 +417,7 @@ namespace Melone
 		mActiveScene = std::make_shared<Scene>();
 		mActiveScene->OnViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
 		mSceneHierarchyPanel.SetContext(mActiveScene);
+		mEditorScenePath = std::filesystem::path();
 	}
 
 	void EditorLayer::OpenScene()
@@ -419,12 +431,28 @@ namespace Melone
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
-		mActiveScene = std::make_shared<Scene>();
-		mActiveScene->OnViewportResize((unsigned int)mViewportSize.x, (unsigned int)mViewportSize.y);
-		mSceneHierarchyPanel.SetContext(mActiveScene);
+		if (mSceneState != SceneState::Edit)
+			OnSceneStop();
 
-		SceneSerializer serializer(mActiveScene);
-		serializer.Deserialize(path.string());
+		SPtr<Scene> newScene = std::make_shared<Scene>();
+		newScene->OnViewportResize((uint32_t)mViewportSize.x, (uint32_t)mViewportSize.y);
+		SceneSerializer serializer(newScene);
+		if (serializer.Deserialize(path.string()))
+		{
+			mEditorScene = newScene;
+			mSceneHierarchyPanel.SetContext(mEditorScene);
+
+			mActiveScene = mEditorScene;
+			mEditorScenePath = path;
+		}
+	}
+
+	void EditorLayer::SaveScene()
+	{
+		if (!mEditorScenePath.empty())
+			SerializeScene(mActiveScene, mEditorScenePath);
+		else
+			SaveSceneAs();
 	}
 
 	void EditorLayer::SaveSceneAs()
@@ -432,9 +460,15 @@ namespace Melone
 		auto filePath = FileDialogs::SaveFile("Melone Scene (*.melone)\0*.melone\0");
 		if (filePath)
 		{
-			SceneSerializer serializer(mActiveScene);
-			serializer.Serialize(std::move(*filePath));
+			SerializeScene(mActiveScene, *filePath);
+			mEditorScenePath = *filePath;
 		}
+	}
+
+	void EditorLayer::SerializeScene(SPtr<Scene> scene, const std::filesystem::path& path)
+	{
+		SceneSerializer serializer(scene);
+		serializer.Serialize(path.string());
 	}
 
 	void EditorLayer::UIToolbar()
@@ -468,12 +502,26 @@ namespace Melone
 	void EditorLayer::OnScenePlay()
 	{
 		mSceneState = SceneState::Play;
+		mActiveScene = Scene::Copy(mEditorScene);
 		mActiveScene->OnRuntimeStart();
+		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
 		mSceneState = SceneState::Edit;
 		mActiveScene->OnRuntimeStop();
+		mActiveScene = mEditorScene;
+		mSceneHierarchyPanel.SetContext(mActiveScene);
+	}
+
+	void EditorLayer::OnDuplicateEntity()
+	{
+		if (mSceneState != SceneState::Edit)
+			return;
+
+		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity)
+			mEditorScene->DuplicateEntity(selectedEntity);
 	}
 }

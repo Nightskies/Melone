@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 4536032330982727620
+  - Entity: 12758807707024981288
     TagComponent:
       Tag: Floor
     TransformComponent:
@@ -18,25 +18,6 @@ Entities:
       Density: 1
       Friction: 0.5
       Restitution: 0
-      RestitutionThreshold: 0.5
-  - Entity: 13726364402435563382
-    TagComponent:
-      Tag: Sprite
-    TransformComponent:
-      Translation: [0, 2, 0]
-      Rotation: [0, 0, 0.663225114]
-      Scale: [0.49999994, 0.49999994, 1]
-    SpriteRendererComponent:
-      Color: [0.121972315, 0.474353075, 0.691176474, 1]
-    Rigidbody2DComponent:
-      BodyType: Dynamic
-      FixedRotation: false
-    BoxCollider2DComponent:
-      Offset: [0, 0]
-      Size: [0.5, 0.5]
-      Density: 1
-      Friction: 0.5
-      Restitution: 0.800000012
       RestitutionThreshold: 0.5
   - Entity: 11154768295557782410
     TagComponent:
@@ -56,3 +37,41 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
+  - Entity: 13726364402435563382
+    TagComponent:
+      Tag: Sprite
+    TransformComponent:
+      Translation: [-1.31839728, 1.32300234, 0]
+      Rotation: [0, 0, 0.663225055]
+      Scale: [0.499999911, 0.499999911, 1]
+    SpriteRendererComponent:
+      Color: [0.121972315, 0.474353075, 0.691176474, 1]
+    Rigidbody2DComponent:
+      BodyType: Dynamic
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0.800000012
+      RestitutionThreshold: 0.5
+  - Entity: 4536032330982727620
+    TagComponent:
+      Tag: Floor
+    TransformComponent:
+      Translation: [-1.79943419, 0.187384576, 0]
+      Rotation: [0, 0, -0.72004348]
+      Scale: [2.1695919, 0.49999994, 1]
+    SpriteRendererComponent:
+      Color: [0.725490212, 0.149365649, 0.149365649, 1]
+    Rigidbody2DComponent:
+      BodyType: Static
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5

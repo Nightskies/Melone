@@ -30,6 +30,9 @@ namespace Melone
 		Entity CreateEntity(std::string&& name);
 		Entity CreateEntityWithUUID(UUID uuid, std::string&& name);
 		void DestroyEntity(Entity entity);
+		void DuplicateEntity(Entity entity);
+
+		static SPtr<Scene> Copy(SPtr<Scene> other);
 
 		void OnUpdateEditorCamera(Timestep ts, const EditorCamera& camera);
 		void OnViewportResize(unsigned int width, unsigned int height);

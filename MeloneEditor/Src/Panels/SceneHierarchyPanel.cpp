@@ -90,22 +90,25 @@ namespace Melone
 	{
 		ImGui::Begin("Scene Hierarchy");
 
-		mContext->mRegistry.each([&](auto entityID)
+		if (mContext)
 		{
-			Entity entity{ entityID , mContext.get() };
-			DrawEntityNode(entity);
-		});
+			mContext->mRegistry.each([&](auto entityID)
+			{
+				Entity entity{ entityID , mContext.get() };
+				DrawEntityNode(entity);
+			});
 
-		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-			mSelectionContext = {};
+			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+				mSelectionContext = {};
 
-		// Right-click on blank space
-		if (ImGui::BeginPopupContextWindow(0, 1, false))
-		{
-			if (ImGui::MenuItem("Create Empty Entity"))
-				mContext->CreateEntity("Empty Entity");
+			// Right-click on blank space
+			if (ImGui::BeginPopupContextWindow(0, 1, false))
+			{
+				if (ImGui::MenuItem("Create Empty Entity"))
+					mContext->CreateEntity("Empty Entity");
 
-			ImGui::EndPopup();
+				ImGui::EndPopup();
+			}
 		}
 
 		ImGui::End();
@@ -377,7 +380,7 @@ namespace Melone
 		DrawComponent<BoxCollider2DComponent>("Box Collider 2D", entity, [](auto& component)
 		{
 			ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-			ImGui::DragFloat2("Size", glm::value_ptr(component.Offset));
+			ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
 			ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
 			ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
 			ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);

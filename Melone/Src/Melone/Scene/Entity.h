@@ -45,6 +45,14 @@ namespace Melone
 			mScene->mRegistry.remove<T>(mEntityHandle);
 		}
 
+		template<typename T, typename... Args>
+		T& AddOrReplaceComponent(Args&&... args)
+		{
+			T& component = mScene->mRegistry.emplace_or_replace<T>(mEntityHandle, std::forward<Args>(args)...);
+			mScene->OnComponentAdded<T>(*this, component);
+			return component;
+		}
+
 		operator bool() const { return mEntityHandle != entt::null; }
 		operator entt::entity() const { return mEntityHandle; }
 		operator unsigned int() const { return (unsigned int)mEntityHandle; }
@@ -60,6 +68,8 @@ namespace Melone
 		}
 
 		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
+
+		const std::string& GetName() { return GetComponent<TagComponent>().Tag; }
 	};
 
 }

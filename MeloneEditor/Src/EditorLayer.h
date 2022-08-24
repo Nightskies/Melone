@@ -21,6 +21,9 @@ namespace Melone
 		SPtr<Texture2D> mCheckerboardTexture;
 
 		SPtr<Scene> mActiveScene;
+		SPtr<Scene> mEditorScene;
+		std::filesystem::path mEditorScenePath;
+
 		Entity mSquareEntity;
 		Entity mCameraEntity;
 		Entity mSecondCamera;
@@ -65,10 +68,14 @@ namespace Melone
 		void NewScene();
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
+		void SaveScene();
 		void SaveSceneAs();
+
+		void SerializeScene(SPtr<Scene> scene, const std::filesystem::path& path);
 
 		void OnScenePlay();
 		void OnSceneStop();
+		void OnDuplicateEntity();
 
 		void UIToolbar();
 
