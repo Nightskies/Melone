@@ -22,6 +22,17 @@ namespace Melone
 		int EntityID;
 	};
 
+	struct CircleVertex
+	{
+		glm::vec3 WorldPosition;
+		glm::vec3 LocalPosition;
+		glm::vec4 Color;
+		float Thickness;
+		float Fade;
+
+		int EntityID;
+	};
+
 	static struct Renderer2DStash
 	{
 		static const unsigned int MaxQuads = 1000;
@@ -29,14 +40,23 @@ namespace Melone
 		static const unsigned int MaxIndices = MaxQuads * 6;
 		static const unsigned int MaxTextureSlots = 32;
 
+		SPtr<Texture2D> WhiteTexture;
+
 		SPtr<VAO> QuadVAO;
 		SPtr<VBO> QuadVBO;
-		SPtr<Shader> TextureShader;
-		SPtr<Texture2D> WhiteTexture;
+		SPtr<Shader> QuadShader;
+
+		SPtr<VAO> CircleVAO;
+		SPtr<VBO> CircleVBO;
+		SPtr<Shader> CircleShader;
 
 		unsigned int QuadIndexCount = 0;
 		QuadVertex* QuadVBOBase = nullptr;
 		QuadVertex* QuadVBOPtr = nullptr;
+
+		unsigned int CircleIndexCount = 0;
+		CircleVertex* CircleVBOBase = nullptr;
+		CircleVertex* CircleVBOPtr = nullptr;
 
 		std::array<SPtr<Texture2D>, MaxTextureSlots> TextureSlots;
 		unsigned int TextureSlotIndex = 1;
@@ -88,8 +108,25 @@ namespace Melone
 			offset += 4;
 		}
 
-		SPtr<IBO> squareIBO = IBO::Create(quadIndices.data(), Renderer2DData.MaxIndices);
-		Renderer2DData.QuadVAO->SetIBO(squareIBO);
+		SPtr<IBO> quadIBO = IBO::Create(quadIndices.data(), Renderer2DData.MaxIndices);
+		Renderer2DData.QuadVAO->SetIBO(quadIBO);
+
+		Renderer2DData.CircleVAO = VAO::Create();
+
+		Renderer2DData.CircleVBO = VBO::Create(Renderer2DData.MaxVertices * sizeof(CircleVertex));
+
+		Renderer2DData.CircleVBO->SetLayout({
+			{ ShaderDataType::Float3, "aWorldPosition" },
+			{ ShaderDataType::Float3, "aLocalPosition" },
+			{ ShaderDataType::Float4, "aColor"         },
+			{ ShaderDataType::Float,  "aThickness"     },
+			{ ShaderDataType::Float,  "aFade"          },
+			{ ShaderDataType::Int,    "aEntityID"      }
+			});
+		Renderer2DData.CircleVAO->AddVBO(Renderer2DData.CircleVBO);
+
+		Renderer2DData.CircleVAO->SetIBO(quadIBO); // Use quad IB
+		Renderer2DData.CircleVBOBase = new CircleVertex[Renderer2DData.MaxVertices];
 
 		Renderer2DData.WhiteTexture = Texture2D::Create(1, 1);
 		unsigned int whiteTextureData = 0xffffffff;
@@ -99,7 +136,8 @@ namespace Melone
 		for (unsigned int i = 0; i < Renderer2DData.MaxTextureSlots; i++)
 			samplers[i] = i;
 
-		Renderer2DData.TextureShader = Shader::Create("Assets/Shaders/TextureShader.glsl");
+		Renderer2DData.QuadShader = Shader::Create("Assets/Shaders/Renderer2D_Quad.glsl");
+		Renderer2DData.CircleShader = Shader::Create("Assets/Shaders/Renderer2D_Circle.glsl");
 
 		Renderer2DData.TextureSlots[0] = Renderer2DData.WhiteTexture;
 
@@ -119,6 +157,9 @@ namespace Melone
 		Renderer2DData.QuadIndexCount = 0;
 		Renderer2DData.QuadVBOPtr = Renderer2DData.QuadVBOBase;
 
+		Renderer2DData.CircleIndexCount = 0;
+		Renderer2DData.CircleVBOPtr = Renderer2DData.CircleVBOBase;
+
 		Renderer2DData.TextureSlotIndex = 1;
 	}
 
@@ -129,6 +170,9 @@ namespace Melone
 
 		Renderer2DData.QuadIndexCount = 0;
 		Renderer2DData.QuadVBOPtr = Renderer2DData.QuadVBOBase;
+
+		Renderer2DData.CircleIndexCount = 0;
+		Renderer2DData.CircleVBOPtr = Renderer2DData.CircleVBOBase;
 
 		Renderer2DData.TextureSlotIndex = 1;
 	}
@@ -143,12 +187,29 @@ namespace Melone
 
 	void Renderer2D::Flush()
 	{
-		for (unsigned int i = 0; i < Renderer2DData.TextureSlotIndex; i++)
-			Renderer2DData.TextureSlots[i]->Bind(i);
+		if (Renderer2DData.QuadIndexCount)
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)Renderer2DData.QuadVBOPtr - (uint8_t*)Renderer2DData.QuadVBOBase);
+			Renderer2DData.QuadVBO->SetData(Renderer2DData.QuadVBOBase, dataSize);
 
-		Renderer2DData.TextureShader->Bind();
-		RenderCommand::DrawIndexed(Renderer2DData.QuadVAO, Renderer2DData.QuadIndexCount);
-		Renderer2DData.Info.DrawCalls++;
+			// Bind textures
+			for (uint32_t i = 0; i < Renderer2DData.TextureSlotIndex; i++)
+				Renderer2DData.TextureSlots[i]->Bind(i);
+
+			Renderer2DData.QuadShader->Bind();
+			RenderCommand::DrawIndexed(Renderer2DData.QuadVAO, Renderer2DData.QuadIndexCount);
+			Renderer2DData.Info.DrawCalls++;
+		}
+
+		if (Renderer2DData.CircleIndexCount)
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)Renderer2DData.CircleVBOPtr - (uint8_t*)Renderer2DData.CircleVBOBase);
+			Renderer2DData.CircleVBO->SetData(Renderer2DData.CircleVBOBase, dataSize);
+
+			Renderer2DData.CircleShader->Bind();
+			RenderCommand::DrawIndexed(Renderer2DData.CircleVAO, Renderer2DData.CircleIndexCount);
+			Renderer2DData.Info.DrawCalls++;
+		}
 	}
 
 	void Renderer2D::FlushAndReset()
@@ -159,6 +220,24 @@ namespace Melone
 		Renderer2DData.QuadVBOPtr = Renderer2DData.QuadVBOBase;
 
 		Renderer2DData.TextureSlotIndex = 1;
+	}
+
+	void Renderer2D::DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness /*= 1.0f*/, float fade /*= 0.005f*/, int entityID /*= -1*/)
+	{
+		for (size_t i = 0; i < 4; i++)
+		{
+			Renderer2DData.CircleVBOPtr->WorldPosition = transform * Renderer2DData.QuadVertexPositions[i];
+			Renderer2DData.CircleVBOPtr->LocalPosition = Renderer2DData.QuadVertexPositions[i] * 2.0f;
+			Renderer2DData.CircleVBOPtr->Color = color;
+			Renderer2DData.CircleVBOPtr->Thickness = thickness;
+			Renderer2DData.CircleVBOPtr->Fade = fade;
+			Renderer2DData.CircleVBOPtr->EntityID = entityID;
+			Renderer2DData.CircleVBOPtr++;
+		}
+
+		Renderer2DData.CircleIndexCount += 6;
+
+		Renderer2DData.Info.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)

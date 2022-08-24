@@ -30,7 +30,7 @@ namespace Melone
 
 	void OpenGLRendererAPI::DrawIndexed(const SPtr<VAO>& VAO, unsigned int indexCount)
 	{
+		VAO->Bind();
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
