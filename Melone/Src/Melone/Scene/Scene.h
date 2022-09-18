@@ -43,6 +43,9 @@ namespace Melone
 
 		Entity GetPrimaryCameraEntity();
 
+		template<typename... Components>
+		auto GetAllEntitiesWith() { return mRegistry.view<Components...>(); }
+
 		static SPtr<Scene> Create();
 	private:
 		template<typename T>

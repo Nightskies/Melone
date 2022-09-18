@@ -148,6 +148,8 @@ namespace Melone
 			mHoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, mActiveScene.get());
 		}
 
+		OnOverlayRender();
+
 		mFramebuffer->Unbind();
 	}
 
@@ -248,6 +250,10 @@ namespace Melone
 
 		ImGui::End();
 
+		ImGui::Begin("Settings");
+		ImGui::Checkbox("Show physics colliders", &mShowPhysicsColliders);
+		ImGui::End();
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 
@@ -339,6 +345,59 @@ namespace Melone
 		UIToolbar();
 
 		ImGui::End();
+	}
+
+	void EditorLayer::OnOverlayRender()
+	{
+		if (mSceneState == SceneState::Play)
+		{
+			Entity camera = mActiveScene->GetPrimaryCameraEntity();
+			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
+		}
+		else
+		{
+			Renderer2D::BeginScene(mEditorCamera);
+		}
+
+		if (mShowPhysicsColliders)
+		{
+			// Box Colliders
+			{
+				auto view = mActiveScene->GetAllEntitiesWith<TransformComponent, BoxCollider2DComponent>();
+				for (auto entity : view)
+				{
+					auto [tc, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
+
+					glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
+					glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+						* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+						* glm::scale(glm::mat4(1.0f), scale);
+
+					Renderer2D::DrawRect(transform, glm::vec4(0.0f, 1.0f, 0.0f , 1.0f));
+				}
+			}
+
+			// Circle Colliders
+			{
+				auto view = mActiveScene->GetAllEntitiesWith<TransformComponent, CircleCollider2DComponent>();
+				for (auto entity : view)
+				{
+					auto [tc, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
+
+					glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.001f);
+					glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+						* glm::scale(glm::mat4(1.0f), scale);
+
+					Renderer2D::DrawCircle(transform, glm::vec4(0.0f , 1.0f, 0.0f, 1.0f), 0.01f);
+				}
+			}
+		}
+
+		Renderer2D::EndScene();
 	}
 
 	void EditorLayer::OnKeyPressed(const KeyPressedEvent& e)

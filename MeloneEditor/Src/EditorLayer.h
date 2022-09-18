@@ -48,6 +48,8 @@ namespace Melone
 		};
 		SceneState mSceneState = SceneState::Edit;
 
+		bool mShowPhysicsColliders = false;
+
 		// Editor resources
 		SPtr<Texture2D> mIconPlay;
 		SPtr<Texture2D> mIconStop;
@@ -76,6 +78,8 @@ namespace Melone
 		void OnScenePlay();
 		void OnSceneStop();
 		void OnDuplicateEntity();
+
+		void OnOverlayRender();
 
 		void UIToolbar();
 

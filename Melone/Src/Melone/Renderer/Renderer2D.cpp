@@ -208,6 +208,9 @@ namespace Melone
 		Renderer2DData.CircleIndexCount = 0;
 		Renderer2DData.CircleVBOPtr = Renderer2DData.CircleVBOBase;
 
+		Renderer2DData.LineVertexCount = 0;
+		Renderer2DData.LineVBOPtr = Renderer2DData.LineVBOBase;
+
 		Renderer2DData.TextureSlotIndex = 1;
 	}
 
