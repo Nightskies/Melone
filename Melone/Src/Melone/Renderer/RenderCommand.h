@@ -29,6 +29,16 @@ namespace Melone
 			mRendererAPI->DrawIndexed(VAO, count);
 		}
 
+		static void DrawLines(const SPtr<VAO>& VAO, unsigned int count)
+		{
+			mRendererAPI->DrawLines(VAO, count);
+		}
+
+		static void SetLineWidth(float width)
+		{
+			mRendererAPI->SetLineWidth(width);
+		}
+
 		static void SetViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 		{
 			mRendererAPI->SetViewport(x, y, width, height);

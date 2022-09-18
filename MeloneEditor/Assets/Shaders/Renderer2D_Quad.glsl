@@ -33,7 +33,7 @@ void main()
 #version 450 core
 
 layout(location = 0) out vec4 color;
-layout(location = 1) out int color2;
+layout(location = 1) out int entityID;
 
 in vec4 vColor;
 in vec2 vTexCoord;
@@ -47,5 +47,5 @@ void main()
 {
 	color = texture(uTextures[int(vTexIndex)], vTexCoord * vTilingFactor) * vColor;
 
-	color2 = vEntityID;;
+	entityID = vEntityID;;
 } 

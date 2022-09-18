@@ -15,5 +15,8 @@ namespace Melone
 		void SetClearColor(const glm::vec4& color) override;
 
 		void DrawIndexed(const SPtr<VAO>& VAO, unsigned int indexCount = 0) override;
+		void DrawLines(const SPtr<VAO>& VAO, unsigned int vertexCount) override;
+
+		void SetLineWidth(float width) override;
 	};
 }

@@ -113,10 +113,10 @@ namespace Melone
 			case PerspectiveCameraMovement::RIGHT:
 				mFocalPoint += -GetRightDirection() * velocity;
 				break;
-			case PerspectiveCameraMovement::UP:
+			case PerspectiveCameraMovement::UP: // Forward
 				mFocalPoint += -GetUpDirection() * velocity;
 				break;
-			case PerspectiveCameraMovement::DOWN:
+			case PerspectiveCameraMovement::DOWN:  // Backward
 				mFocalPoint += GetUpDirection() * velocity;
 				break;
 			default:
@@ -150,7 +150,6 @@ namespace Melone
 			RecalculateViewProjection();
 		}
 	}
-
 
 	void PerspectiveCamera::Zoom(float yOffset)
 	{
