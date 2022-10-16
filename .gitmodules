@@ -7,15 +7,6 @@
 [submodule "Melone/Vendor/glm"]
 	path = Melone/Vendor/glm
 	url = https://github.com/g-truc/glm
-[submodule "Melone/Vendor/imgui"]
-	path = Melone/Vendor/imgui
-	url = https://github.com/TheCherno/imgui
-[submodule "Melone/Vendor/yaml-cpp"]
-	path = Melone/Vendor/yaml-cpp
-	url = https://github.com/thecherno/yaml-cpp
 [submodule "Melone/Vendor/ImGuizmo"]
 	path = Melone/Vendor/ImGuizmo
 	url = https://github.com/thecherno/imguizmo
-[submodule "Melone/Vendor/Box2D"]
-	path = Melone/Vendor/Box2D
-	url = https://github.com/thecherno/box2d
