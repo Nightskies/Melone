@@ -1,17 +1,12 @@
 #pragma once
 
-struct GLFWwindow;
-
 namespace Melone
 {
 	class WindowsWindow
 	{
 	public:
-		WindowsWindow()
-		{
-			
-		}
+		WindowsWindow() = default;
 	};
+
+	using Windows = WindowsWindow;
 }
-
-

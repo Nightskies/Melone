@@ -12,7 +12,7 @@
 
 namespace Melone
 {
-	GUI::GUI(const Window& window)
+	GUI::GUI(const SPtr<Window>& window)
 		:
 		mWindow(window)
 	{
@@ -40,7 +40,7 @@ namespace Melone
 		}
 
 		// Setup Platform/Renderer bindings
-		ImGui_ImplGlfw_InitForOpenGL(mWindow.GetNativeWindow(), true);
+		ImGui_ImplGlfw_InitForOpenGL(mWindow->GetHandle(), true);
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
@@ -54,7 +54,7 @@ namespace Melone
 
 	void GUI::End()
 	{
-		auto [width, height] = mWindow.GetProperties().mDimensions;
+		auto [width, height] = mWindow->GetProperties().Dimensions;
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2(width, height);

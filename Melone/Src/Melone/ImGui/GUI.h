@@ -7,14 +7,14 @@ namespace Melone
 	class GUI
 	{
 	private:
-		const Window& mWindow;
+		SPtr<Window> mWindow;
 	public:
-		GUI(const Window& window);
+		GUI(const SPtr<Window>& window);
 		~GUI();
 	public:	
 		void Begin();
 		void End();
 
-		static SPtr<GUI> Create(const Window& window) { return std::make_shared<GUI>(window); }
+		static SPtr<GUI> Create(const SPtr<Window>& window) { return std::make_shared<GUI>(window); }
 	};
 }

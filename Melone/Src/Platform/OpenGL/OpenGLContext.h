@@ -10,8 +10,9 @@ namespace Melone
 		GLFWwindow* mWindow = nullptr;
 	public:
 		OpenGLContext() = default;
-		OpenGLContext(GLFWwindow* window);
 		~OpenGLContext() = default;
+
+		void SetContext(GLFWwindow* window);
 
 		void SwapBuffers() const;
 	};

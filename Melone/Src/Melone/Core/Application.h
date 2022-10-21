@@ -13,7 +13,7 @@ namespace Melone
 	class Application
 	{
 	private:
-		const Window& mWindow;
+		SPtr<Window> mWindow;
 		SPtr<GUI> mGUI;
 
 		std::vector<UPtr<Layer>> mLayers;

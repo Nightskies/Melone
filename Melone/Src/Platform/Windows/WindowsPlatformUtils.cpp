@@ -15,7 +15,7 @@ namespace Melone
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window(Window::GetInstance().GetNativeWindow());
+		ofn.hwndOwner = glfwGetWin32Window(Window::GetInstance()->GetHandle());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
@@ -35,7 +35,7 @@ namespace Melone
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window(Window::GetInstance().GetNativeWindow());
+		ofn.hwndOwner = glfwGetWin32Window(Window::GetInstance()->GetHandle());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;

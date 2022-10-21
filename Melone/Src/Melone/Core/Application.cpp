@@ -9,9 +9,9 @@
 namespace Melone
 {
 	Application::Application(std::string&& name)
-		:
-		mWindow(Window::GetInstance({ { std::move(name), { 1280, 720 } } }))
 	{	
+		WindowProperties&& props = { std::move(name), { 1280, 720 } };
+		mWindow = Window::Create(std::move(props));
 		mGUI = GUI::Create(mWindow);
 
 		Renderer::Init();
@@ -19,9 +19,9 @@ namespace Melone
 
 	void Application::Run()
 	{
-		while (!mWindow.IsClosed())
+		while (!mWindow->IsClosed())
 		{
-			if (float ts = TimeStepUpdate(); !mWindow.IsMinimized())
+			if (float ts = TimeStepUpdate(); !mWindow->IsMinimized())
 			{
 				std::for_each(mLayers.cbegin(), mLayers.cend(), [ts](auto& layer) { layer->OnUpdate(ts); });
 
@@ -31,7 +31,7 @@ namespace Melone
 
 				mGUI->End();
 			}
-			mWindow.Update();
+			mWindow->Update();
 		}
 	}
 
