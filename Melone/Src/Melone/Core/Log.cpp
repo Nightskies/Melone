@@ -8,10 +8,10 @@ namespace Melone
 	void Log::Init()
 	{
 		spdlog::set_pattern("%^[%T] %n: %v%$");
-		CoreLogger = spdlog::stdout_color_mt("MELONE");
-		CoreLogger->set_level(spdlog::level::trace);
+		mCoreLogger = spdlog::stdout_color_mt("MELONE");
+		mCoreLogger->set_level(spdlog::level::trace);
 
-		ClientLogger = spdlog::stdout_color_mt("CLIENT");
-		ClientLogger->set_level(spdlog::level::trace);
+		mClientLogger = spdlog::stdout_color_mt("CLIENT");
+		mClientLogger->set_level(spdlog::level::trace);
 	}
 }

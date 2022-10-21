@@ -5,18 +5,16 @@ namespace Melone
 	class Timestep
 	{
 	private:
-		float mTime;
+		float mTimestep;
 	public:
-		Timestep(float time = 0.0f)
-			:
-			mTime(time)
-		{}
-
+		Timestep(float timestep = 0.0f);
 		~Timestep() = default;
 	public:
-		float GetSeconds() const { return mTime; }
-		float GetMilliseconds() const { return mTime * 1000.0f; }
+		float GetSeconds() const { return mTimestep; }
+		float GetMilliseconds() const { return mTimestep * 1000.0f; }
 
-		operator float() const { return mTime; }
+		float GetTimestep();
+
+		operator float() const { return mTimestep; }
 	};
 }

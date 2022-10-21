@@ -12,16 +12,16 @@ namespace Melone
 {
 	class Log
 	{
-	private:
-		static inline SPtr<spdlog::logger> CoreLogger;
-		static inline SPtr<spdlog::logger> ClientLogger;
-
-		Log() = default;
 	public:
 		static void Init();
 
-		static SPtr<spdlog::logger>& GetCoreLogger() { return CoreLogger; }
-		static SPtr<spdlog::logger>& GetClientLogger() { return ClientLogger; }
+		static SPtr<spdlog::logger>& GetCoreLogger() { return mCoreLogger; }
+		static SPtr<spdlog::logger>& GetClientLogger() { return mClientLogger; }
+	private:
+		Log() = default;
+	private:
+		static inline SPtr<spdlog::logger> mCoreLogger;
+		static inline SPtr<spdlog::logger> mClientLogger;
 	};
 }
 
@@ -36,4 +36,3 @@ namespace Melone
 #define MELONE_WARN(...) ::Melone::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define MELONE_ERROR(...) ::Melone::Log::GetClientLogger()->error(__VA_ARGS__)
 #define MELONE_FATAL(...) ::Melone::Log::GetClientLogger()->critical(__VA_ARGS__)
-

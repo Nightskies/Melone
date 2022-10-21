@@ -8,8 +8,6 @@ namespace Melone
 {
 	class Layer
 	{
-	protected:
-		std::string mName;
 	public:
 		virtual ~Layer() = default;
 
@@ -18,7 +16,6 @@ namespace Melone
 			mName(std::move(name))
 		{}
 
-	public:
 		virtual void OnUpdate(Timestep ts) = 0;
 		virtual void OnAttach() = 0;
 		virtual void OnImGuiRender() = 0;
@@ -30,5 +27,7 @@ namespace Melone
 		}
 
 		const std::string& GetName() const { return mName; }
+	protected:
+		std::string mName;
 	};
 }

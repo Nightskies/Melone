@@ -19,14 +19,12 @@ namespace Melone
 
 namespace std 
 {
-
 	template<>
 	struct hash<Melone::UUID>
 	{
-		std::size_t operator()(const Melone::UUID& uuid) const
+		uint64_t operator()(const Melone::UUID& uuid) const
 		{
 			return hash<uint64_t>()((uint64_t)uuid);
 		}
 	};
-
 }

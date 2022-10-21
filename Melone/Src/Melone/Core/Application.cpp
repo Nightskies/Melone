@@ -4,8 +4,6 @@
 #include "Melone/Renderer/Renderer.h"
 #include "Melone/Input/Input.h"
 
-#include <glfw/glfw3.h>
-
 namespace Melone
 {
 	Application::Application(std::string&& name)
@@ -21,7 +19,7 @@ namespace Melone
 	{
 		while (!mWindow->IsClosed())
 		{
-			if (float ts = TimeStepUpdate(); !mWindow->IsMinimized())
+			if (float ts = mTimestep.GetTimestep(); !mWindow->IsMinimized())
 			{
 				std::for_each(mLayers.cbegin(), mLayers.cend(), [ts](auto& layer) { layer->OnUpdate(ts); });
 
@@ -33,26 +31,6 @@ namespace Melone
 			}
 			mWindow->Update();
 		}
-	}
-
-	void Application::RemoveLayer(const UPtr<Layer>& layer)
-	{
-		if (auto& it = std::find(mLayers.begin(), mLayers.end(), layer); it != mLayers.end())
-		{
-			mLayers.erase(it);
-		}
-		layer->OnDetach();
-	}
-
-	const Timestep& Application::TimeStepUpdate()
-	{
-		static float lastFrameTime = 0.0f;
-
-		float time = (float)glfwGetTime();
-		mTimeStep = time - lastFrameTime;
-		lastFrameTime = time;
-
-		return mTimeStep;
 	}
 
 	void Application::Close()

@@ -2,6 +2,6 @@ build/
 /tags
 /bazel-*
 bin
-bin-int
+bin_int
 yaml-cpp.vcxproj
 yaml-cpp.vcxproj.filters
