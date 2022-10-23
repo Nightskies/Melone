@@ -1,6 +1,5 @@
 #pragma once
 #include "Melone/Renderer/Shader.h"
-
 #include "glm/glm.hpp"
 
 using GLenum = unsigned int;
@@ -9,11 +8,6 @@ namespace Melone
 {
 	class OpenGLShader : public Shader
 	{
-	private:
-		std::string mFilePath;
-		unsigned int mRendererID;
-		std::string mName;
-		mutable std::unordered_map<std::string, int> mUniformLocationCache;
 	public:
 		OpenGLShader(std::string&& filePath);
 		~OpenGLShader();
@@ -39,7 +33,10 @@ namespace Melone
 		void CompileAndLinkShader(const std::unordered_map<GLenum, std::string>& shaderSrc);
 
 		int GetUniformLocation(const std::string& name) const;
+	private:
+		std::string mFilePath;
+		unsigned int mRendererID;
+		std::string mName;
+		mutable std::unordered_map<std::string, int> mUniformLocationCache;
 	};
 }
-
-

@@ -3,16 +3,14 @@
 
 namespace Melone 
 {
-
 	class OpenGLUniformBuffer : public UniformBuffer
 	{
-	private:
-		unsigned int mRendererID = 0;
 	public:
 		OpenGLUniformBuffer(unsigned int size, unsigned int binding);
 		~OpenGLUniformBuffer();
 
 		void SetData(const void* data, unsigned int size, unsigned int offset = 0) override;
+	private:
+		unsigned int mRendererID = 0;
 	};
 }
-

@@ -124,9 +124,12 @@ namespace Melone
 	void Window::OnClose(const WindowCloseEvent& e)
 	{
 		mClosed = true;
+	}
 
+	void Window::Shutdown()
+	{
 		glfwDestroyWindow(mHandle);
-
+		
 		glfwTerminate();
 	}
 
@@ -148,5 +151,10 @@ namespace Melone
 
 			glfwPollEvents();
 		}
+	}
+
+	Window::~Window()
+	{
+		Shutdown();
 	}
 }

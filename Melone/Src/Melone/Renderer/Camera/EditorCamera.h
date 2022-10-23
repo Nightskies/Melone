@@ -1,13 +1,10 @@
 #pragma once
-
 #include "PerspectiveCamera.h"
 
 namespace Melone
 {
 	class EditorCamera : public PerspectiveCamera
 	{
-	private:
-		glm::vec2 mMousePosition = { 0.0f, 0.0f };
 	public:
 		EditorCamera(const std::pair<float, float>& dimensions);
 
@@ -24,6 +21,7 @@ namespace Melone
 		void MouseRotate(const glm::vec2& mousePositionOffset);
 		void MouseTranslation(const glm::vec2& mousePositionOffset);
 		void MouseZoom(float yOffset);
+	private:
+		glm::vec2 mMousePosition = { 0.0f, 0.0f };
 	};
 }
-

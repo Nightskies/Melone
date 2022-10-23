@@ -2,7 +2,6 @@
 #include "CameraDirections.h"
 
 #include "Melone/Core/Timestep.h"
-
 #include "Melone/Events/EventSystem.h"
 
 #include <glm/glm.hpp>
@@ -11,30 +10,6 @@ namespace Melone
 {
 	class PerspectiveCamera
 	{
-	private:
-		glm::vec3 mPosition;
-
-		glm::vec3 mFocalPoint = { 0.0f, 0.0f, 0.0f };
-
-		float mYaw = 0.0f;
-		float mPitch = 0.0f;
-
-		float mFOV = 45.0f;
-		float mNear = 0.01f;
-		float mFar = 1000.0f;
-
-		std::pair<float, float> mViewportDimensions;
-		float mAspectRatio;
-	protected:
-		glm::mat4 mVPMatrix;
-		glm::mat4 mProjectionMatrix = glm::mat4(1.0f);
-		glm::mat4 mViewMatrix = glm::mat4(1.0f);
-
-		float mDistance = 10.0f;
-
-		glm::vec2 mTranslationSpeed;
-		float mRotationSpeed = 0.8f;
-		float mZoomSpeed;
 	public:
 		PerspectiveCamera(const std::pair<float, float>& dimensions);
 
@@ -73,7 +48,29 @@ namespace Melone
 		void OnMouseScrolled(const MouseScrolledEvent& e);
 		void OnWindowResized(const WindowResizeEvent& e);
 		void OnMouseMoved(const MouseMovedEvent& e);
+	private:
+		glm::vec3 mPosition;
+
+		glm::vec3 mFocalPoint = { 0.0f, 0.0f, 0.0f };
+
+		float mYaw = 0.0f;
+		float mPitch = 0.0f;
+
+		float mFOV = 45.0f;
+		float mNear = 0.01f;
+		float mFar = 1000.0f;
+
+		std::pair<float, float> mViewportDimensions;
+		float mAspectRatio;
+	protected:
+		glm::mat4 mVPMatrix;
+		glm::mat4 mProjectionMatrix = glm::mat4(1.0f);
+		glm::mat4 mViewMatrix = glm::mat4(1.0f);
+
+		float mDistance = 10.0f;
+
+		glm::vec2 mTranslationSpeed;
+		float mRotationSpeed = 0.8f;
+		float mZoomSpeed;
 	};
-
 }
-

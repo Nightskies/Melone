@@ -13,8 +13,7 @@ namespace Melone
 	{}
 
 	void EditorCamera::OnUpdate(Timestep ts)
-	{
-		
+	{	
 		if (Input::IsKeyPressed(Key::LeftAlt))
 		{	
 			auto [xPos, yPos] = Input::GetMousePosition();
@@ -34,7 +33,6 @@ namespace Melone
 			{
 				MouseZoom(mousePositionOffset.y);
 			}
-
 		}
 
 		// Moving camera by using the keyboard

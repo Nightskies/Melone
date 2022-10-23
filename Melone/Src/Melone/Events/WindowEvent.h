@@ -7,8 +7,6 @@ namespace Melone
 {
 	class WindowResizeEvent
 	{
-	private:
-		std::pair<float, float> mWinDimensions;
 	public:
 		WindowResizeEvent() = default;
 
@@ -29,6 +27,8 @@ namespace Melone
 		}
 
 		static constexpr unsigned char GetCategory() { return EventCategoryApplication; }
+	private:
+		std::pair<float, float> mWinDimensions;
 	};
 
 	class WindowCloseEvent

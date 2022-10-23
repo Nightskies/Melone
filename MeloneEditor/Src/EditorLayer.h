@@ -1,16 +1,42 @@
 #pragma once
-
 #include <Melone.h>
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/ContentBrowserPanel.h"
-
 #include "Melone/Renderer/Camera/EditorCamera.h"
 
 namespace Melone 
 {
 	class EditorLayer : public Layer
 	{
+	public:
+		EditorLayer();
+		~EditorLayer() = default;
+
+		void OnAttach() override;
+		void OnDetach() override;
+
+		void OnUpdate(Timestep ts) override;
+		void OnImGuiRender() override;
+	private:
+		void NewScene();
+		void OpenScene();
+		void OpenScene(const std::filesystem::path& path);
+		void SaveScene();
+		void SaveSceneAs();
+
+		void SerializeScene(SPtr<Scene> scene, const std::filesystem::path& path);
+
+		void OnScenePlay();
+		void OnSceneStop();
+		void OnDuplicateEntity();
+
+		void OnOverlayRender();
+
+		void UIToolbar();
+
+		void OnKeyPressed(const KeyPressedEvent& e);
+		void OnMouseButtonPressed(const MouseButtonPressedEvent& e);
 	private:
 		EditorCamera mEditorCamera;
 
@@ -57,33 +83,5 @@ namespace Melone
 		// Panels
 		SceneHierarchyPanel mSceneHierarchyPanel;
 		ContentBrowserPanel mContentBrowserPanel;
-	public:
-		EditorLayer();
-		~EditorLayer() = default;
-
-		void OnAttach() override;
-		void OnDetach() override;
-
-		void OnUpdate(Timestep ts) override;
-		void OnImGuiRender() override;
-	private:
-		void NewScene();
-		void OpenScene();
-		void OpenScene(const std::filesystem::path& path);
-		void SaveScene();
-		void SaveSceneAs();
-
-		void SerializeScene(SPtr<Scene> scene, const std::filesystem::path& path);
-
-		void OnScenePlay();
-		void OnSceneStop();
-		void OnDuplicateEntity();
-
-		void OnOverlayRender();
-
-		void UIToolbar();
-
-		void OnKeyPressed(const KeyPressedEvent& e);
-		void OnMouseButtonPressed(const MouseButtonPressedEvent& e);
 	};
 }

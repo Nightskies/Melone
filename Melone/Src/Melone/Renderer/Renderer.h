@@ -1,5 +1,4 @@
 #pragma once
-
 #include "RenderCommand.h"
 #include "Camera/Camera.h"
 #include "Shader.h"
@@ -8,13 +7,6 @@ namespace Melone
 {
 	class Renderer
 	{
-	private:
-		struct SceneData
-		{
-			glm::mat4 ViewProjectionMatrix;
-		};
-
-		static SceneData* mSceneData;
 	public:
 		Renderer() = default;
 		~Renderer() = default;
@@ -30,5 +22,12 @@ namespace Melone
 		static void Submit(const SPtr<Shader>& shader, const SPtr<VAO>& VAO, const glm::mat4& transform = glm::mat4(1.0f));
 
 		static const RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+	private:
+		struct SceneData
+		{
+			glm::mat4 ViewProjectionMatrix;
+		};
+
+		static SceneData* mSceneData;
 	};
 }

@@ -1,10 +1,8 @@
 #include "SceneHierarchyPanel.h"
+#include "Melone/Scene/Components.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
-
-#include "Melone/Scene/Components.h"
-
 #include <cstring>
 #include <glm/gtc/type_ptr.hpp>
 #include <filesystem>

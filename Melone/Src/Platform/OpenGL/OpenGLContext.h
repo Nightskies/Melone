@@ -6,8 +6,6 @@ namespace Melone
 {
 	class OpenGLContext
 	{
-	private:
-		GLFWwindow* mWindow = nullptr;
 	public:
 		OpenGLContext() = default;
 		~OpenGLContext() = default;
@@ -15,5 +13,7 @@ namespace Melone
 		void SetContext(GLFWwindow* window);
 
 		void SwapBuffers() const;
+	private:
+		GLFWwindow* mWindow = nullptr;
 	};
 }

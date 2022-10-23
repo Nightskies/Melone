@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Scene.h"
 #include "Melone/Core/UUID.h"
 #include "Components.h"
@@ -8,9 +7,6 @@ namespace Melone
 {
 	class Entity
 	{
-	private:
-		entt::entity mEntityHandle{ entt::null };
-		Scene* mScene = nullptr; //weak ptr
 	public:
 		Entity() = default;
 		Entity(entt::entity handle, Scene* scene);
@@ -70,7 +66,9 @@ namespace Melone
 		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
 
 		const std::string& GetName() { return GetComponent<TagComponent>().Tag; }
+	private:
+		entt::entity mEntityHandle{ entt::null };
+		Scene* mScene = nullptr; //weak ptr
 	};
-
 }
 

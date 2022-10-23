@@ -22,7 +22,7 @@ namespace Melone
 		using WindowType = std::variant<Windows, Linux>;
 	public:
 		Window(WindowProperties&& winProps, WindowType&& wType = Windows());
-		~Window() = default;
+		~Window();
 
 		GLFWwindow* GetHandle() const { return mHandle; }
 		const WindowProperties& GetProperties() const { return mProperties; }
@@ -41,6 +41,8 @@ namespace Melone
 	private:
 		void OnResize(const WindowResizeEvent& e);
 		void OnClose(const WindowCloseEvent& e);
+
+		void Shutdown();
 	private:
 		GLFWwindow* mHandle = nullptr;
 
@@ -53,6 +55,6 @@ namespace Melone
 		bool mMinimized = false;
 		bool mClosed = false;
 
-		inline static const Window* mInstance;
+		inline static const Window* mInstance = nullptr;
 	};
 }

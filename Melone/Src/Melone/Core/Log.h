@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Core.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -19,6 +18,7 @@ namespace Melone
 		static SPtr<spdlog::logger>& GetClientLogger() { return mClientLogger; }
 	private:
 		Log() = default;
+		~Log() = default;
 	private:
 		static inline SPtr<spdlog::logger> mCoreLogger;
 		static inline SPtr<spdlog::logger> mClientLogger;

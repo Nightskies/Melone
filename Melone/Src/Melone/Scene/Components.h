@@ -1,8 +1,7 @@
 #pragma once
-
 #include "SceneCamera.h"
-#include "Melone/Renderer/Texture.h"
 #include "Melone/Core/UUID.h"
+#include "Melone/Renderer/Texture.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -20,9 +19,8 @@ namespace Melone
 		IDComponent(const IDComponent&) = default;
 	};
 
-	class TagComponent
+	struct TagComponent
 	{
-	public:
 		std::string Tag = "Entity";
 
 		TagComponent() = default;
@@ -33,9 +31,8 @@ namespace Melone
 		{}
 	};
 
-	class TransformComponent
+	struct TransformComponent
 	{
-	public:
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
@@ -57,9 +54,8 @@ namespace Melone
 		}
 	};
 
-	class SpriteRendererComponent
+	struct SpriteRendererComponent
 	{
-	public:
 		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
 		SPtr<Texture2D> Texture;
 		float TilingFactor = 1.0f;
@@ -72,9 +68,8 @@ namespace Melone
 		{}
 	};
 
-	class CameraComponent
+	struct CameraComponent
 	{
-	public:
 		SceneCamera Camera;
 		bool Primary = true;
 		bool FixedAspectRatio = false;
@@ -95,9 +90,8 @@ namespace Melone
 
 	class ScriptableEntity;
 
-	class NativeScriptComponent
+	struct NativeScriptComponent
 	{
-	public:
 		SPtr<ScriptableEntity> Instance;
 
 		std::function<SPtr<ScriptableEntity>()> InstantiateScript;

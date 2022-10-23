@@ -2,7 +2,6 @@
 #include "BufferObj.h"
 
 #include "Renderer.h"
-
 #include "Platform/OpenGL/OpenGLBufferObj.h"
 
 namespace Melone

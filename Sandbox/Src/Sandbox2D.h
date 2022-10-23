@@ -6,6 +6,14 @@
 
 class Sandbox2D : public Melone::Layer
 {
+public:
+	Sandbox2D();
+	~Sandbox2D() override = default;
+
+	void OnAttach() override;
+	void OnDetach() override;
+	void OnUpdate(Melone::Timestep ts) override;
+	void OnImGuiRender() override;
 private:
 	Melone::Camera mCamera;
 
@@ -28,12 +36,4 @@ private:
 	unsigned int mMapWidth;
 	unsigned int mMapHeight;
 	std::unordered_map<char, SPtr<Melone::SubTexture2D>> sTextureMap;
-public:
-	Sandbox2D();
-	~Sandbox2D() override = default;
-
-	void OnAttach() override;
-	void OnDetach() override;
-	void OnUpdate(Melone::Timestep ts) override;
-	void OnImGuiRender() override;
 };

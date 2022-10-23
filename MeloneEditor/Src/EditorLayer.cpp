@@ -1,17 +1,13 @@
 #include "EditorLayer.h"
 
 #include "imgui/imgui.h"
+#include "ImGuizmo.h"
+#include "Melone/Scene/SceneSerializer.h"
+#include "Melone/Utils/PlatformUtils.h"
+#include "Melone/Math/Math.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include "Melone/Scene/SceneSerializer.h"
-
-#include "Melone/Utils/PlatformUtils.h"
-
-#include "ImGuizmo.h"
-
-#include "Melone/Math/Math.h"
 
 namespace Melone
 {

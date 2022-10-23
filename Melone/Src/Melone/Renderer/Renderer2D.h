@@ -1,9 +1,7 @@
 #pragma once
-
 #include "Camera/Camera.h"
 #include "Camera/EditorCamera.h"
 
-#include "Texture.h"
 #include "SubTexture2D.h"
 
 #include "Melone/Scene/Components.h"
@@ -13,9 +11,16 @@ namespace Melone
 	class Renderer2D
 	{
 	public:
-		Renderer2D() = default;
-		~Renderer2D() = default;
+		// Stats info
+		struct Stats
+		{
+			unsigned int DrawCalls = 0;
+			unsigned int QuadCount = 0;
 
+			unsigned int GetTotalVertexCount() { return QuadCount * 4; }
+			unsigned int GetTotalIndexCount() { return QuadCount * 6; }
+		};
+	public:
 		static void Init();
 		static void Shutdown();
 		static void Flush();
@@ -56,20 +61,12 @@ namespace Melone
 		static float GetLineWidth();
 		static void SetLineWidth(float width);
 
-		// Stats info
-		struct Stats
-		{
-			unsigned int DrawCalls = 0;
-			unsigned int QuadCount = 0;
-
-			unsigned int GetTotalVertexCount() { return QuadCount * 4; }
-			unsigned int GetTotalIndexCount() { return QuadCount * 6; }
-		};
-
 		static void ResetStats();
 		static Stats GetStats();
+	private:
+		Renderer2D() = default;
+		~Renderer2D() = default;
 	private:
 		static void FlushAndReset();
 	};
 }
-

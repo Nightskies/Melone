@@ -7,9 +7,6 @@ namespace Melone
 {
 	class MouseMovedEvent
 	{
-	private:
-		double mX;
-		double mY;
 	public:
 		MouseMovedEvent() = default;
 
@@ -31,13 +28,13 @@ namespace Melone
 		}
 
 		static constexpr unsigned char GetCategory() { return EventCategoryMouse | EventCategoryInput; }
+	private:
+		double mX;
+		double mY;
 	};
 
 	class MouseScrolledEvent
 	{
-	private:
-		double mXOffset;
-		double mYOffset;
 	public:
 		MouseScrolledEvent() = default;
 
@@ -59,12 +56,17 @@ namespace Melone
 			return ss.str();
 		}
 		static constexpr unsigned char GetCategory() { return EventCategoryMouse | EventCategoryInput; }
+	private:
+		double mXOffset;
+		double mYOffset;
 	};
 
 	class MouseButtonEvent
 	{
-	protected:
-		int mButton;
+	public:
+		static constexpr unsigned char GetCategory() { return EventCategoryMouse | EventCategoryInput; }
+
+		int GetPressedButton() const { return mButton; }
 	protected:
 		MouseButtonEvent() = default;
 
@@ -72,12 +74,10 @@ namespace Melone
 			:
 			mButton(button)
 		{}
-		
-		virtual ~MouseButtonEvent() = default;
-	public:
-		static constexpr unsigned char GetCategory() { return EventCategoryMouse | EventCategoryInput; }
 
-		int GetPressedButton() const { return mButton; }
+		virtual ~MouseButtonEvent() = default;
+	protected:
+		int mButton;
 	};
 
 

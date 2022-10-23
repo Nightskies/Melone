@@ -1,16 +1,14 @@
 #pragma once
-
 #include "Entity.h"
 
 namespace Melone
 {
 	class ScriptableEntity
 	{
-	private:
-		Entity mEntity;
-
+	public:
 		friend class Scene;
 	public:
+		ScriptableEntity() = default;
 		virtual ~ScriptableEntity() = default;
 
 		template<typename T>
@@ -22,5 +20,7 @@ namespace Melone
 		virtual void OnCreate() {}
 		virtual void OnDestroy() {}
 		virtual void OnUpdate(Timestep ts) {}
+	private:
+		Entity mEntity;
 	};
 }

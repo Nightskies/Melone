@@ -1,7 +1,7 @@
 #pragma once
+#include "ArrayObj.h"
 
 #include <glm/glm.hpp>
-#include "ArrayObj.h"
 
 namespace Melone
 {
@@ -13,12 +13,10 @@ namespace Melone
 			Undefined = 0,
 			OpenGL
 		};
-	private:
-		static inline API mAPI = API::OpenGL;
 	public:
 		RendererAPI() = default;
 		virtual ~RendererAPI() = default;
-	public:
+
 		virtual void Init() = 0;
 		virtual void SetViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height) = 0;
 		virtual void Clear() = 0;
@@ -30,5 +28,7 @@ namespace Melone
 		virtual void SetLineWidth(float width) = 0;
 
 		static API GetAPI() { return mAPI; }
+	private:
+		static inline API mAPI = API::OpenGL;
 	};
 }

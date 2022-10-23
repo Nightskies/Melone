@@ -1,8 +1,6 @@
 #pragma once
-
 #include <string>
 #include <unordered_map>
-
 #include <glm/glm.hpp>
 
 namespace Melone
@@ -10,6 +8,7 @@ namespace Melone
 	class Shader
 	{
 	public:
+		Shader() = default;
 		virtual ~Shader() = default;
 
 		virtual void Bind() const = 0;
@@ -34,6 +33,9 @@ namespace Melone
 	class ShaderLibrary
 	{
 	public:
+		ShaderLibrary() = default;
+		~ShaderLibrary() = default;
+
 		void Add(const SPtr<Shader>& s);
 		SPtr<Shader> Load(std::string&& path);
 

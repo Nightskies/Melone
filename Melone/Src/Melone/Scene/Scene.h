@@ -1,5 +1,4 @@
 #pragma once
-
 #include "entt.hpp"
 
 #include "Melone/Core/Timestep.h"
@@ -12,14 +11,7 @@ namespace Melone
 {
 	class Scene
 	{
-	private:
-		entt::registry mRegistry;
-		
-		unsigned int mViewportWidth = 0;
-		unsigned int mViewportHeight = 0;
-
-		b2World* mPhysicsWorld = nullptr;
-
+	public:
 		friend class Entity;
 		friend class SceneHierarchyPanel;
 		friend class SceneSerializer;
@@ -50,6 +42,13 @@ namespace Melone
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
+	private:
+		entt::registry mRegistry;
+
+		unsigned int mViewportWidth = 0;
+		unsigned int mViewportHeight = 0;
+
+		b2World* mPhysicsWorld = nullptr;
 	};
 }
 

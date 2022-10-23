@@ -43,15 +43,14 @@ namespace Melone
 		}
 	}
 
-	class VBOElement
+	struct VBOElement
 	{
-	public:
 		std::string Name;
 		ShaderDataType Type;
 		unsigned int Size;
 		unsigned int Offset = 0;
 		bool Normalized;
-	public:
+
 		VBOElement() = default;
 		~VBOElement() = default;
 
@@ -62,9 +61,6 @@ namespace Melone
 
 	class VBOLayout
 	{
-	private:
-		std::vector<VBOElement> mElements;
-		unsigned int mStride = 0;
 	public:
 		VBOLayout() = default;
 		~VBOLayout() = default;
@@ -81,12 +77,16 @@ namespace Melone
 		std::vector<VBOElement>::const_iterator end() const { return mElements.cend(); }
 	private:
 		void CalculateOffsetAndStride();
+	private:
+		std::vector<VBOElement> mElements;
+		unsigned int mStride = 0;
 	};
 
 	// Vertex Buffer Object
 	class VBO
 	{
 	public:
+		VBO() = default;
 		virtual ~VBO() = default;
 
 		virtual void Bind() const = 0;

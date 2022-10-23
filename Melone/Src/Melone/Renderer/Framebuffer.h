@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Melone/Core/Core.h"
 
 namespace Melone
@@ -50,6 +49,7 @@ namespace Melone
 	class Framebuffer
 	{
 	public:
+		Framebuffer() = default;
 		virtual ~Framebuffer() = default;
 
 		virtual void Bind() = 0;
@@ -67,4 +67,3 @@ namespace Melone
 		static SPtr<Framebuffer> Create(const FramebufferSpecification& spec);
 	};
 }
-

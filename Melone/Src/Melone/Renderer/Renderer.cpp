@@ -1,7 +1,7 @@
 #include "mlpch.h"
 #include "Renderer.h"
-#include "Renderer2D.h"
 
+#include "Renderer2D.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Melone
@@ -27,9 +27,7 @@ namespace Melone
 	}
 
 	void Renderer::EndScene()
-	{
-
-	}
+	{}
 
 	void Renderer::Submit(const SPtr<Shader>& shader, const SPtr<VAO>& VAO, const glm::mat4& transform)
 	{
@@ -42,7 +40,5 @@ namespace Melone
 	}
 
 	void Renderer::Shutdown()
-	{
-
-	}
+	{}
 }

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Melone/Renderer/BufferObj.h"
 
 namespace Melone
@@ -7,6 +6,7 @@ namespace Melone
 	class VAO
 	{
 	public:
+		VAO() = default;
 		virtual ~VAO() = default;
 
 		virtual void Bind() const = 0;

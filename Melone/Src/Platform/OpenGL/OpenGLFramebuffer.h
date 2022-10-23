@@ -1,20 +1,10 @@
 #pragma once
-
 #include "Melone/Renderer/Framebuffer.h"
 
 namespace Melone 
 {
 	class OpenGLFramebuffer : public Framebuffer
 	{
-	private:
-		unsigned int mRendererID = 0;
-		FramebufferSpecification mSpecification;
-
-		std::vector<FramebufferTextureSpecification> mColorAttachmentSpecifications;
-		FramebufferTextureSpecification mDepthAttachmentSpecification = FramebufferTextureFormat::None;
-
-		std::vector<unsigned int> mColorAttachments;
-		unsigned int mDepthAttachment = 0;
 	public:
 		OpenGLFramebuffer(const FramebufferSpecification& spec);
 		~OpenGLFramebuffer();
@@ -37,5 +27,14 @@ namespace Melone
 		}
 
 		const FramebufferSpecification& GetSpecification() const override { return mSpecification; }
+	private:
+		unsigned int mRendererID = 0;
+		FramebufferSpecification mSpecification;
+
+		std::vector<FramebufferTextureSpecification> mColorAttachmentSpecifications;
+		FramebufferTextureSpecification mDepthAttachmentSpecification = FramebufferTextureFormat::None;
+
+		std::vector<unsigned int> mColorAttachments;
+		unsigned int mDepthAttachment = 0;
 	};
 }

@@ -1,13 +1,10 @@
 #pragma once
-
 #include "RendererAPI.h"
 
 namespace Melone
 {
 	class RenderCommand
 	{
-	private:
-		static RendererAPI* mRendererAPI;
 	public:
 		static void Init()
 		{
@@ -43,5 +40,10 @@ namespace Melone
 		{
 			mRendererAPI->SetViewport(x, y, width, height);
 		}
+	private:
+		RenderCommand() = default;
+		~RenderCommand() = default;
+	private:
+		static RendererAPI* mRendererAPI;
 	};
 }

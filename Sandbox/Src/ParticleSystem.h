@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Melone.h>
 
 #include <random>

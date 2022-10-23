@@ -1,13 +1,8 @@
 #pragma once
-
 #include "Core.h"
 #include "Layer.h"
 
 #include "Melone/ImGui/GUI.h"
-
-//#include "Platform/OpenGL/OpenGLShader.h"
-//#include "Platform/OpenGL/OpenGLArrayObj.h"
-//#include "Platform/OpenGL/OpenGLTexture.h"
 
 namespace Melone
 {

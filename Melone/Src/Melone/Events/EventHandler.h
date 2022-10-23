@@ -11,8 +11,9 @@ namespace Melone
 		class EventHandlerBase
 		{
 		public:
+			EventHandlerBase() = default;
 			virtual ~EventHandlerBase() = default;
-		public:
+
 			void Invoke(const Events& e)
 			{
 				Call(e);
@@ -26,16 +27,14 @@ namespace Melone
 		template<class T, class E>
 		class EventHandler : public EventHandlerBase
 		{
-		private:
-			T* mInstance;
-
-			EventCallback<T, E> mCallback;
 		public:
 			EventHandler(T* instance, EventCallback<T, E> callback)
 				:
 				mInstance(instance),
 				mCallback(callback)
 			{}
+
+			~EventHandler() override = default;
 
 			void Call(const Events& events) override
 			{
@@ -45,6 +44,10 @@ namespace Melone
 
 				(mInstance->*mCallback)(e);
 			}
+		private:
+			T* mInstance;
+
+			EventCallback<T, E> mCallback;
 		};
 	}
 }

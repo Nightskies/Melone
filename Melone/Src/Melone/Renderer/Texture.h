@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Melone/Core/Core.h"
 
 #include <string>
@@ -9,6 +8,7 @@ namespace Melone
 	class ITexture
 	{
 	public:
+		ITexture() = default;
 		virtual ~ITexture() = default;
 
 		virtual void Bind(unsigned int slot = 0) const = 0;
@@ -27,6 +27,9 @@ namespace Melone
 	class Texture2D : public ITexture
 	{
 	public:
+		Texture2D() = default;
+		~Texture2D() override = default;
+
 		static SPtr<Texture2D> Create(unsigned int width, unsigned int height);
 		static SPtr<Texture2D> Create(std::string&& path);
 	};

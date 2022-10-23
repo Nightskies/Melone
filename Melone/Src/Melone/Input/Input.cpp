@@ -3,8 +3,6 @@
 
 #include "Melone/Core/Window.h"
 
-#include "Melone/Events/EventSystem.h"
-
 #include <GLFW/glfw3.h>
 
 namespace Melone

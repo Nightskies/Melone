@@ -9,12 +9,12 @@ namespace Melone
 	class Layer
 	{
 	public:
-		virtual ~Layer() = default;
-
 		Layer(std::string&& name)
 			:
 			mName(std::move(name))
 		{}
+
+		virtual ~Layer() = default;
 
 		virtual void OnUpdate(Timestep ts) = 0;
 		virtual void OnAttach() = 0;

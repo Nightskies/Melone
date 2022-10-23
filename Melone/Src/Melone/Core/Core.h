@@ -1,9 +1,8 @@
 #pragma once
+#include "PlatformDetection.h"
 
 #include <memory>
 #include <variant>
-
-#include "PlatformDetection.h"
 
 template<class I>
 using SPtr = std::shared_ptr<I>;

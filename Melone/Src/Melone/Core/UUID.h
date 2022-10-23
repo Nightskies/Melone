@@ -1,5 +1,4 @@
 #pragma once
-
 #include <xhash>
 
 namespace Melone
@@ -10,6 +9,7 @@ namespace Melone
 		UUID();
 		UUID(uint64_t uuid);
 		UUID(const UUID&) = default;
+		~UUID() = default;
 
 		operator uint64_t() const { return mUUID; }
 	private:

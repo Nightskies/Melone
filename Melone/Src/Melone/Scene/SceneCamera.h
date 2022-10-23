@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Melone/Renderer/Camera/Camera.h"
 
 namespace Melone 
@@ -12,18 +11,6 @@ namespace Melone
 			Perspective,
 			Orthographic
 		};
-	private:
-		ProjectionType mProjectionType = ProjectionType::Orthographic;
-
-		float mPerspectiveFOV = 45.0f;
-		float mPerspectiveNear = 0.01f;
-		float mPerspectiveFar = 1000.0f;
-
-		float mOrthographicSize = 1.0f;
-		float mOrthographicNear = -1.0f;
-		float mOrthographicFar = 1.0f;
-
-		float mAspectRatio = 0.0f;
 	public:
 		SceneCamera();
 		~SceneCamera() = default;
@@ -51,6 +38,18 @@ namespace Melone
 		void SetProjectionType(ProjectionType type) { mProjectionType = type; RecalculateProjection(); }
 	private:
 		void RecalculateProjection();
+	private:
+		ProjectionType mProjectionType = ProjectionType::Orthographic;
+
+		float mPerspectiveFOV = 45.0f;
+		float mPerspectiveNear = 0.01f;
+		float mPerspectiveFar = 1000.0f;
+
+		float mOrthographicSize = 1.0f;
+		float mOrthographicNear = -1.0f;
+		float mOrthographicFar = 1.0f;
+
+		float mAspectRatio = 0.0f;
 	};
 }
 

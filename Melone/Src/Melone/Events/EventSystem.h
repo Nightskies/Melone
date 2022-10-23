@@ -5,17 +5,11 @@ namespace Melone
 {
 	class EventSystem
 	{
-	private:
-		inline static std::map<Event::EventType, Event::HandlerList> mSubscribers;
-
-		inline static Event::Events mEvents;
-
-		inline static  int mBlockedCategories = 0;
 	public:
 		template<size_t I, typename... Args>
 		static void Publish(Args&&... args)
 		{
-			mEvents.emplace<I>(std::forward<Args>(args)...);
+			mCurEvent.emplace<I>(std::forward<Args>(args)...);
 
 			if (EventIsNotBlocked<I>())
 			{
@@ -23,7 +17,7 @@ namespace Melone
 
 				for (const auto& handler : list)
 				{
-					handler->Invoke(mEvents);
+					handler->Invoke(mCurEvent);
 				}
 			}
 		}
@@ -49,10 +43,19 @@ namespace Melone
 			mBlockedCategories = 0;
 		}
 	private:
+		EventSystem() = default;
+		~EventSystem() = default;
+
 		template<size_t I>
 		static bool EventIsNotBlocked()
 		{
-			return !(std::get<I>(mEvents).GetCategory() & mBlockedCategories);
+			return !(std::get<I>(mCurEvent).GetCategory() & mBlockedCategories);
 		}
+	private:
+		inline static std::map<Event::EventType, Event::HandlerList> mSubscribers;
+
+		inline static Event::Events mCurEvent;
+
+		inline static  int mBlockedCategories = 0;
 	};
 }
