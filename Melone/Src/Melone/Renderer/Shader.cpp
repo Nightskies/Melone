@@ -5,9 +5,9 @@
 
 namespace Melone
 {
-	SPtr<Shader> Shader::Create(std::string&& shaderFilePath)
+	SPtr<Shader> Shader::Create(std::filesystem::path&& vertShaderPath, std::filesystem::path&& fragShaderPath)
 	{
-		return std::make_shared<OpenGLShader>(std::move(shaderFilePath));
+		return std::make_shared<OpenGLShader>(std::move(vertShaderPath), std::move(fragShaderPath));
 	}
 
 	void ShaderLibrary::Add(const SPtr<Shader>& shader)
@@ -16,9 +16,9 @@ namespace Melone
 		mShaders[name] = shader;
 	}
 
-	SPtr<Shader> ShaderLibrary::Load(std::string&& path)
+	SPtr<Shader> ShaderLibrary::Load(std::filesystem::path&& vertShaderPath, std::filesystem::path&& fragShaderPath)
 	{
-		auto shader = Shader::Create(std::move(path));
+		auto shader = Shader::Create(std::move(vertShaderPath), std::move(fragShaderPath));
 		Add(shader);
 		return shader;
 	}

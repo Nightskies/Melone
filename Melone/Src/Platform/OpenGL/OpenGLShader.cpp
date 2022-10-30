@@ -6,35 +6,43 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
+const char* VERTEX_SHADER_EXTENSION = ".vt";
+const char* FRAGMENT_SHADER_EXTENSION = ".fg";
+
 namespace Melone
 {
-	static GLenum ShaderTypeFromString(const std::string_view& type)
-	{
-		if (type == "vertex")
-			return GL_VERTEX_SHADER;
-		if (type == "fragment" || type == "pixel")
-			return GL_FRAGMENT_SHADER;
-
-		MELONE_CORE_ASSERT(false, "Unknown shader type");
-
-		return 0;
-	}
-
-	OpenGLShader::OpenGLShader(std::string&& filePath)
+	OpenGLShader::OpenGLShader(std::filesystem::path&& vertShaderPath, std::filesystem::path&& fragShaderPath)
 		: 
-		mFilePath(std::move(filePath)), 
+		mVertShaderPath(std::move(vertShaderPath)),
+		mFragShaderPath(std::move(fragShaderPath)),
 		mRendererID(0)
 	{
-		std::string src = ReadShaderFile(mFilePath);
-		auto shaderSrc = GetSourceShaders(src);
-		CompileAndLinkShader(shaderSrc);
+		std::string vertShaderSrc = GetSource(mVertShaderPath);
+		std::string fragShaderSrc = GetSource(mFragShaderPath);
 
-		// get file name
-		auto lastSlash = mFilePath.find_last_of("/\\");
-		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-		auto lastDot = mFilePath.rfind('.');
-		auto count = lastDot == std::string::npos ? mFilePath.size() - lastSlash : lastDot - lastSlash;
-		mName = mFilePath.substr(lastSlash, count);
+		unsigned int vertShader = glCreateShader(GL_VERTEX_SHADER);
+		unsigned int fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+		unsigned int program = glCreateProgram();
+
+		const char* srcPtr = vertShaderSrc.c_str();
+		glShaderSource(vertShader, 1, &srcPtr, nullptr);
+		Compile(vertShader);
+		glAttachShader(program, vertShader);
+
+		srcPtr = fragShaderSrc.c_str();
+		glShaderSource(fragShader, 1, &srcPtr, nullptr);
+		Compile(fragShader);
+		glAttachShader(program, fragShader);
+
+		Link(program);
+
+		glDetachShader(program, vertShader);
+		glDetachShader(program, fragShader);
+
+		mRendererID = program;
+
+		mName = mVertShaderPath.stem().string();
 	}
 
 	void OpenGLShader::Bind() const
@@ -47,113 +55,77 @@ namespace Melone
 		glUseProgram(0);
 	}
 
-	std::string OpenGLShader::ReadShaderFile(const std::string& path)
+	std::string OpenGLShader::GetSource(const std::filesystem::path& shaderPath)
 	{
-		std::string result;
-		std::ifstream stream(path, std::ios::in | std::ios::binary);
-
-		if (stream)
+		if (shaderPath.has_extension())
 		{
-			stream.seekg(0, std::ios::end);
-			result.resize(stream.tellg());
-			stream.seekg(0, std::ios::beg);
-			stream.read(&result[0], result.size());
-			stream.close();
+			std::string extension = shaderPath.extension().string();
+
+			if (extension == FRAGMENT_SHADER_EXTENSION ||
+				extension == VERTEX_SHADER_EXTENSION)
+			{
+				std::ifstream file(shaderPath);
+				std::stringstream ss;
+
+				if (file)
+				{
+					ss << file.rdbuf();
+				}
+				else
+				{
+					MELONE_CORE_ERROR("File: {0} wasn't open", shaderPath.string());
+				}
+
+				return ss.str();
+			}
+			else
+			{
+				MELONE_CORE_ERROR("Invalid extension: {0}", extension);
+			}
 		}
 		else
 		{
-			MELONE_CORE_ERROR("Could not open file '{0}'", path);
+			MELONE_CORE_ERROR("File hasn't extension");
 		}
-
-		return result;
 	}
 
-	std::unordered_map<GLenum, std::string> OpenGLShader::GetSourceShaders(const std::string_view& src)
+	void OpenGLShader::Compile(unsigned int shader)
 	{
-		std::unordered_map<GLenum, std::string> shaderSrc;
-
-		std::string_view typeToken = "#type";
-		size_t pos = src.find(typeToken, 0);
-
-		while (pos != std::string::npos)
-		{
-			size_t eol = src.find_first_of("\r\n", pos);
-			MELONE_CORE_ASSERT(eol != std::string::npos, "Syntax error");
-
-			size_t begin = pos + typeToken.size() + 1;
-			std::string_view type = src.substr(begin, eol - begin);
-			MELONE_CORE_ASSERT(ShaderTypeFromString(type), "Invdlid shader type specified");
-
-			size_t nextLinePos = src.find_first_not_of("\r\n", eol);
-			pos = src.find(typeToken, nextLinePos);
-			shaderSrc[ShaderTypeFromString(type)] = src.substr(nextLinePos,
-				pos - (nextLinePos == std::string::npos ? src.size() - 1 : nextLinePos));
-		}
-
-		return shaderSrc;
-	}
-
-	void OpenGLShader::CompileAndLinkShader(const std::unordered_map<GLenum, std::string>& shaderSrc)
-	{
-		GLuint program = glCreateProgram();
-		std::array<GLenum, 2> glShaderIDs;
-		int shaderID = 0;
-
-		for (const auto& kv : shaderSrc)
-		{
-			GLenum type = kv.first;
-			const std::string& source = kv.second;
-
-			GLuint shader = glCreateShader(type);
-
-			const GLchar* s = source.c_str();
-			glShaderSource(shader, 1, &s, nullptr);
-			glCompileShader(shader);
-
-			int result;
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
-			if (result == GL_FALSE)
-			{
-				int length;
-				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
-				char* message = (char*)alloca(length * sizeof(char));
-				glGetShaderInfoLog(shader, length, &length, message);
-
-				glDeleteShader(shader);
-
-				MELONE_CORE_ERROR("{0}", message);
-				MELONE_CORE_ASSERT(false, "Shader compilation failure");
-				break;
-			}
-
-			glAttachShader(program, shader);
-			glShaderIDs[shaderID++] = shader;
-		}
-
-		glLinkProgram(program);
-
 		int result;
-		glGetShaderiv(program, GL_LINK_STATUS, &result);
+
+		glCompileShader(shader);
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
 		if (result == GL_FALSE)
 		{
 			int length;
-			glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length);
-			char* message = (char*)alloca(length * sizeof(char));
-			glGetShaderInfoLog(program, length, &length, message);
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+			std::string msg(length, ' ');
+			glGetShaderInfoLog(shader, length, &length, msg.data());
+
+			MELONE_CORE_FATAL(msg);
+
+			glDeleteShader(shader);
+		}
+	}
+
+	void OpenGLShader::Link(unsigned int program)
+	{
+		int result;
+
+		glLinkProgram(program);
+
+		glGetProgramiv(program, GL_LINK_STATUS, &result);
+		if (result == GL_FALSE)
+		{
+			int length;
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+			std::string msg(length, ' ');
+			glGetProgramInfoLog(program, length, &length, msg.data());
+
+			MELONE_CORE_FATAL(msg);
 
 			glDeleteShader(program);
-
-			for (auto id : glShaderIDs)
-				glDeleteShader(id);
-
-			MELONE_CORE_ERROR("{0}", message);
-			MELONE_CORE_ASSERT(false, "Shader link failure");
 		}
-
-		for (auto id : glShaderIDs)
-			glDetachShader(program, id);
-
-		mRendererID = program;
 	}
 
 	int OpenGLShader::GetUniformLocation(const std::string& name) const

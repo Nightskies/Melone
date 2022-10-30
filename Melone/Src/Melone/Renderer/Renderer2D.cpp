@@ -166,9 +166,9 @@ namespace Melone
 		for (unsigned int i = 0; i < Renderer2DData.MaxTextureSlots; i++)
 			samplers[i] = i;
 
-		Renderer2DData.QuadShader = Shader::Create("Assets/Shaders/Renderer2D_Quad.glsl");
-		Renderer2DData.CircleShader = Shader::Create("Assets/Shaders/Renderer2D_Circle.glsl");
-		Renderer2DData.LineShader = Shader::Create("Assets/Shaders/Renderer2D_Line.glsl");
+		Renderer2DData.QuadShader = Shader::Create("Assets/Shaders/Renderer2D_Quad.vt", "Assets/Shaders/Renderer2D_Quad.fg");
+		Renderer2DData.CircleShader = Shader::Create("Assets/Shaders/Renderer2D_Circle.vt", "Assets/Shaders/Renderer2D_Circle.fg");
+		Renderer2DData.LineShader = Shader::Create("Assets/Shaders/Renderer2D_Line.vt", "Assets/Shaders/Renderer2D_Line.fg");
 
 		Renderer2DData.TextureSlots[0] = Renderer2DData.WhiteTexture;
 

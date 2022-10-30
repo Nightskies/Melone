@@ -25,7 +25,7 @@ namespace Melone
 		glTextureParameteri(mRendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(std::string&& path)
+	OpenGLTexture2D::OpenGLTexture2D(std::filesystem::path&& path)
 		:
 		mPath(std::move(path))
 	{
@@ -35,7 +35,7 @@ namespace Melone
 
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = nullptr;
-		data = stbi_load(mPath.c_str(), &width, &height, &channels, 0);
+		data = stbi_load(mPath.string().c_str(), &width, &height, &channels, 0);
 
 		if (data)
 		{

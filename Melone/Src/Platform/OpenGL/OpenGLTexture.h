@@ -10,7 +10,7 @@ namespace Melone
 	{
 	public:
 		OpenGLTexture2D(unsigned int width, unsigned int height);
-		OpenGLTexture2D(std::string&& path);
+		OpenGLTexture2D(std::filesystem::path&& path);
 		~OpenGLTexture2D();
 
 		void Bind(unsigned int slot = 0) const override;
@@ -29,7 +29,7 @@ namespace Melone
 		}
 	private:
 		unsigned int mRendererID;
-		std::string mPath;
+		std::filesystem::path mPath;
 		unsigned int mWidth;
 		unsigned int mHeight;
 		bool mIsLoaded = false;

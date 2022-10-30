@@ -1,7 +1,7 @@
 #pragma once
 #include "Melone/Core/Core.h"
 
-#include <string>
+#include <filesystem>
 
 namespace Melone
 {
@@ -31,6 +31,6 @@ namespace Melone
 		~Texture2D() override = default;
 
 		static SPtr<Texture2D> Create(unsigned int width, unsigned int height);
-		static SPtr<Texture2D> Create(std::string&& path);
+		static SPtr<Texture2D> Create(std::filesystem::path&& path);
 	};
 }

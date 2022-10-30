@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <filesystem>
 #include <glm/glm.hpp>
 
 namespace Melone
@@ -27,7 +28,7 @@ namespace Melone
 
 		virtual const std::string& GetName() const = 0;
 
-		static SPtr<Shader> Create(std::string&& shaderFilePath);
+		static SPtr<Shader> Create(std::filesystem::path&& vertShaderPath, std::filesystem::path&& fragShaderPath);
 	};
 
 	class ShaderLibrary
@@ -37,7 +38,7 @@ namespace Melone
 		~ShaderLibrary() = default;
 
 		void Add(const SPtr<Shader>& s);
-		SPtr<Shader> Load(std::string&& path);
+		SPtr<Shader> Load(std::filesystem::path&& vertShaderPath, std::filesystem::path&& fragShaderPath);
 
 		SPtr<Shader> Get(const std::string& name);
 
